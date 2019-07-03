@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+class Create<%= name.camelize %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :<%= name %><%= primary_key_type %> do |t|
+
+      t.timestamps null: false
+    end
+
+    add_index :<%= name %>, :email,                unique: true
+    add_index :<%= name %>, :reset_password_token, unique: true
+  end
+end

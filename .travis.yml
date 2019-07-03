@@ -1,7 +1,24 @@
 ---
 sudo: false
 language: ruby
+install: bundle --without local_development --jobs=3 --retry=3
 cache: bundler
 rvm:
-  - 2.6.3
-before_install: gem install bundler -v 2.0.2
+  - 2.5.3
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=not_defined_yet
+    - COVERAGE=1
+    - TRAVIS_TEST_RESULT=simplecov
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+before_install: gem install bundler -v 1.17.1
+script:
+  - bundle exec rake
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

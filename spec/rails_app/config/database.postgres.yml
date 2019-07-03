@@ -1,0 +1,10 @@
+default: &default
+  adapter:  postgresql
+  username: postgres
+  password:
+  host:     localhost
+  port:     5432
+
+test:
+  <<: *default
+  database: active_validation_test

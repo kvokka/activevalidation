@@ -1,0 +1,82 @@
+inherit_from: .rubocop_todo.yml
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+  AutoCorrect: true
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+Style/AndOr:
+  EnforcedStyle: conditionals
+Metrics/ClassLength:
+  CountComments: false
+  Max: 300
+Metrics/ModuleLength:
+  CountComments: false
+  Max: 300
+Layout/EndAlignment:
+  AutoCorrect: true
+Layout/DefEndAlignment:
+  AutoCorrect: true
+Rails:
+  Enabled: false
+Style/AutoResourceCleanup:
+  Description: 'Suggests the usage of an auto resource cleanup version of a method (if available).'
+  Enabled: true
+Metrics/MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 25
+NumericLiterals:
+  Enabled: false
+Metrics/LineLength:
+  Max: 120
+Documentation:
+  Enabled: false
+Lint/Debugger:
+  Enabled: true
+Metrics/AbcSize:
+  Max: 40
+Metrics/CyclomaticComplexity:
+  Max: 10
+Rails/HasAndBelongsToMany:
+  Enabled: false
+Style/DoubleNegation:
+  Description: 'Checks for uses of double negation (!!).'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-bang-bang'
+  Enabled: false
+Style/AsciiComments:
+  Description: 'Use only ascii symbols in comments.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#english-comments'
+  Enabled: false
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+  Enabled: false
+Style/SingleLineMethods:
+  Description: 'Avoid single-line methods.'
+  StyleGuide: '#no-single-line-methods'
+  Enabled: false
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
+AllCops:
+  TargetRubyVersion: 2.3
+
+require: rubocop-rspec
+RSpec/MultipleExpectations:
+  Max: 7
+RSpec/NestedGroups:
+  Max: 7
+RSpec/ExampleLength:
+  Max: 10
+RSpec/LetSetup:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/RepeatedDescription:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
