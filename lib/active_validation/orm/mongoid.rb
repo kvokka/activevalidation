@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 ActiveSupport.on_load(:mongoid) do
-  require "orm_adapter/adapters/mongoid"
+  require "active_validation/adapters/mongoid"
 
-  Mongoid::Document::ClassMethods.send :include, ActiveValidation::Models
+  ActiveValidation.configuration.orm ||= :mongoid
+
+  Mongoid::Document.include ActiveValidation::ModelExtension
 end

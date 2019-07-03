@@ -2,7 +2,7 @@
 
 module ActiveValidation
   module Adapters
-    class NotSupportedError < NotImplementedError
+    class NotSupportedError < RuntimeError
       def to_s
         "method not supported by this ORM adapter"
       end
@@ -14,8 +14,8 @@ module ActiveValidation
         super
       end
 
-      def must_be_here()
-        #TODO remove it after
+      def must_be_here
+        # TODO: remove it after
         raise NotSupportedError
       end
     end

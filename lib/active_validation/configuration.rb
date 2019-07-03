@@ -2,10 +2,8 @@
 
 module ActiveValidation
   class Configuration
-    attr_accessor :foo
+    attr_accessor :orm
 
-    def initialize
-      @foo = "bar"
-    end
+    def initialize; end
   end
 end
