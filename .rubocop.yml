@@ -43,8 +43,6 @@ Metrics/AbcSize:
   Max: 40
 Metrics/CyclomaticComplexity:
   Max: 10
-Rails/HasAndBelongsToMany:
-  Enabled: false
 Style/DoubleNegation:
   Description: 'Checks for uses of double negation (!!).'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-bang-bang'
