@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
-require "rails"
-require "active_support/core_ext/numeric/time"
-require "active_support/dependencies"
-require "active_validation/configuration"
-require "active_validation/adapters"
-require "active_validation/railtie"
+require "set"
+require "active_support/core_ext/string/inflections"
+require "active_support/core_ext/module/delegation"
 
 module ActiveValidation
-  class << self
-    attr_accessor :configuration
-  end
+  autoload :Configuration,             "active_validation/configuration"
+  autoload :ModelExtension,            "active_validation/model_extension"
+  autoload :Orm,                       "active_validation/orm"
 
-  def self.configure
-    self.configuration ||= Configuration.new
-    yield(configuration)
+  require "active_validation/railtie" if defined? Rails
+
+  class << self
+    def configuration
+      @configuration ||= Configuration.new
+      yield(@configuration) if block_given?
+      @configuration
+    end
   end
 end

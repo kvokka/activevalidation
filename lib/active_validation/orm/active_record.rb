@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
-ActiveSupport.on_load(:active_record) do
-  require "active_validation/adapters/active_record"
+module ActiveValidation
+  module Orm
+    class ActiveRecord < Base
+      class << self
+        def base
+          ::ApplicationRecord
+        rescue NameError
+          ::ActiveRecord::Base
+        end
 
-  ActiveValidation.configuration.orm ||= :active_record
-
-  base = defined?(::ApplicationRecord) ? ::ApplicationRecord : ::ActiveRecord::Base
-  base.include(ActiveValidation::ModelExtension)
+        def setup
+          ::ActiveSupport.on_load(:active_record) do
+            ActiveValidation::Orm::ActiveRecord.base.include(ActiveValidation::ModelExtension)
+          end
+        end
+      end
+    end
+  end
 end
