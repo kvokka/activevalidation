@@ -13,9 +13,10 @@ module ActiveValidation
 
   class << self
     def configuration
-      @configuration ||= Configuration.new
+      @configuration ||= Configuration.instance
       yield(@configuration) if block_given?
       @configuration
     end
+    alias config configuration
   end
 end
