@@ -21,3 +21,6 @@ module ActiveValidation
     end
   end
 end
+
+require "active_validation/orm/plugins/active_record"
+require "active_validation/orm/plugins/mongoid"

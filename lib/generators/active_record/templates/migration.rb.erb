@@ -2,12 +2,25 @@
 
 class Create<%= name.camelize %> < ActiveRecord::Migration<%= migration_version %>
   def change
-    create_table :<%= name %><%= primary_key_type %> do |t|
+    create_table :active_validation_manifests<%= create_table_primary_key_type %> do |t|
+      t.string   :active_validation_manifests, :name
+      t.string   :active_validation_manifests, :version
+      t.integer  :active_validation_manifests, :edition, :integer, limit: 8, auto_increment: true
+      t.string   :active_validation_manifests, :model_klass
 
-      t.timestamps null: false
+      t.datetime :created_at, null: false
     end
 
-    add_index :<%= name %>, :email,                unique: true
-    add_index :<%= name %>, :reset_password_token, unique: true
+    add_index :active_validation_model_klass_version, %i[model_klass version]
+
+    create_table :active_validation_checks<%= create_table_primary_key_type %> do |t|
+      t.references :active_validation_manifests<%= references_primary_key_type %>
+      t.string     :active_validation_manifests, :klass_helper
+      t.string     :active_validation_manifests, :field
+      t.json       :active_validation_manifests, :options
+
+      t.datetime :created_at, null: false
+    end
+
   end
 end

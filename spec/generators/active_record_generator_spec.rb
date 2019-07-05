@@ -28,7 +28,8 @@ RSpec.describe ActiveRecord::Generators::ActiveValidationGenerator, type: :gener
               migration("create_active_validations") do
                 contains("class CreateActiveValidations < " + SpecMigrator.migration_superclass)
                 contains "def change"
-                contains "create_table :active_validations"
+                contains "create_table :active_validation_manifests"
+                contains "create_table :active_validation_checks"
               end
             end
           end
@@ -37,7 +38,7 @@ RSpec.describe ActiveRecord::Generators::ActiveValidationGenerator, type: :gener
     end
   end
 
-  describe "with custom table name" do
+  describe "with custom file name" do
     before { run_generator %w[foo] }
 
     it "creates the migration" do
@@ -48,7 +49,8 @@ RSpec.describe ActiveRecord::Generators::ActiveValidationGenerator, type: :gener
               migration("create_foo") do
                 contains("class CreateFoo < " + SpecMigrator.migration_superclass)
                 contains "def change"
-                contains "create_table :foo"
+                contains "create_table :active_validation_manifests"
+                contains "create_table :active_validation_checks"
               end
             end
           end
@@ -68,7 +70,9 @@ RSpec.describe ActiveRecord::Generators::ActiveValidationGenerator, type: :gener
               migration("create_active_validations") do
                 contains("class CreateActiveValidations < " + SpecMigrator.migration_superclass)
                 contains "def change"
-                contains "create_table :active_validations, id: :uuid"
+                contains "create_table :active_validation_manifests, id: :uuid"
+                contains "create_table :active_validation_checks, id: :uuid"
+                contains "t.references :active_validation_manifests, type: :uuid"
               end
             end
           end

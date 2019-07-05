@@ -19,11 +19,20 @@ module ActiveRecord
         "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]" if rails_gt_4?
       end
 
-      def primary_key_type
+      def create_table_primary_key_type
         return nil unless rails_gt_4?
 
-        key_string = options[:primary_key_type]
-        ", id: :#{key_string}" if key_string
+        ", id: :#{primary_key_type}" if primary_key_type
+      end
+
+      def references_primary_key_type
+        return nil unless rails_gt_4?
+
+        ", type: :#{primary_key_type}" if primary_key_type
+      end
+
+      def primary_key_type
+        options[:primary_key_type]
       end
     end
   end

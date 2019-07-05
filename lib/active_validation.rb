@@ -9,7 +9,7 @@ module ActiveValidation
   autoload :ModelExtension,            "active_validation/model_extension"
   autoload :Orm,                       "active_validation/orm"
 
-  require "active_validation/rails/railtie" if defined? Rails
+  require "active_validation/frameworks/rails/railtie" if defined? Rails
 
   class << self
     def configuration

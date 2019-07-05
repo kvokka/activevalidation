@@ -8,7 +8,8 @@ module ActiveRecord
     class ActiveValidationGenerator < ActiveRecord::Generators::Base
       class_option :primary_key_type, type: :string, desc: "The type for primary key", default: :integer
 
-      argument :name, type: :string, default: "active_validations"
+      argument :name, type: :string, default: "active_validations",
+               desc: "Customize file name for the migration"
 
       include ActiveRecord::Generators::ActiveValidationHelpers
       source_root File.expand_path("templates", __dir__)

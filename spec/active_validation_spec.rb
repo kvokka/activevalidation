@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe ActiveValidation do
-  it "just test the test suite, REMOVE IT" do
-    expect(true).to be true
+  it ".config method return actual Configuration" do
+    expect(subject.config).to eq ActiveValidation::Configuration.instance
   end
 end

@@ -6,17 +6,16 @@ module ActiveValidation
   class Configuration
     include Singleton
 
-    attr_reader :orm
+    def orm
+      return @orm if @orm
 
-    def initialize
-      # Variables which affect all threads, whose access is synchronized.
-      @mutex = Mutex.new
-      self.orm = :active_record if defined? ActiveRecord
-      self.orm = :mongoid       if defined? Mongoid
+      @orm = :active_record if defined? ::ActiveRecord
+      @orm = :mongoid       if defined? ::Mongoid
+      @orm
     end
 
     def orm=(other)
-      @mutex.synchronize { @orm = Orm.find! other }
+      @orm = Orm::Finder.call(other)
     end
   end
 end
