@@ -21,8 +21,6 @@ class SpecMigrator
     private
 
     def migration_version_suffix
-      return "" if ::ActiveRecord.gem_version < ::Gem::Version.new("5.0.0")
-
       "[#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}]"
     end
 
