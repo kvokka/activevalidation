@@ -6,6 +6,6 @@ module ActiveValidation
     self.table_name = :active_validation_manifests
 
     has_many :checks
-    accepts_nested_attributes_for :checks
+    accepts_nested_attributes_for :checks, allow_destroy: false
   end
 end

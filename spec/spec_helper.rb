@@ -40,3 +40,8 @@ require "orm/#{ACTIVE_VALIDATION_ORM}"
 
 # Load model for selected ORM
 require "active_validation/frameworks/#{ACTIVE_VALIDATION_ORM}"
+
+# Define Orm agnostic models constants shortcuts
+
+Check    = ActiveValidation::Check
+Manifest = ActiveValidation::Manifest
