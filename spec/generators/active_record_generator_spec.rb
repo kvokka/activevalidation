@@ -72,7 +72,7 @@ RSpec.describe ActiveRecord::Generators::ActiveValidationGenerator, type: :gener
                 contains "def change"
                 contains "create_table :active_validation_manifests, id: :uuid"
                 contains "create_table :active_validation_checks, id: :uuid"
-                contains "t.references :active_validation_manifests, type: :uuid"
+                contains "t.references :manifest, type: :uuid"
               end
             end
           end

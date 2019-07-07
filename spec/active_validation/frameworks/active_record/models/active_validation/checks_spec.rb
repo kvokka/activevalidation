@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+
+return unless ACTIVE_VALIDATION_ORM == :active_record
+
+# require 'pry'
+# binding.pry
+
+RSpec.describe ActiveValidation::Check do
+  it "return empty collection" do
+    expect(described_class.all).to be_empty
+  end
+end

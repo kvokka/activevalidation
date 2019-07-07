@@ -31,5 +31,12 @@ require "pry" if Gem::Specification.detect { |s| s.name == "pry" }
 I18n.load_path << File.expand_path("support/locale/en.yml", __dir__)
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
+
+# load ORM related support modules
 Dir["#{File.dirname(__FILE__)}/support/#{ACTIVE_VALIDATION_ORM}/*.rb"].each { |f| require f }
+
+# Setup ORM for testing
 require "orm/#{ACTIVE_VALIDATION_ORM}"
+
+# Load model for selected ORM
+require "active_validation/frameworks/#{ACTIVE_VALIDATION_ORM}"

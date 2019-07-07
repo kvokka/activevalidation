@@ -27,7 +27,7 @@ class SpecMigrator
     end
 
     def migrations_path
-      @migrations_path ||= Pathname.new(File.expand_path("../rails_app/db/migrate", __dir__))
+      @migrations_path ||= Pathname.new(File.expand_path("../../rails_app/db/migrate", __dir__))
     end
 
     def generate(generator, generator_invoke_args)

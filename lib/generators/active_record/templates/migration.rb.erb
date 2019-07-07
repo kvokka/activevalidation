@@ -2,25 +2,25 @@
 
 class Create<%= name.camelize %> < ActiveRecord::Migration<%= migration_version %>
   def change
-    create_table :active_validation_manifests<%= create_table_primary_key_type %> do |t|
-      t.string   :active_validation_manifests, :name
-      t.string   :active_validation_manifests, :version
-      t.integer  :active_validation_manifests, :edition, :integer, limit: 8, auto_increment: true
-      t.string   :active_validation_manifests, :model_klass
+    create_table :active_validation_manifests, id: :<%= primary_key_type %> do |t|
+      t.string   :name
+      t.string   :version, index: true
+      t.integer  :edition, :integer, auto_increment: true
+      t.string   :model_klass, index: true
 
       t.datetime :created_at, null: false
     end
 
-    add_index :active_validation_model_klass_version, %i[model_klass version]
+  add_index :active_validation_manifests, %i[model_klass version],
+            name: 'index_active_validation_manifest_on_model_klass_version'
 
-    create_table :active_validation_checks<%= create_table_primary_key_type %> do |t|
-      t.references :active_validation_manifests<%= references_primary_key_type %>
-      t.string     :active_validation_manifests, :klass_helper
-      t.string     :active_validation_manifests, :field
-      t.json       :active_validation_manifests, :options
+    create_table :active_validation_checks, id: :<%= primary_key_type %> do |t|
+      t.references :manifest, type: :<%= primary_key_type %>
+      t.string     :klass_helper
+      t.string     :field
+      t.json       :options
 
       t.datetime :created_at, null: false
     end
-
   end
 end
