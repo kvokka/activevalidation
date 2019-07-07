@@ -5,7 +5,7 @@ class CreateActiveValidations < ActiveRecord::Migration[5.2]
     create_table :active_validation_manifests, id: :integer do |t|
       t.string   :name
       t.string   :version, index: true
-      t.integer  :edition, :integer, auto_increment: true
+      t.integer  :edition, auto_increment: true
       t.string   :model_klass, index: true
 
       t.datetime :created_at, null: false
