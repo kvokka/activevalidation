@@ -18,6 +18,9 @@ class CreateActiveValidations < ActiveRecord::Migration[5.2]
       t.references :manifest, type: :integer
       t.string     :klass_helper
       t.string     :field
+      t.string     :validator
+      t.string     :validation_method
+
       t.json       :options
 
       t.datetime :created_at, null: false
