@@ -29,7 +29,8 @@ class SpecMigrator
     end
 
     def generate(generator, generator_invoke_args)
-      sleep_until_the_next_second
+      sleep_until_the_next_second if @second_run_of_generator
+      @second_run_of_generator = true
       Rails::Generators.invoke(generator, generator_invoke_args, destination_root: Rails.root)
     end
 
