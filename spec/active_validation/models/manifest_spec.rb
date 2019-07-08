@@ -19,4 +19,12 @@ RSpec.describe Manifest do
     expect(described_class.count).to eq 1
     expect(Check.count).to eq 3
   end
+
+  context "factories traits" do
+    %i[validate validates validate_with].each do |trait|
+      it "accept Factory trait #{trait} and build corresponding check" do
+        expect(build(:manifest, trait).checks.size).to eq 1
+      end
+    end
+  end
 end
