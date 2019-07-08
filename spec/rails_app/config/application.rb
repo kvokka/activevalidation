@@ -27,7 +27,7 @@ module RailsApp
       loading_app_folders = %w[] # example: ['helpers', 'views']
       p =~ %r{/app/(\w+)$} && !loading_app_folders.include?(Regexp.last_match(1))
     end
-    config.autoload_paths += ["#{config.root}/app/#{ACTIVE_VALIDATION_ORM}"]
+    config.autoload_paths += ["#{config.root}/app/models/#{ACTIVE_VALIDATION_ORM}"]
 
     rails_version = Gem::Version.new(Rails.version)
     if ACTIVE_VALIDATION_ORM == :active_record
