@@ -14,7 +14,7 @@ end
 
 desc "Delete generated files and databases"
 task :clean do
-  ::FileUtils.rm("spec/rails_app/db/database.yml", force: true)
+  ::FileUtils.rm("spec/internal/rails_app/config/database.yml", force: true)
   case ENV["DB"]
   when "mysql"
     %w[test].each do |db|
@@ -25,7 +25,7 @@ task :clean do
       system("dropdb --if-exists active_validation_#{db} > /dev/null 2>&1")
     end
   when nil, "", "sqlite"
-    ::FileUtils.rm(::Dir.glob("spec/rails_app/db/*.sqlite3"))
+    ::FileUtils.rm(::Dir.glob("spec/internal/rails_app/db/*.sqlite3"))
   else
     raise "Don't know how to clean specified RDBMS: #{ENV['DB']}"
   end
@@ -34,8 +34,8 @@ end
 desc "Write a database.yml for the specified RDBMS"
 task prepare: [:clean] do
   ENV["DB"] ||= "sqlite"
-  FileUtils.cp "spec/rails_app/config/database.#{ENV['DB']}.yml",
-               "spec/rails_app/config/database.yml"
+  FileUtils.cp "spec/internal/rails_app/config/database.#{ENV['DB']}.yml",
+               "spec/internal/rails_app/config/database.yml"
   case ENV["DB"]
   when "mysql"
     %w[test].each do |db|

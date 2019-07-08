@@ -21,12 +21,14 @@ class SpecMigrator
     private
 
     def migrations_path
-      @migrations_path ||= Pathname.new(File.expand_path("../../rails_app/db/migrate", __dir__))
+      @migrations_path ||= Pathname.new(File.expand_path("../../internal/active_record/db/migrate", __dir__))
     end
 
     def generate(generator, generator_invoke_args)
       sleep_until_the_next_second if @second_run_of_generator
       @second_run_of_generator = true
+
+      # TODO: remove this dependency!!!
       Rails::Generators.invoke(generator, generator_invoke_args, destination_root: Rails.root)
     end
 

@@ -19,7 +19,10 @@ require "active_validation"
 
 module RailsApp
   class Application < Rails::Application
-    config.autoload_paths += ["#{config.root}/app/models/#{ACTIVE_VALIDATION_ORM}"]
+    config.autoload_paths += [
+      File.expand_path("#{config.root}/../app/models/#{ACTIVE_VALIDATION_ORM}", __dir__),
+      File.expand_path("#{config.root}/../app/validators", __dir__)
+    ]
 
     rails_version = Gem::Version.new(Rails.version)
     if ACTIVE_VALIDATION_ORM == :active_record

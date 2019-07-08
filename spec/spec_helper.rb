@@ -23,22 +23,18 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
-require "rails_app/config/environment"
+require "internal/rails_app/config/environment"
 require "rspec/rails"
+I18n.load_path << File.expand_path("support/locale/en.yml", __dir__)
 
 require "pry" if Gem::Specification.detect { |s| s.name == "pry" }
-
-I18n.load_path << File.expand_path("support/locale/en.yml", __dir__)
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 
 # load ORM related support modules
 Dir["#{File.dirname(__FILE__)}/support/#{ACTIVE_VALIDATION_ORM}/*.rb"].each { |f| require f }
 
-# Setup ORM for testing
-require "orm/#{ACTIVE_VALIDATION_ORM}"
-
-# Load model for selected ORM
+# Load models for selected ORM
 require "active_validation/frameworks/#{ACTIVE_VALIDATION_ORM}"
 
 # Define Orm agnostic models constants shortcuts
