@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateActiveValidations < ActiveRecord::Migration[5.2]
+class CreateActiveValidations < ActiveRecord::Migration[5.0]
   def change
     create_table :active_validation_manifests, id: :integer do |t|
       t.string   :name

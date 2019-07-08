@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+# The simplest way is to stick to minimal version for easy support
+class ActiveRecord::Migration
+  def self.current_version
+    5.0
+  end
+end
+
 RSpec.configure do |config|
   config.before(:suite) do
-    generator_paths = %w[active_record]
-                      .map { |s| "lib/generators/#{s}" }.join(" ")
-    next true if `git ls-files --modified #{generator_paths}`.blank?
-
     destination_root = File.expand_path("../../rails_app", __dir__)
     args = ["--force"]
     [

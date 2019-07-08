@@ -11,10 +11,6 @@ module ActiveRecord
         @migration_path ||= File.join("db", "migrate")
       end
 
-      def migration_version
-        "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
-      end
-
       def primary_key_type
         options[:primary_key_type]
       end

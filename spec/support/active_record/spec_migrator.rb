@@ -15,14 +15,10 @@ class SpecMigrator
     end
 
     def migration_superclass
-      "ActiveRecord::Migration" + migration_version_suffix
+      "ActiveRecord::Migration[#{ActiveRecord::Migration.current_version}]"
     end
 
     private
-
-    def migration_version_suffix
-      "[#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}]"
-    end
 
     def migrations_path
       @migrations_path ||= Pathname.new(File.expand_path("../../rails_app/db/migrate", __dir__))
