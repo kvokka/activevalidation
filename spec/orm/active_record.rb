@@ -8,8 +8,9 @@ ActiveRecord::Migration.verbose = false
 ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.include_root_in_json = true
 
-SpecMigrator.migrate
-
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
+  config.before(:suite) do
+    SpecMigrator.migrate
+  end
 end
