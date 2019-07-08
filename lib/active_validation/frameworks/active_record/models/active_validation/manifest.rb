@@ -2,7 +2,7 @@
 
 module ActiveValidation
   class Manifest < ActiveRecord::Base
-    prepend Orm::UpdateErrors
+    prepend Orm::Errors::Update
     self.table_name = :active_validation_manifests
 
     has_many :checks
