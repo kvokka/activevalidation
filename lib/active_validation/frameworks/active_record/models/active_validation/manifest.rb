@@ -7,5 +7,9 @@ module ActiveValidation
 
     has_many :checks
     accepts_nested_attributes_for :checks, allow_destroy: false
+
+    def model_class
+      model_klass.constantize
+    end
   end
 end

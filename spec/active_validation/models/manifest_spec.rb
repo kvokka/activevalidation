@@ -10,10 +10,10 @@ RSpec.describe Manifest do
   end
 
   it "accepts nested attributes for checks" do
-    described_class.create name: "foo", version: 1, model_klass: "Cat", checks_attributes: [
+    described_class.create name: "foo", version: 1, model_klass: "Fruit", checks_attributes: [
       { type: "ValidatesMethod", argument: :color, options: { presence: true } },
       { type: "ValidateWithMethod", argument: :FooValidator },
-      { type: "ValidateMethod", argument: :bar_method }
+      { type: "ValidateMethod", argument: :foo_allowed }
     ]
 
     expect(described_class.count).to eq 1
