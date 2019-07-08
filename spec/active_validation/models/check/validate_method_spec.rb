@@ -9,12 +9,12 @@ RSpec.describe Check::ValidateMethod do
 
   context "validate the method invocation" do
     it "invokes allowed method" do
-      expect(described_class.new(argument: "foo_allowed")).to be_valid
+      expect(build(:check_validate, argument: "foo_allowed")).to be_valid
     end
 
     it "does not invoke globally restricted method" do
-      manifest = Manifest.create model_klass: "Fruit"
-      expect(described_class.new(argument: "delete", manifest: manifest)).not_to be_valid
+      manifest = build :manifest, model_klass: "Fruit"
+      expect(build(:check_validate, argument: "delete", manifest: manifest)).not_to be_valid
     end
   end
 end

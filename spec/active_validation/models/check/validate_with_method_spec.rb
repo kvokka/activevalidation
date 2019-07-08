@@ -9,17 +9,17 @@ RSpec.describe Check::ValidateWithMethod do
 
   context "simple validator" do
     it "is valid record with correct validator" do
-      expect(Check.new(type: "ValidateWithMethod", argument: "SpoiledValidator")).to be_valid
+      expect(build(:check_validate_with, argument: "SpoiledValidator")).to be_valid
     end
 
     it "is not valid record with incorrect validator" do
-      record = Check.new(type: "ValidateWithMethod", argument: "NotExist")
+      record = build(:check_validate_with, argument: "NotExist")
       expect(record).not_to be_valid
       expect(record.errors[:argument].size).to eq 1
     end
 
     it "is not valid record without validator" do
-      record = Check.new(type: "ValidateWithMethod", argument: "")
+      record = build(:check_validate_with, argument: "")
       expect(record).not_to be_valid
       expect(record.errors[:argument].size).to eq 1
     end
@@ -27,7 +27,7 @@ RSpec.describe Check::ValidateWithMethod do
 
   context "nested validator" do
     it "is valid record with correct validator" do
-      expect(Check.new(type: "ValidateWithMethod", argument: "PoisonedValidator")).to be_valid
+      expect(build(:check_validate_with, argument: "PoisonedValidator")).to be_valid
     end
   end
 end
