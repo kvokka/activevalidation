@@ -11,6 +11,11 @@ class CreateModels < ActiveRecord::Migration[5.0]
       t.string :name
       t.timestamps
     end
+
+    create_table :foos, id: :integer do |t|
+      t.string :name
+      t.timestamps
+    end
   end
 
   def down
