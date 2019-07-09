@@ -3,9 +3,10 @@
 module ActiveValidation
   class Check < ActiveRecord::Base
     sti_autoload_path = "active_validation/frameworks/active_record/models/active_validation/check/"
-    autoload :ValidateMethod,     "#{sti_autoload_path}validate_method"
-    autoload :ValidateWithMethod, "#{sti_autoload_path}validate_with_method"
-    autoload :ValidatesMethod,    "#{sti_autoload_path}validates_method"
+    autoload :MethodMustBeAllowed, "#{sti_autoload_path}concerns/method_must_be_allowed"
+    autoload :ValidateMethod,      "#{sti_autoload_path}validate_method"
+    autoload :ValidateWithMethod,  "#{sti_autoload_path}validate_with_method"
+    autoload :ValidatesMethod,     "#{sti_autoload_path}validates_method"
 
     prepend Orm::Errors::Update
 
