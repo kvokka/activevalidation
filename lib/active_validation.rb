@@ -9,6 +9,7 @@ module ActiveValidation
   autoload :ModelExtension,            "active_validation/model_extension"
   autoload :Orm,                       "active_validation/orm"
   autoload :Registry,                  "active_validation/registry"
+  autoload :Verifier,                  "active_validation/verifier"
 
   require "active_validation/frameworks/rails" if defined? Rails
 

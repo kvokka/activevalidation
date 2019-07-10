@@ -24,5 +24,9 @@ module ActiveValidation
 
       @model_extension_defaults = block
     end
+
+    def verifiers_registry
+      @verifiers_registry ||= Registry.new("Verifiers")
+    end
   end
 end
