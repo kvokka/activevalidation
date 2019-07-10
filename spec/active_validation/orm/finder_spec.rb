@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
-RSpec.describe ActiveValidation::Orm::Finder do
+describe ActiveValidation::Orm::Finder do
   before do
     ActiveValidation::Orm::Base.all.each { |orm_klass| allow(orm_klass).to receive(:setup) }
   end
