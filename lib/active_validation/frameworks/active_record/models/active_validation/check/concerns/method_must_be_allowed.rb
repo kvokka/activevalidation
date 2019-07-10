@@ -31,7 +31,7 @@ module ActiveValidation::Check::Concerns::MethodMustBeAllowed
   def method_must_be_allowed
     verify_options
     verify_argument
-    verify_glogal_argument
+    verify_global_argument
   end
 
   def verify_options
@@ -50,7 +50,7 @@ module ActiveValidation::Check::Concerns::MethodMustBeAllowed
     errors.add :argument, "method #{argument} is globally restricted for usage in validation"
   end
 
-  def verify_glogal_argument
+  def verify_global_argument
     return unless argument && manifest.try(:model_klass)
 
     model_restricted_methods = Array(manifest.model_class.try(:validation_restricted_methods)).map(&:to_sym)
