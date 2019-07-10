@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::Check::ValidateWithMethod do
+describe ActiveValidation::Check::ValidateWithMethod, helpers: %i[only_with_active_record] do
   it "provides the description of the validation class" do
     expect(described_class.argument_description).to match "^Should contain"
   end

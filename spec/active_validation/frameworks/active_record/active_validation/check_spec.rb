@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::Check do
+describe ActiveValidation::Check, helpers: %i[only_with_active_record] do
   it "return empty collection" do
     expect(described_class.all).to be_empty
   end
