@@ -17,5 +17,12 @@ module ActiveValidation
     def orm=(other)
       @orm = Orm::Finder.call(other)
     end
+
+    def verifier_defaults(&block)
+      @model_extension_defaults ||= ->(*) {}
+      return @model_extension_defaults unless block_given?
+
+      @model_extension_defaults = block
+    end
   end
 end
