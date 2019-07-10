@@ -13,14 +13,16 @@ Gem::Specification.new do |spec|
   spec.authors     = ["kvokka"]
   spec.email       = ["kvokka@yahoo.com"]
   spec.homepage    = "https://github.com/kvokka/activevalidation"
-  spec.summary     = "Allow to store ActiveModel validations in ORM for Rails."
-  spec.description = "Allow to store ActiveModel validations in ORM for Rails."
+  spec.summary     = "Allow to store ActiveModel validations in ORM."
+  spec.description = "Allow to store ActiveModel validations in ORM."
   spec.licenses    = ["MIT"]
 
   spec.files         = `git ls-files`.split("\n")
   spec.test_files    = `git ls-files -- test/*`.split("\n")
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.3.0"
+
+  # Minor version requirement adopted from zeitwerk gem
+  spec.required_ruby_version = ">= 2.4.4"
 
   spec.add_dependency("activemodel",   ">= 5.0.0", "< 6.0")
   spec.add_dependency("activesupport", ">= 5.0.0", "< 6.0")
@@ -28,9 +30,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "activerecord", ">= 4.2.0", "< 6.0"
   spec.add_development_dependency "bundler", "~> 1.17"
-  spec.add_development_dependency "factory_bot_rails", "~> 5.0.0"
-  spec.add_development_dependency "generator_spec", "~> 0.9.4"
-  spec.add_development_dependency "rspec-rails", "~> 3.8"
+  spec.add_development_dependency "factory_bot", "~> 5.0.0"
+  spec.add_development_dependency "rspec", "~> 3.8"
   spec.add_development_dependency "simplecov", "~> 0.16"
   spec.add_development_dependency "sqlite3", "~> 1.3.13"
 end

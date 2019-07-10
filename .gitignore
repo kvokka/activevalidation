@@ -30,11 +30,5 @@ node_modules/
 passenger.*
 pkg
 rdoc/*
-spec/internal/rails_app/config/database.yml
-spec/internal/rails_app/db/*.sqlite3
-spec/internal/rails_app/*.sqlite3
-spec/internal/rails_app/db/schema.rb
-spec/internal/rails_app/log/*
-spec/internal/rails_app/tmp/*
 tmp/
 yarn-error.log

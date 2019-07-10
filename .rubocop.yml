@@ -61,7 +61,7 @@ Style/SingleLineMethods:
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
 
 require: rubocop-rspec
 RSpec/MultipleExpectations:

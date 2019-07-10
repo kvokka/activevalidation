@@ -5,12 +5,3 @@
 # one by one as the offenses are removed from the code base.
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
-
-# Offense count: 2
-# Configuration parameters: CustomTransform, IgnoreMethods.
-RSpec/FilePath:
-  Exclude:
-    - 'spec/active_validation/frameworks/active_record/models/check_spec.rb'
-    - 'spec/active_validation/frameworks/active_record/models/manifest_spec.rb'
-    - 'spec/active_validation/models/check_spec.rb'
-    - 'spec/active_validation/models/manifest_spec.rb'

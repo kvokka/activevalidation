@@ -9,8 +9,8 @@ module ActiveValidation
     def orm
       return @orm if @orm
 
-      @orm = :active_record if defined? ::ActiveRecord
-      @orm = :mongoid       if defined? ::Mongoid
+      @orm = "active_record" if defined? ::ActiveRecord
+      @orm = "mongoid"       if defined? ::Mongoid
       @orm
     end
 

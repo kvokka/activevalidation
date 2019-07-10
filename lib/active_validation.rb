@@ -11,8 +11,6 @@ loader.push_dir "lib/active_validation/frameworks/active_record/models"
 loader.setup
 
 module ActiveValidation
-  require "active_validation/frameworks/rails" if defined? Rails
-
   class << self
     def configuration
       @configuration ||= Configuration.instance

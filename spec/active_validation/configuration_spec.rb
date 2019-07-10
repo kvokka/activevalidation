@@ -2,7 +2,7 @@
 
 describe ActiveValidation::Configuration do
   it "setups proper default adapter" do
-    expect(ActiveValidation.configuration.orm.to_sym).to eq ACTIVE_VALIDATION_ORM
+    expect(ActiveValidation.configuration.orm).to eq ENV["ACTIVE_VALIDATION_ORM"]
   end
 
   context "verifier_defaults" do

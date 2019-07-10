@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Verifier do
-  subject { described_class.new(Foo) { |k| k.instance_variable_set :@bar, :setted } }
+  subject do
+    described_class.new(model) { |k| k.instance_variable_set :@bar, :setted }
+  end
+
+  let(:model) { define_model "Foo" }
 
   context "simple examples" do
     it "setups base klass" do
-      expect(subject.base_klass).to eq Foo
+      expect(subject.base_klass).to eq model
     end
 
     it "yield provided block" do
@@ -27,7 +31,7 @@ describe ActiveValidation::Verifier do
 
     it "add self to minifests registry" do
       subject
-      expect(ActiveValidation.config.verifiers_registry.find(Foo)).to eq subject
+      expect(ActiveValidation.config.verifiers_registry.find(model)).to eq subject
     end
   end
 end
