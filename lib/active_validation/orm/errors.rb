@@ -9,7 +9,7 @@ module ActiveValidation
         end
       end
 
-      class NotImplemented
+      class NotImplemented < StandardError
         def initialize(msg = "This method should be implemented in sub-class")
           super
         end
