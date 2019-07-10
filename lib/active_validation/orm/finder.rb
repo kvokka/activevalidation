@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "active_validation/orm/base"
-
 module ActiveValidation
   module Orm
     module Finder

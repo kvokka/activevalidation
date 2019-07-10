@@ -3,7 +3,7 @@
 module ActiveValidation
   class Check < ActiveRecord::Base
     class ValidatesMethod < Check
-      include MethodMustBeAllowed
+      include Concerns::MethodMustBeAllowed
 
       class << self
         def argument_description

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveValidation::Check::MethodMustBeAllowed
+module ActiveValidation::Check::Concerns::MethodMustBeAllowed
   extend ActiveSupport::Concern
 
   included do

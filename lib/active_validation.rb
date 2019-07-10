@@ -3,14 +3,14 @@
 require "set"
 require "active_support/core_ext/string/inflections"
 require "active_support/core_ext/module/delegation"
+require "active_support/core_ext/hash/indifferent_access"
+require "zeitwerk"
+
+loader = Zeitwerk::Loader.for_gem
+loader.push_dir "lib/active_validation/frameworks/active_record/models"
+loader.setup
 
 module ActiveValidation
-  autoload :Configuration,             "active_validation/configuration"
-  autoload :ModelExtension,            "active_validation/model_extension"
-  autoload :Orm,                       "active_validation/orm"
-  autoload :Registry,                  "active_validation/registry"
-  autoload :Verifier,                  "active_validation/verifier"
-
   require "active_validation/frameworks/rails" if defined? Rails
 
   class << self
