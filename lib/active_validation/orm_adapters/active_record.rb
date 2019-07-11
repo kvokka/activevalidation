@@ -7,14 +7,12 @@ module ActiveValidation
         def setup
           return initialised if initialised
 
-          if defined? ::ActiveRecord::Base
+          installator = lambda do
             ::ActiveRecord::Base.include ActiveValidation::ModelExtension
-          else
-            ::ActiveSupport.on_load(:active_record) do
-              ::ActiveRecord::Base.include(ActiveValidation::ModelExtension)
-            end
+            require "active_validation/frameworks/active_record"
           end
 
+          defined?(::ActiveRecord::Base) ? installator.call : ::ActiveSupport.on_load(:active_record, &installator)
           self.initialised = true
         end
 

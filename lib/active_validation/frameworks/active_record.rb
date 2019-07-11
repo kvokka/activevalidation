@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-require "active_validation/frameworks/active_record/models/active_validation/manifest"
-require "active_validation/frameworks/active_record/models/active_validation/check"
+loader = Zeitwerk::Loader.new
+loader.push_dir "#{__dir__}/active_record/models"
+loader.setup
+loader.eager_load
