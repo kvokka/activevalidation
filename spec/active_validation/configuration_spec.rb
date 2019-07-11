@@ -27,7 +27,7 @@ describe ActiveValidation::Configuration do
 
       it "setup correctly loaded adapter" do
         config.orm_adapter = "fake"
-        expect(config.orm_adapter.to_s).to eq "fake"
+        expect(config.orm_adapter.to_s).to eq "fake_plugin"
       end
     end
 

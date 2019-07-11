@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-ENV["ACTIVE_VALIDATION_ORM"] ||= "active_record"
+ENV["ORM"] = "active_record"
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
-puts "\n==> ACTIVE_VALIDATION_ORM = #{ENV['ACTIVE_VALIDATION_ORM'].inspect}"
+puts "\n==> ORM = #{ENV['ORM'].inspect}"
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_results"
@@ -28,8 +28,8 @@ require "pry"
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 
 # load ORM related support modules
-require_relative "support/orm/#{ENV['ACTIVE_VALIDATION_ORM']}/setup"
+require_relative "support/orm/#{ENV['ORM']}/setup"
 
 # Load models for selected ORM
 
-ActiveValidation.config.orm_adapter = ENV["ACTIVE_VALIDATION_ORM"]
+ActiveValidation.config.orm_adapter = ENV["ORM"]

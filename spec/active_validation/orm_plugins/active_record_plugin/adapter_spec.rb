@@ -5,7 +5,7 @@ describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter do
     subject { ActiveValidation.config }
 
     it "is in the registry" do
-      expect(subject.orm_adapters_registry).to be_registered(:active_record)
+      expect(subject.orm_adapters_registry).to be_registered(:active_record_plugin)
     end
   end
 

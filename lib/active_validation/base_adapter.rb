@@ -31,11 +31,8 @@ module ActiveValidation
       end
 
       def plugin_name
-        regex = /Plugin\z/
-        klass_name = name.split("::").detect { |c| c =~ regex }
-        return "base" unless klass_name
-
-        klass_name.sub(regex, "").underscore
+        klass_name = name.split("::").detect { |c| c =~ /Plugin\z/ }
+        klass_name ? klass_name.underscore : "base"
       end
 
       def to_s
