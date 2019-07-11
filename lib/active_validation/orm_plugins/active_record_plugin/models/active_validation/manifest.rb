@@ -2,7 +2,7 @@
 
 module ActiveValidation
   class Manifest < ActiveRecord::Base
-    prepend OrmAdapters::ActiveRecord::ProtectFromMutableInstanceMethods
+    prepend ActiveValidation::Concerns::ProtectFromMutableInstanceMethods
 
     self.table_name = :active_validation_manifests
 

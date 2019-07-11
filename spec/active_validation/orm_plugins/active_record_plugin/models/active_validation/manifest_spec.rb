@@ -3,7 +3,7 @@
 describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
   %i[update update_attribute update_attributes].each do |method|
     it "should raise on #{method}" do
-      expect { subject.send(method) }.to raise_error ActiveValidation::OrmAdapters::Errors::ImmutableError
+      expect { subject.send(method) }.to raise_error ActiveValidation::Errors::ImmutableError
     end
   end
 

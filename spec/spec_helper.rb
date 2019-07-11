@@ -23,6 +23,7 @@ end
 
 require "active_validation"
 require "active_support/concern"
+require "pry"
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 
@@ -30,4 +31,5 @@ Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 require_relative "support/orm/#{ENV['ACTIVE_VALIDATION_ORM']}/setup"
 
 # Load models for selected ORM
-require "active_validation/frameworks/#{ENV['ACTIVE_VALIDATION_ORM']}"
+
+ActiveValidation.config.orm_adapter = ENV["ACTIVE_VALIDATION_ORM"]

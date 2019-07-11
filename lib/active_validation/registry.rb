@@ -35,6 +35,10 @@ module ActiveValidation
       @items.key?(name)
     end
 
+    def delete(name)
+      @items.delete name
+    end
+
     private
 
     def key_error_with_custom_message(key_error)

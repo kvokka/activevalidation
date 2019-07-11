@@ -7,7 +7,7 @@ require "active_support/core_ext/hash/indifferent_access"
 require "zeitwerk"
 
 loader = Zeitwerk::Loader.for_gem
-loader.ignore "lib/active_validation/frameworks"
+loader.ignore "#{__dir__}/active_validation/orm_plugins"
 loader.setup
 
 module ActiveValidation

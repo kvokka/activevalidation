@@ -9,23 +9,32 @@ module ActiveValidation
       @orm_adapters_registry = Registry.new("Orm adapters")
     end
 
-    def orm
-      return @orm if @orm
+    attr_reader :orm_adapter
 
-      @orm = "active_record" if defined? ::ActiveRecord
-      @orm = "mongoid"       if defined? ::Mongoid
-      @orm
-    end
+    def orm_adapter=(name, retry_attempt: 0)
+      retry_attempt += 1
+      @orm_adapter = case name
+                     when BaseAdapter
+                       name
+                     when Class
+                       name.new
+                     when String, Symbol
+                       "ActiveValidation::OrmPlugins::#{name.to_s.classify}Plugin::Adapter".constantize.new
+                     else
+                       raise ArgumentError "ORM plugin not found"
+                     end
+    rescue NameError
+      raise if retry_attempt > 1
 
-    def orm=(other)
-      @orm = Orm::Finder.call(other)
+      require_relative "orm_plugins/#{name}_plugin/adapter"
+      retry
     end
 
     def verifier_defaults(&block)
-      @model_extension_defaults ||= ->(*) {}
-      return @model_extension_defaults unless block_given?
+      @verifier_defaults ||= ->(*) {}
+      return @verifier_defaults unless block_given?
 
-      @model_extension_defaults = block
+      @verifier_defaults = block
     end
   end
 end

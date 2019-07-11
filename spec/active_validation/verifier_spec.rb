@@ -22,6 +22,7 @@ describe ActiveValidation::Verifier do
       backup = ActiveValidation.config.verifier_defaults
       example.call
       ActiveValidation.config.verifier_defaults(&backup)
+      ActiveValidation.config.verifiers_registry.clear
     end
 
     it "setups defaults from configuration" do

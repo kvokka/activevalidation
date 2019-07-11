@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::OrmAdapters::ActiveRecord do
+describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter do
   context "global configuration" do
     subject { ActiveValidation.config }
 
@@ -20,7 +20,8 @@ describe ActiveValidation::OrmAdapters::ActiveRecord do
 
     it "is initialised after setup" do
       described_class.initialised = false
-      expect(subject.setup.class.initialised).to be_truthy
+      described_class.new
+      expect(described_class.initialised).to be_truthy
     end
   end
 end

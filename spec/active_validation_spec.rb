@@ -8,7 +8,7 @@ RSpec.describe ActiveValidation do
   end
 
   it "setups proper default adapter" do
-    expect(subject.configuration.orm).to eq ENV["ACTIVE_VALIDATION_ORM"]
+    expect(subject.configuration.orm_adapter.to_s).to eq ENV["ACTIVE_VALIDATION_ORM"]
   end
 
   context "verifier_defaults" do

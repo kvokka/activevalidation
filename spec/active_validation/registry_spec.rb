@@ -58,4 +58,11 @@ describe ActiveValidation::Registry do
     subject.clear
     expect(subject.count).to be_zero
   end
+
+  it "delete selected object" do
+    subject.register(:first_object, registered_object)
+    subject.register(:second_object, second_registered_object)
+    subject.delete :first_object
+    expect(subject.to_a).to eq [second_registered_object]
+  end
 end
