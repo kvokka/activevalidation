@@ -2,7 +2,8 @@
 
 module ActiveValidation
   class Manifest < ActiveRecord::Base
-    prepend Orm::Errors::Update
+    prepend OrmAdapters::ActiveRecord::ProtectFromMutableInstanceMethods
+
     self.table_name = :active_validation_manifests
 
     has_many :checks

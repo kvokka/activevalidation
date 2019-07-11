@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require "singleton"
-
 module ActiveValidation
   class Configuration
-    include Singleton
+    attr_reader :verifiers_registry, :orm_adapters_registry
+
+    def initialize
+      @verifiers_registry    = Registry.new("Verifiers")
+      @orm_adapters_registry = Registry.new("Orm adapters")
+    end
 
     def orm
       return @orm if @orm
@@ -23,10 +26,6 @@ module ActiveValidation
       return @model_extension_defaults unless block_given?
 
       @model_extension_defaults = block
-    end
-
-    def verifiers_registry
-      @verifiers_registry ||= Registry.new("Verifiers")
     end
   end
 end

@@ -13,7 +13,7 @@ loader.setup
 module ActiveValidation
   class << self
     def configuration
-      @configuration ||= Configuration.instance
+      @configuration ||= Configuration.new
       yield(@configuration) if block_given?
       @configuration
     end

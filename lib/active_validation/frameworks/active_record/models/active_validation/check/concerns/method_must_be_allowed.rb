@@ -9,20 +9,8 @@ module ActiveValidation::Check::Concerns::MethodMustBeAllowed
 
   module ClassMethods
     # list of restricted methods in the checking instance
-    def validation_restricted_methods
-      %i[
-        delete
-        destroy
-        destroy_all
-        touch
-        update
-        update!
-        update_all
-        update_attribute
-        update_attributes
-        update_column
-        update_columns
-      ]
+    def restricted_instance_methods
+      ActiveValidation::OrmAdapters::ActiveRecord.restricted_instance_methods.dup
     end
   end
 
@@ -38,22 +26,22 @@ module ActiveValidation::Check::Concerns::MethodMustBeAllowed
     return unless options
 
     danger_values = options.slice([:if, :unless, "if", "unless"]).values
-    return if (danger_values & self.class.validation_restricted_methods).empty?
+    return if (danger_values & self.class.restricted_instance_methods).empty?
 
     errors.add :options, "Options contain dangerous checks"
   end
 
-  def verify_argument
+  def verify_global_argument
     return unless argument && manifest.try(:model_klass)
-    return unless self.class.validation_restricted_methods.include?(argument.to_sym)
+    return unless self.class.restricted_instance_methods.include?(argument.to_sym)
 
     errors.add :argument, "method #{argument} is globally restricted for usage in validation"
   end
 
-  def verify_global_argument
+  def verify_argument
     return unless argument && manifest.try(:model_klass)
 
-    model_restricted_methods = Array(manifest.model_class.try(:validation_restricted_methods)).map(&:to_sym)
+    model_restricted_methods = Array(manifest.model_class.try(:restricted_instance_methods)).map(&:to_sym)
     return unless model_restricted_methods.include?(argument.to_sym)
 
     errors.add :argument, "method #{argument} is restricted for usage in validation"

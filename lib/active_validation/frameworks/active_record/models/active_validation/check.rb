@@ -2,7 +2,7 @@
 
 module ActiveValidation
   class Check < ActiveRecord::Base
-    prepend Orm::Errors::Update
+    prepend OrmAdapters::ActiveRecord::ProtectFromMutableInstanceMethods
 
     self.table_name = :active_validation_checks
     self.store_full_sti_class = false
@@ -13,7 +13,7 @@ module ActiveValidation
 
     class << self
       def argument_description
-        raise Orm::Errors::NotImplemented
+        raise NotImplementedError, "abstract"
       end
     end
   end
