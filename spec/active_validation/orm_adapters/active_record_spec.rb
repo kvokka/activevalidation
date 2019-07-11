@@ -14,8 +14,8 @@ describe ActiveValidation::OrmAdapters::ActiveRecord do
       expect(described_class.abstract).to be_falsey
     end
 
-    it "should not contain '(abstract)' suffix" do
-      expect(described_class.to_s).not_to match %r[\(abstract\)\z]
+    it "does not contain '(abstract)' suffix" do
+      expect(described_class.to_s).not_to match(/\(abstract\)\z/)
     end
 
     it "is initialised after setup" do

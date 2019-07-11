@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ActiveValidation::OrmAdapters::Base do
   context "global configuration" do
     subject { ActiveValidation.config }
@@ -7,7 +9,7 @@ describe ActiveValidation::OrmAdapters::Base do
     end
   end
 
-  it "should contain '(abstract)' suffix" do
-    expect(described_class.to_s).to match %r[\(abstract\)\z]
+  it "contains '(abstract)' suffix" do
+    expect(described_class.to_s).to match(/\(abstract\)\z/)
   end
 end
