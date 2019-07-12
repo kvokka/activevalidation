@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Verifier do
-  subject do
-    described_class.new(model) { |k| k.instance_variable_set :@bar, :setted }
-  end
-
   let(:model) { define_model "Foo" }
+  let(:registry) { described_class.registry }
 
   context "simple examples" do
+    subject do
+      described_class.new(model) { |k| k.instance_variable_set :@bar, :setted }
+    end
+
     it "setups base klass" do
       expect(subject.base_klass).to eq model
     end
@@ -22,11 +23,13 @@ describe ActiveValidation::Verifier do
   end
 
   context "with restored configuration" do
+    subject { described_class.new(model) }
+
     around do |example|
       backup = ActiveValidation.config.verifier_defaults
       example.call
       ActiveValidation.config.verifier_defaults(&backup)
-      ActiveValidation.config.verifiers_registry.clear
+      registry.clear
     end
 
     it "setups defaults from configuration" do
@@ -36,7 +39,73 @@ describe ActiveValidation::Verifier do
 
     it "add self to manifests registry" do
       subject
-      expect(ActiveValidation.config.verifiers_registry.find(model)).to eq subject
+      expect(registry.find(model)).to eq subject
+    end
+  end
+
+  context "::registry" do
+    it "return the global registry for verifier" do
+      expect(registry).to eq ActiveValidation.config.verifiers_registry
+    end
+  end
+
+  context "::find_or_build" do
+    before do
+      define_class "#{model.name}::Validations"
+      define_class "#{model.name}::Validations::V300"
+      define_class "#{model.name}::Validations::V301"
+    end
+
+    it "build new instance if it was not declared" do
+      expect(registry).not_to be_registered(model)
+      described_class.find_or_build(model)
+      expect(registry).to be_registered(model)
+    end
+
+    it "execute the block after build for new verifier" do
+      expect(registry).not_to be_registered(model)
+      described_class.find_or_build(model) { |v| v.api_version = :V300 }
+      expect(registry.find(model).api_version).to eq :V300
+    end
+
+    it "execute the block after build for existed verifier" do
+      expect(registry).not_to be_registered(model)
+      described_class.new(model) { |v| v.api_version = :V300 }
+      described_class.find_or_build(model) { |v| v.api_version = :V301 }
+      expect(registry.find(model).api_version).to eq :V301
+    end
+  end
+
+  context "#api_version" do
+    subject { described_class.new(model) }
+
+    before  do
+      define_class "#{model.name}::Validations"
+      define_class "#{model.name}::Validations::V300"
+    end
+
+    it "set/gets api_version" do
+      subject.api_version = :V300
+      expect(subject.api_version).to eq :V300
+    end
+  end
+
+  context "#api_versions" do
+    before do
+      define_class "Bar" do
+        include ActiveValidation::ModelExtension
+        active_validation
+      end
+
+      define_class "Bar::Validations"
+      define_class "Bar::Validations::V1"
+      define_class "Bar::Validations::V2"
+      define_class "Bar::Validations::V23"
+      define_class "Bar::Validations::V42"
+    end
+
+    it "returns correct versions in asc order" do
+      expect(described_class.find_or_build(Bar).api_versions).to eq %i[V1 V2 V23 V42]
     end
   end
 end

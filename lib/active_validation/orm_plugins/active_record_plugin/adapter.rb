@@ -6,8 +6,14 @@ module ActiveValidation
       class Adapter < ActiveValidation::BaseAdapter
         loading_path << "models"
 
+        # Name of the folder, where all validations method should be scoped.
+        # Inside, in corresponding sub-folder with version name shall be
+        # stored validation related methods
+        attr_accessor :validations_module_name
+
         def initialize
           setup unless self.class.initialised
+          self.validations_module_name = "Validations"
         end
 
         # @return [void]
@@ -30,6 +36,15 @@ module ActiveValidation
             ::ActiveSupport.on_load(:active_record_adapter, &installator)
           end
           self.class.initialised = true
+        end
+
+        # @param [Verifier]
+        # @return [Array<Symbol>] Sorted list of constants prefixed with 'V'
+        def api_versions(verifier)
+          klass = verifier.base_klass.const_get validations_module_name
+          klass.constants.select { |c| c.to_s =~ /\AV/ }.sort
+        rescue NameError
+          []
         end
       end
     end

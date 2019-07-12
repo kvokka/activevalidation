@@ -7,7 +7,7 @@ module ActiveValidation
 
     module ClassMethods
       def active_validation
-        ::ActiveValidation::Verifier.new self
+        ::ActiveValidation::Verifier.find_or_build self
       end
     end
   end
