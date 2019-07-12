@@ -15,6 +15,10 @@ describe ActiveValidation::Verifier do
     it "yield provided block" do
       expect(subject.instance_variable_get(:@bar)).to eq :setted
     end
+
+    it "includes current ORM adapter my default" do
+      expect(subject.orm_adapter.adapter_name).to eq ENV["ORM"]
+    end
   end
 
   context "with restored configuration" do

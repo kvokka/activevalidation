@@ -35,12 +35,16 @@ module ActiveValidation
         klass_name ? klass_name.underscore : "base"
       end
 
+      def adapter_name
+        plugin_name.sub(/_plugin\z/, "")
+      end
+
       def to_s
         abstract ? "#{plugin_name} (abstract)" : plugin_name
       end
     end
 
-    delegate :to_s, to: :class
+    delegate :to_s, :plugin_name, :adapter_name, to: :class
 
     # @abstract
     # should setup self.class.initialised to true after loading all dependencies

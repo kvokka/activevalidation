@@ -13,6 +13,10 @@ describe ActiveValidation::BaseAdapter do
     expect(described_class.plugin_name).to eq "base"
   end
 
+  it "has 'base' adapter name" do
+    expect(described_class.adapter_name).to eq "base"
+  end
+
   it "contains '(abstract)' suffix" do
     expect(described_class.to_s).to match(/\(abstract\)\z/)
   end

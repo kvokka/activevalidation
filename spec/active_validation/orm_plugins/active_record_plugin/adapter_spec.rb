@@ -23,5 +23,13 @@ describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter do
       described_class.new
       expect(described_class.initialised).to be_truthy
     end
+
+    it "has right plugin name" do
+      expect(described_class.plugin_name).to eq "active_record_plugin"
+    end
+
+    it "has right adapter name" do
+      expect(described_class.adapter_name).to eq "active_record"
+    end
   end
 end
