@@ -31,7 +31,7 @@ module ActiveValidation
     end
 
     def verifier_defaults(&block)
-      @verifier_defaults ||= ->(*) {}
+      @verifier_defaults ||= ->(_config) {}
       return @verifier_defaults unless block_given?
 
       @verifier_defaults = block
