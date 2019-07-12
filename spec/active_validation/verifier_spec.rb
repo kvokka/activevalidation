@@ -34,7 +34,7 @@ describe ActiveValidation::Verifier do
       expect(subject.instance_variable_get(:@test)).to eq :passed
     end
 
-    it "add self to minifests registry" do
+    it "add self to manifests registry" do
       subject
       expect(ActiveValidation.config.verifiers_registry.find(model)).to eq subject
     end
