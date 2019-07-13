@@ -23,12 +23,12 @@ describe ActiveValidation::Values::Base do
     it("sort") { expect(subject.sort.map(&:to_s)).to eq %w[1 3 5 7 9] }
   end
 
-  context '==' do
+  context "==" do
     let(:version1) { described_class.new 1 }
     let(:another_version1) { described_class.new 1 }
 
-    it('should be equal'){ expect(version1).to eq another_version1 }
-    it('should not be equal'){ expect(version1).not_to eq subject }
+    it("is equal") { expect(version1).to eq another_version1 }
+    it("is not equal") { expect(version1).not_to eq subject }
   end
 
   context "to_s" do

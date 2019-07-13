@@ -3,12 +3,13 @@
 module ActiveValidation
   module Values
     class Base
-      BAD_VALUES = [nil, true, false]
+      BAD_VALUES = [nil, true, false].freeze
 
       attr_reader :value
 
       def initialize(value)
         raise ArgumentError, "Value of #{self.class} can not be #{value.inspect}" if BAD_VALUES.include? value
+
         @value = value.freeze
       end
 

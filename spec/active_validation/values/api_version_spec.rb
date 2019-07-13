@@ -20,9 +20,9 @@ describe ActiveValidation::Values::ApiVersion do
 
     it("set the value from integer") { expect(described_class.new(42).value).to eq 42 }
 
-    context 'to_i' do
-      it("string to integer") { expect(described_class.new('42').to_i).to eq 42 }
-      it("symbol to integer") { expect(described_class.new('V42').to_i).to eq 42 }
+    context "to_i" do
+      it("string to integer") { expect(described_class.new("42").to_i).to eq 42 }
+      it("symbol to integer") { expect(described_class.new("V42").to_i).to eq 42 }
     end
   end
 end

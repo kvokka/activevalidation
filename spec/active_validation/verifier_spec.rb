@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Verifier do
-  let(:model) { define_model "Foo" }
+  let(:model) { define_class "Foo" }
   let(:registry) { described_class.registry }
 
   context "simple examples" do
@@ -86,7 +86,7 @@ describe ActiveValidation::Verifier do
       define_class "#{model.name}::Validations::V302"
     end
 
-    it 'use latest version by default' do
+    it "use latest version by default" do
       expect(subject.api_version).to eq ActiveValidation::Values::ApiVersion.new(302)
     end
 
