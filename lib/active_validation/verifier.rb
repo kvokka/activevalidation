@@ -27,22 +27,24 @@ module ActiveValidation
     # @note Orm adapter for exactly this verifier instance
     attr_accessor :orm_adapter
 
-    # @note Api version manual lock
-    attr_reader :api_version
-
     def initialize(base_klass)
       ActiveValidation.config.verifier_defaults.call self
       @base_klass = base_klass
       @orm_adapter ||= ActiveValidation.config.orm_adapter
-      @api_version = api_versions.last
 
       yield self if block_given?
       self.class.registry.register base_klass, self
     end
 
+    # @note Api version manual lock
+    def api_version
+      @api_version ||= api_versions.last
+    end
+
     def api_version=(other)
-      api_versions.include?(other) or raise ArgumentError, "Api version #{other} not found"
-      @api_version = other
+      other_value = ActiveValidation::Values::ApiVersion.new(other)
+      api_versions.include?(other_value) or raise ArgumentError, "Api version #{other} not found"
+      @api_version = other_value
     end
 
     def api_versions

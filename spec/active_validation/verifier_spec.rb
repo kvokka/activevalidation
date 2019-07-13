@@ -65,14 +65,14 @@ describe ActiveValidation::Verifier do
     it "execute the block after build for new verifier" do
       expect(registry).not_to be_registered(model)
       described_class.find_or_build(model) { |v| v.api_version = :V300 }
-      expect(registry.find(model).api_version).to eq :V300
+      expect(registry.find(model).api_version).to eq ActiveValidation::Values::ApiVersion.new(300)
     end
 
     it "execute the block after build for existed verifier" do
       expect(registry).not_to be_registered(model)
       described_class.new(model) { |v| v.api_version = :V300 }
       described_class.find_or_build(model) { |v| v.api_version = :V301 }
-      expect(registry.find(model).api_version).to eq :V301
+      expect(registry.find(model).api_version).to eq ActiveValidation::Values::ApiVersion.new(301)
     end
   end
 
@@ -82,11 +82,17 @@ describe ActiveValidation::Verifier do
     before  do
       define_class "#{model.name}::Validations"
       define_class "#{model.name}::Validations::V300"
+      define_class "#{model.name}::Validations::V301"
+      define_class "#{model.name}::Validations::V302"
+    end
+
+    it 'use latest version by default' do
+      expect(subject.api_version).to eq ActiveValidation::Values::ApiVersion.new(302)
     end
 
     it "set/gets api_version" do
       subject.api_version = :V300
-      expect(subject.api_version).to eq :V300
+      expect(subject.api_version).to eq ActiveValidation::Values::ApiVersion.new(300)
     end
   end
 
@@ -105,7 +111,7 @@ describe ActiveValidation::Verifier do
     end
 
     it "returns correct versions in asc order" do
-      expect(described_class.find_or_build(Bar).api_versions).to eq %i[V1 V2 V23 V42]
+      expect(described_class.find_or_build(Bar).api_versions.map(&:to_i)).to eq [1, 2, 23, 42]
     end
   end
 end
