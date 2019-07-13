@@ -40,7 +40,7 @@ module ActiveValidation
         end
 
         # @param [Verifier]
-        # @return [Array<Symbol>] Sorted list of constants prefixed with 'V'
+        # @return [Array<Value::Version>] Sorted list of versions.
         def versions(verifier)
           verifier.base_klass.const_get(validations_module_name)
                   .constants.map { |k| ActiveValidation::Values::Version.new(k) }.sort

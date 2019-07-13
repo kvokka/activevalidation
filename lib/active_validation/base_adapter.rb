@@ -53,5 +53,32 @@ module ActiveValidation
     def setup
       raise NotImplementedError, "abstract"
     end
+
+    # @abstract
+    # @param [Hash] Full description of the manifest
+    # @option manifest_hash [String] :name Human readable name, by default build with selected
+    #         formatter for current manifest
+    # @option manifest_hash [String, Class] :base_klass (base_klass) Base klass for the Manifest
+    # @option manifest_hash [String, Symbol, Integer, Values::Version] :version (:current) Version
+    #         of the current manifest
+    #
+    # @example Add new manifest:
+    #     add_manifest({  name: 'Cool Manifest',
+    #        version: 42,
+    #        base_klass: 'Bar',
+    #        checks_attributes: [
+    #     { type: "ValidatesMethod", argument: "some_column", options: { presence: true } }
+    #     ]}) # => Hash
+    def add_manifest(**_manifest_hash)
+      raise NotImplementedError, "abstract"
+    end
+
+    # @abstract
+    # Return all initialized versions for current verifier
+    # @param [Verifier]
+    # @return [Array<Values::Version>]
+    def versions(_verifier)
+      raise NotImplementedError, "abstract"
+    end
   end
 end
