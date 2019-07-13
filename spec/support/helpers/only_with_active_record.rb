@@ -9,3 +9,7 @@ module OnlyWithActiveRecord
     end
   end
 end
+
+RSpec.configure do |config|
+  config.include OnlyWithActiveRecord, helpers: :only_with_active_record
+end
