@@ -110,7 +110,7 @@ describe ActiveValidation::Verifier do
     end
   end
 
-  context "#add_manifest" do
+  context "Manifest" do
     subject { described_class.find_or_build(bar) }
 
     let(:bar) { define_const("Bar", superclass: ActiveRecord::Base) { active_validation } }
@@ -120,13 +120,24 @@ describe ActiveValidation::Verifier do
       define_const "Bar::Validations::V1"
     end
 
-    it "raises no error" do
-      checks = [{ type: "ValidatesMethod", argument: "some_column", options: { presence: true } }]
-      expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
+    context "#add_manifest" do
+      it "raises no error" do
+        checks = [{ type: "ValidatesMethod", argument: "some_column", options: { presence: true } }]
+        expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
+        expect(subject.find_manifest(base_klass: :Bar)).to be_a ActiveValidation::Manifest
+      end
+    end
 
-      # remove it after!
-      expect(ActiveValidation::Manifest.count).to eq 1
-      expect(ActiveValidation::Check.count).to eq 1
+    context "#find_manifest" do
+      let!(:manifest) { create :manifest, base_klass: bar, version: 1 }
+
+      it "find existed Manifest" do
+        expect(subject.find_manifest(base_klass: "Bar")).to eq manifest
+      end
+
+      it "returns version value object" do
+        expect(subject.find_manifest(base_klass: "Bar").version).to be_a ActiveValidation::Values::ApiVersion
+      end
     end
   end
 end

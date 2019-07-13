@@ -63,5 +63,17 @@ module ActiveValidation
 
       orm_adapter.add_manifest(h)
     end
+
+    def find_manifest(version: :current, **wheres)
+      h = ActiveSupport::HashWithIndifferentAccess.new wheres
+
+      # TODO: maybe rename :version to api_version or dsl_version?
+      h[:version] = api_version if version == :current
+
+      # TODO: maybe we should not allow to change base_klass here?
+      h[:base_klass] ||= base_klass
+
+      orm_adapter.find_manifest h
+    end
   end
 end

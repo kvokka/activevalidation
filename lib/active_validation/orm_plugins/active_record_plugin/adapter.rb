@@ -51,6 +51,10 @@ module ActiveValidation
         def add_manifest(manifest_hash)
           Manifest.create! manifest_hash
         end
+
+        def find_manifest(wheres)
+          Manifest.where(wheres).order(created_at: :desc).first
+        end
       end
     end
   end
