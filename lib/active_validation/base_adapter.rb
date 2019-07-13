@@ -8,9 +8,9 @@ module ActiveValidation
       def inherited(base)
         base.singleton_class.attr_accessor :abstract
 
-        # set default loading paths to the plugin root folder
-        base.singleton_class.attr_accessor :loading_path
-        base.loading_path = ["orm_plugins", base.plugin_name]
+        # set default loading paths from the plugin root folder
+        base.singleton_class.attr_accessor :loading_paths
+        base.loading_paths = []
         base.abstract = false
         ActiveValidation.config.orm_adapters_registry.register base.plugin_name, base
         super
@@ -20,7 +20,9 @@ module ActiveValidation
         return @loader if @loader
 
         @loader = Zeitwerk::Loader.new
-        @loader.push_dir [__dir__, *loading_path].join("/")
+        loading_paths.each do |loading_path|
+          @loader.push_dir [__dir__, "orm_plugins", plugin_name, loading_path].join("/")
+        end
         @loader.setup
         @loader
       end

@@ -4,7 +4,8 @@ module ActiveValidation
   module OrmPlugins
     module ActiveRecordPlugin
       class Adapter < ActiveValidation::BaseAdapter
-        loading_path << "models"
+        loading_paths << "models"
+        loading_paths << "types"
 
         # Name of the folder, where all validations method should be scoped.
         # Inside, in corresponding sub-folder with version name shall be
