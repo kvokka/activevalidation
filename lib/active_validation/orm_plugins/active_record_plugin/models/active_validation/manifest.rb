@@ -6,6 +6,8 @@ module ActiveValidation
 
     self.table_name = :active_validation_manifests
 
+    attribute :version, :api_version
+
     has_many :checks
     accepts_nested_attributes_for :checks, allow_destroy: false
 
@@ -14,3 +16,5 @@ module ActiveValidation
     end
   end
 end
+
+::ActiveRecord::Type.register(:api_version, ActiveValidation::Type::ApiVersion)
