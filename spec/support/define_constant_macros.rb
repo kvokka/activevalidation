@@ -13,30 +13,6 @@ module DefineConstantMacros
     klass
   end
 
-  def define_model(name, columns = {}, &block)
-    model = define_class(name, ActiveRecord::Base, &block)
-    create_table(model.table_name) do |table|
-      columns.each do |column_name, type|
-        table.column column_name, type
-      end
-    end
-    model
-  end
-
-  def create_table(table_name, &block)
-    connection = ActiveRecord::Base.connection
-
-    begin
-      connection.execute("DROP TABLE IF EXISTS #{table_name}")
-      connection.create_table(table_name, &block)
-      created_tables << table_name
-      connection
-    rescue Exception => e # rubocop:disable Lint/RescueException
-      connection.execute("DROP TABLE IF EXISTS #{table_name}")
-      raise e
-    end
-  end
-
   def constant_path(constant_name)
     names = constant_name.split("::")
     class_name = names.pop
@@ -53,23 +29,10 @@ module DefineConstantMacros
     defined_constants.clear
   end
 
-  def clear_generated_tables
-    created_tables.each do |table_name|
-      ActiveRecord::Base
-        .connection
-        .execute("DROP TABLE IF EXISTS #{table_name}")
-    end
-    created_tables.clear
-  end
-
   private
 
   def defined_constants
     @defined_constants ||= []
-  end
-
-  def created_tables
-    @created_tables ||= []
   end
 end
 
@@ -78,6 +41,5 @@ RSpec.configure do |config|
 
   config.after do
     clear_generated_constants
-    clear_generated_tables
   end
 end

@@ -8,11 +8,10 @@ ActiveRecord::Migration.verbose = false
 ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.include_root_in_json = true
 
-require_relative "macros/define_constant"
+require_relative "macros/define_model_macros"
 require_relative "macros/active_record_connection"
 
 RSpec.configure do |config|
-  config.include DefineConstantMacros
   config.include ActiveRecordConnection
 
   config.before do
