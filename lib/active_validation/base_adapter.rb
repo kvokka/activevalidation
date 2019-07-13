@@ -24,6 +24,7 @@ module ActiveValidation
           @loader.push_dir [__dir__, "orm_plugins", plugin_name, loading_path].join("/")
         end
         @loader.setup
+        @loader.eager_load
         @loader
       end
 
