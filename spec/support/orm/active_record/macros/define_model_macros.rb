@@ -5,7 +5,7 @@
 
 module DefineModelMacros
   def define_model(name, columns = {}, &block)
-    model = define_class(name, ActiveRecord::Base, &block)
+    model = define_const(name, superclass: ActiveRecord::Base, &block)
     create_table(model.table_name) do |table|
       columns.each do |column_name, type|
         table.column column_name, type

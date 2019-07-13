@@ -7,7 +7,7 @@ describe ActiveValidation::Check::ValidateWithMethod, helpers: %i[only_with_acti
 
   context "simple validator" do
     before do
-      define_class("FooValidator", ActiveModel::Validator) { def validate(*); true; end }
+      define_const("FooValidator", superclass: ActiveModel::Validator) { def validate(*); true; end }
     end
 
     it "is valid record with correct validator" do
@@ -27,7 +27,7 @@ describe ActiveValidation::Check::ValidateWithMethod, helpers: %i[only_with_acti
     end
 
     it "is valid with nested record with correct validator" do
-      define_class("NestedValidator", FooValidator)
+      define_const("NestedValidator", superclass: FooValidator)
       expect(build(:check_validate_with, argument: "NestedValidator")).to be_valid
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Verifier do
-  let(:model) { define_class "Foo" }
+  let(:model) { define_const "Foo" }
   let(:registry) { described_class.registry }
 
   context "simple examples" do
@@ -51,9 +51,7 @@ describe ActiveValidation::Verifier do
 
   context "::find_or_build" do
     before do
-      define_class "#{model.name}::Validations"
-      define_class "#{model.name}::Validations::V300"
-      define_class "#{model.name}::Validations::V301"
+      define_const "#{model.name}::Validations::V300", "#{model.name}::Validations::V301"
     end
 
     it "build new instance if it was not declared" do
@@ -80,10 +78,9 @@ describe ActiveValidation::Verifier do
     subject { described_class.new(model) }
 
     before  do
-      define_class "#{model.name}::Validations"
-      define_class "#{model.name}::Validations::V300"
-      define_class "#{model.name}::Validations::V301"
-      define_class "#{model.name}::Validations::V302"
+      define_const "#{model.name}::Validations::V300",
+                   "#{model.name}::Validations::V301",
+                   "#{model.name}::Validations::V302"
     end
 
     it "use latest version by default" do
@@ -98,16 +95,14 @@ describe ActiveValidation::Verifier do
 
   context "#api_versions" do
     before do
-      define_class "Bar" do
-        include ActiveValidation::ModelExtension
+      define_const "Bar", superclass: ActiveRecord::Base do
         active_validation
       end
 
-      define_class "Bar::Validations"
-      define_class "Bar::Validations::V1"
-      define_class "Bar::Validations::V2"
-      define_class "Bar::Validations::V23"
-      define_class "Bar::Validations::V42"
+      define_const "Bar::Validations::V1",
+                   "Bar::Validations::V2",
+                   "Bar::Validations::V23",
+                   "Bar::Validations::V42"
     end
 
     it "returns correct versions in asc order" do
