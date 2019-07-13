@@ -67,8 +67,6 @@ module ActiveValidation
     def find_manifest(**wheres)
       h = ActiveSupport::HashWithIndifferentAccess.new wheres
       h[:version] ||= version
-
-      # TODO: maybe we should not allow to change base_klass here?
       h[:base_klass] ||= base_klass
 
       orm_adapter.find_manifest h
