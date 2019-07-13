@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :check_validates, class: "ActiveValidation::Check::ValidatesMethod" do
+    type     { "ValidatesMethod" }
     argument { "name" }
     options  { { presence: true } }
   end

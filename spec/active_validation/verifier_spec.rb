@@ -121,8 +121,9 @@ describe ActiveValidation::Verifier do
     end
 
     context "#add_manifest" do
+      let(:checks) { [attributes_for(:check_validates)] }
+
       it "raises no error" do
-        checks = [{ type: "ValidatesMethod", argument: "some_column", options: { presence: true } }]
         expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
         expect(subject.find_manifest(base_klass: :Bar)).to be_a ActiveValidation::Manifest
       end
