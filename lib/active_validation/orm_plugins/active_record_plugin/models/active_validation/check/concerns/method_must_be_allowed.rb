@@ -27,7 +27,7 @@ module ActiveValidation
         end
 
         def verify_argument
-          return unless argument && manifest.try(:model_klass)
+          return unless argument && manifest.try(:base_klass)
           return unless restricted_instance_methods.include?(argument.to_sym)
 
           errors.add :argument, "method #{argument} is restricted for usage in validation"

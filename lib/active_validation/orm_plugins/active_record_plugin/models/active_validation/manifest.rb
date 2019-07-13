@@ -10,7 +10,7 @@ module ActiveValidation
     accepts_nested_attributes_for :checks, allow_destroy: false
 
     def model_class
-      model_klass.constantize
+      base_klass.constantize
     end
   end
 end

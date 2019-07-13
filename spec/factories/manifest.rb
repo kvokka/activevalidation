@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :manifest, class: "ActiveValidation::Manifest" do
     sequence(:name) { |n| "Manifest #{n}" }
     version { 1 }
-    model_klass { "Foo" }
+    base_klass { "Foo" }
 
     %i[validate validates validate_with].each do |trait_name|
       trait(trait_name) do

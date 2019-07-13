@@ -14,7 +14,7 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
     end
 
     it "accepts nested attributes for checks" do
-      described_class.create name: "foo's manifest", version: 1, model_klass: "Foo", checks_attributes: [
+      described_class.create name: "foo's manifest", version: 1, base_klass: "Foo", checks_attributes: [
         { type: "ValidatesMethod", argument: :color, options: { presence: true } },
         { type: "ValidateWithMethod", argument: :FooValidator },
         { type: "ValidateMethod", argument: :foo_allowed }

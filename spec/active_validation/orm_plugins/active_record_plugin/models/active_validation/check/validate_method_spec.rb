@@ -19,7 +19,7 @@ describe ActiveValidation::Check::ValidateMethod, helpers: %i[only_with_active_r
     end
 
     it "does not invoke globally restricted method" do
-      manifest = build :manifest, model_klass: "Foo"
+      manifest = build :manifest, base_klass: "Foo"
       expect(build(:check_validate, argument: "delete", manifest: manifest)).not_to be_valid
     end
   end

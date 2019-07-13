@@ -20,7 +20,7 @@ RSpec.configure do |config|
     create_table :active_validation_manifests do |t|
       t.string   :name
       t.string   :version
-      t.string   :model_klass
+      t.string   :base_klass
 
       t.datetime :created_at
     end
