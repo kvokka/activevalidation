@@ -9,6 +9,16 @@ describe ActiveValidation::Configuration do
     expect(subject.orm_adapters_registry).to be_a ActiveValidation::Registry
   end
 
+  context "manifest name formatter" do
+    it "has value" do
+      expect(subject.manifest_name_formatter).to eq ActiveValidation::Formatters::ManifestNameFormatter
+    end
+
+    it "has value" do
+      expect(subject.manifest_name_formatter).to respond_to(:call)
+    end
+  end
+
   context "orm_adapter=" do
     let(:config) { ActiveValidation.config }
 

@@ -27,10 +27,14 @@ module ActiveValidation
     # @note Orm adapter for exactly this verifier instance
     attr_accessor :orm_adapter
 
+    # @note Custom name formatter for Manifests
+    attr_accessor :manifest_name_formatter
+
     def initialize(base_klass)
       ActiveValidation.config.verifier_defaults.call self
       @base_klass = base_klass
       @orm_adapter ||= ActiveValidation.config.orm_adapter
+      @manifest_name_formatter ||= ActiveValidation.config.manifest_name_formatter
 
       yield self if block_given?
       self.class.registry.register base_klass, self

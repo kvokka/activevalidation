@@ -7,7 +7,10 @@ module ActiveValidation
     def initialize
       @verifiers_registry    = Registry.new("Verifiers")
       @orm_adapters_registry = Registry.new("Orm adapters")
+      @manifest_name_formatter = Formatters::ManifestNameFormatter
     end
+
+    attr_accessor :manifest_name_formatter
 
     attr_reader :orm_adapter
 
