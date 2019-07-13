@@ -46,6 +46,10 @@ module ActiveValidation
         rescue NameError
           []
         end
+
+        def add_manifest(manifest_hash)
+          Manifest.create! manifest_hash
+        end
       end
     end
   end

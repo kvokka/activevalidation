@@ -54,5 +54,16 @@ module ActiveValidation
     def api_versions
       orm_adapter.api_versions self
     end
+
+    def add_manifest(**manifest_hash)
+      h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
+      h[:name]        ||= manifest_name_formatter.call(base_klass)
+      h[:version]     ||= api_version
+
+      # TODO: maybe rename model_klass to base_klass?
+      h[:model_klass] ||= base_klass
+
+      orm_adapter.add_manifest(h)
+    end
   end
 end

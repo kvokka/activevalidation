@@ -109,4 +109,24 @@ describe ActiveValidation::Verifier do
       expect(described_class.find_or_build(Bar).api_versions.map(&:to_i)).to eq [1, 2, 23, 42]
     end
   end
+
+  context "#add_manifest" do
+    subject { described_class.find_or_build(bar) }
+
+    let(:bar) { define_const("Bar", superclass: ActiveRecord::Base) { active_validation } }
+
+    before do
+      subject
+      define_const "Bar::Validations::V1"
+    end
+
+    it "raises no error" do
+      checks = [{ type: "ValidatesMethod", argument: "some_column", options: { presence: true } }]
+      expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
+
+      # remove it after!
+      expect(ActiveValidation::Manifest.count).to eq 1
+      expect(ActiveValidation::Check.count).to eq 1
+    end
+  end
 end
