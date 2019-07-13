@@ -127,6 +127,18 @@ describe ActiveValidation::Verifier do
         expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
         expect(subject.find_manifest(base_klass: :Bar)).to be_a ActiveValidation::Manifest
       end
+
+      it "returns right class" do
+        expect(subject.add_manifest(checks_attributes: checks)).to be_a ActiveSupport::HashWithIndifferentAccess
+      end
+
+      it "contain checks array with out checks" do
+        expect(subject.add_manifest).to have_key "checks"
+      end
+
+      it "contain checks array with checks" do
+        expect(subject.add_manifest(checks_attributes: checks)).to have_key "checks"
+      end
     end
 
     context "#find_manifest" do

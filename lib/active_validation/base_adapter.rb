@@ -69,7 +69,9 @@ module ActiveValidation
     #        base_klass: 'Bar',
     #        checks_attributes: [
     #     { type: "ValidatesMethod", argument: "some_column", options: { presence: true } }
-    #     ]}) # => Hash
+    #     ]})
+    #
+    # @return [ActiveSupport::HashWithIndifferentAccess]
     def add_manifest(**_manifest_hash)
       raise NotImplementedError, "abstract"
     end

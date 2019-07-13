@@ -49,7 +49,7 @@ module ActiveValidation
         end
 
         def add_manifest(manifest_hash)
-          Manifest.create! manifest_hash
+          Manifest::Decorators::ToJsonWithNested.new(Manifest.create!(manifest_hash)).as_json
         end
 
         def find_manifest(wheres)
