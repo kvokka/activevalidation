@@ -41,9 +41,9 @@ module ActiveValidation
 
         # @param [Verifier]
         # @return [Array<Symbol>] Sorted list of constants prefixed with 'V'
-        def api_versions(verifier)
+        def versions(verifier)
           verifier.base_klass.const_get(validations_module_name)
-                  .constants.map { |k| ActiveValidation::Values::ApiVersion.new(k) }.sort
+                  .constants.map { |k| ActiveValidation::Values::Version.new(k) }.sort
         rescue NameError
           []
         end

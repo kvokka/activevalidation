@@ -40,35 +40,33 @@ module ActiveValidation
       self.class.registry.register base_klass, self
     end
 
-    # @note Api version manual lock
-    def api_version
-      @api_version ||= api_versions.last
+    # @note Version manual lock
+    def version
+      @version ||= versions.last
     end
 
-    def api_version=(other)
-      other_value = ActiveValidation::Values::ApiVersion.new(other)
-      api_versions.include?(other_value) or raise ArgumentError, "Api version #{other} not found"
-      @api_version = other_value
+    def version=(other)
+      other_value = ActiveValidation::Values::Version.new(other)
+      versions.include?(other_value) or raise ArgumentError, "Version #{other} not found"
+      @version = other_value
     end
 
-    def api_versions
-      orm_adapter.api_versions self
+    def versions
+      orm_adapter.versions self
     end
 
     def add_manifest(**manifest_hash)
       h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
       h[:name]        ||= manifest_name_formatter.call(base_klass)
-      h[:version]     ||= api_version
+      h[:version]     ||= version
       h[:base_klass]  ||= base_klass
 
       orm_adapter.add_manifest(h)
     end
 
-    def find_manifest(version: :current, **wheres)
+    def find_manifest(**wheres)
       h = ActiveSupport::HashWithIndifferentAccess.new wheres
-
-      # TODO: maybe rename :version to api_version or dsl_version?
-      h[:version] = api_version if version == :current
+      h[:version] ||= version
 
       # TODO: maybe we should not allow to change base_klass here?
       h[:base_klass] ||= base_klass

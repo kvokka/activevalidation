@@ -2,7 +2,7 @@
 
 module ActiveValidation
   module Values
-    class ApiVersion < Base
+    class Version < Base
       # @param value [#to_i, #to_s]
       def initialize(value)
         super

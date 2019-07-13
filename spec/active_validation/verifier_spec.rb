@@ -62,19 +62,19 @@ describe ActiveValidation::Verifier do
 
     it "execute the block after build for new verifier" do
       expect(registry).not_to be_registered(model)
-      described_class.find_or_build(model) { |v| v.api_version = :V300 }
-      expect(registry.find(model).api_version).to eq ActiveValidation::Values::ApiVersion.new(300)
+      described_class.find_or_build(model) { |v| v.version = :V300 }
+      expect(registry.find(model).version).to eq ActiveValidation::Values::Version.new(300)
     end
 
     it "execute the block after build for existed verifier" do
       expect(registry).not_to be_registered(model)
-      described_class.new(model) { |v| v.api_version = :V300 }
-      described_class.find_or_build(model) { |v| v.api_version = :V301 }
-      expect(registry.find(model).api_version).to eq ActiveValidation::Values::ApiVersion.new(301)
+      described_class.new(model) { |v| v.version = :V300 }
+      described_class.find_or_build(model) { |v| v.version = :V301 }
+      expect(registry.find(model).version).to eq ActiveValidation::Values::Version.new(301)
     end
   end
 
-  context "#api_version" do
+  context "#version" do
     subject { described_class.new(model) }
 
     before  do
@@ -84,16 +84,16 @@ describe ActiveValidation::Verifier do
     end
 
     it "use latest version by default" do
-      expect(subject.api_version).to eq ActiveValidation::Values::ApiVersion.new(302)
+      expect(subject.version).to eq ActiveValidation::Values::Version.new(302)
     end
 
-    it "set/gets api_version" do
-      subject.api_version = :V300
-      expect(subject.api_version).to eq ActiveValidation::Values::ApiVersion.new(300)
+    it "set/gets version" do
+      subject.version = :V300
+      expect(subject.version).to eq ActiveValidation::Values::Version.new(300)
     end
   end
 
-  context "#api_versions" do
+  context "#versions" do
     before do
       define_const "Bar", superclass: ActiveRecord::Base do
         active_validation
@@ -106,7 +106,7 @@ describe ActiveValidation::Verifier do
     end
 
     it "returns correct versions in asc order" do
-      expect(described_class.find_or_build(Bar).api_versions.map(&:to_i)).to eq [1, 2, 23, 42]
+      expect(described_class.find_or_build(Bar).versions.map(&:to_i)).to eq [1, 2, 23, 42]
     end
   end
 
@@ -136,7 +136,7 @@ describe ActiveValidation::Verifier do
       end
 
       it "returns version value object" do
-        expect(subject.find_manifest(base_klass: "Bar").version).to be_a ActiveValidation::Values::ApiVersion
+        expect(subject.find_manifest(base_klass: "Bar").version).to be_a ActiveValidation::Values::Version
       end
     end
   end

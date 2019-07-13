@@ -2,7 +2,7 @@
 
 module ActiveValidation
   module Type
-    class ApiVersion < ActiveModel::Type::Integer
+    class Version < ActiveModel::Type::Integer
       def serialize(value)
         value.to_i
       end
@@ -10,7 +10,7 @@ module ActiveValidation
       def deserialize(value)
         return unless value
 
-        ActiveValidation::Values::ApiVersion.new value
+        ActiveValidation::Values::Version.new value
       end
     end
   end

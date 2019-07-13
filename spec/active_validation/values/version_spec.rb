@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::Values::ApiVersion do
+describe ActiveValidation::Values::Version do
   context "::new" do
     context 'with "V" prefix' do
       it("from symbol") { expect(described_class.new(:V42).value).to eq 42 }
