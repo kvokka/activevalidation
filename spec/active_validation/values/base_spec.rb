@@ -35,4 +35,12 @@ describe ActiveValidation::Values::Base do
     it("convert to integer to string") { expect(described_class.new(1).to_s).to eq "1" }
     it("convert to symbol to string") { expect(described_class.new(:foo).to_s).to eq "foo" }
   end
+
+  context "to_json" do
+    it("return only value") { expect(described_class.new(42).to_json).to eq "42" }
+  end
+
+  context "as_json" do
+    it("return only value") { expect(described_class.new(42).as_json).to eq 42 }
+  end
 end
