@@ -49,11 +49,21 @@ module ActiveValidation
         end
 
         def add_manifest(manifest_hash)
-          Manifest::Decorators::ToJsonWithNested.new(Manifest.create!(manifest_hash)).as_json
+          decorated { Manifest.create!(manifest_hash) }
+        end
+
+        def find_manifests(wheres)
+          decorated {  Manifest.where(wheres).order(created_at: :desc) }
         end
 
         def find_manifest(wheres)
-          Manifest.where(wheres).order(created_at: :desc).first
+          decorated {  Manifest.where(wheres).order(created_at: :desc).first }
+        end
+
+        private
+
+        def decorated
+          Manifest::Decorators::ToJsonWithNested.new(yield).as_json
         end
       end
     end

@@ -56,20 +56,28 @@ module ActiveValidation
     end
 
     def add_manifest(**manifest_hash)
-      h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
-      h[:name]        ||= manifest_name_formatter.call(base_klass)
-      h[:version]     ||= version
-      h[:base_klass]  ||= base_klass
+      h = normalize_input manifest_hash
+      h[:name] ||= manifest_name_formatter.call(base_klass)
 
       orm_adapter.add_manifest(h)
     end
 
     def find_manifest(**wheres)
-      h = ActiveSupport::HashWithIndifferentAccess.new wheres
-      h[:version] ||= version
-      h[:base_klass] ||= base_klass
+      orm_adapter.find_manifest normalize_input wheres
+    end
 
-      orm_adapter.find_manifest h
+    def find_manifests(**wheres)
+      orm_adapter.find_manifests normalize_input wheres
+    end
+
+    private
+
+    def normalize_input(hash = {})
+      h = ActiveSupport::HashWithIndifferentAccess.new hash
+      h[:version]     ||= version
+      h[:base_klass]  ||= base_klass
+      h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
+      h
     end
   end
 end

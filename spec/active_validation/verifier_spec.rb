@@ -116,14 +116,20 @@ describe ActiveValidation::Verifier do
     before do
       subject
       define_const "Bar::Validations::V1"
+      define_const "Bar::Validations::V42"
     end
 
     context "#add_manifest" do
       let(:checks) { [attributes_for(:check_validates)] }
 
+      it do
+        expect(subject.add_manifest).to include(name:       a_kind_of(String),
+                                                base_klass: a_kind_of(String),
+                                                version:    a_kind_of(ActiveValidation::Values::Version))
+      end
+
       it "raises no error" do
         expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
-        expect(subject.find_manifest(base_klass: :Bar)).to be_a ActiveValidation::Manifest
       end
 
       it "returns right class" do
@@ -140,14 +146,45 @@ describe ActiveValidation::Verifier do
     end
 
     context "#find_manifest" do
-      let!(:manifest) { create :manifest, base_klass: bar, version: 1 }
+      let!(:manifest) { create :manifest, base_klass: bar, version: 42 }
+      let(:as_json) { ActiveValidation::Manifest::Decorators::ToJsonWithNested.new(manifest).as_json }
+
+      it do
+        expect(subject.find_manifest).to include(name:       a_kind_of(String),
+                                                 base_klass: a_kind_of(String),
+                                                 version:    a_kind_of(ActiveValidation::Values::Version))
+      end
 
       it "find existed Manifest" do
-        expect(subject.find_manifest(base_klass: "Bar")).to eq manifest
+        expect(subject.find_manifest(base_klass: "Bar")).to eq as_json
+      end
+
+      it "find existed Manifest if base_klass is Class" do
+        expect(subject.find_manifest(base_klass: Bar)).to eq as_json
       end
 
       it "returns version value object" do
-        expect(subject.find_manifest(base_klass: "Bar").version).to be_a ActiveValidation::Values::Version
+        expect(subject.find_manifest(base_klass: "Bar").fetch("version")).to eq 42
+      end
+
+      context "with pre-defined data" do
+        let(:not_exist) { subject.find_manifest(base_klass: "Bar", version: 23) }
+
+        before do
+          1.upto(5) { |n| create :manifest, base_klass: bar, version: n, name: "Bar#{n}" }
+        end
+
+        it "find correct manifest be version" do
+          expect(subject.find_manifest(base_klass: "Bar", version: 3).fetch("name")).to eq "Bar3"
+        end
+
+        it "find latest manifest" do
+          expect(subject.find_manifest(base_klass: "Bar").fetch("name")).not_to match(/Bar\d/)
+        end
+
+        it "find nothing and return nil" do
+          expect(not_exist).to eq ActiveSupport::HashWithIndifferentAccess.new
+        end
       end
     end
   end

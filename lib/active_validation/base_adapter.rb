@@ -75,6 +75,14 @@ module ActiveValidation
       raise NotImplementedError, "abstract"
     end
 
+    def find_manifest(**_wheres)
+      raise NotImplementedError, "abstract"
+    end
+
+    def find_manifests(**_wheres)
+      raise NotImplementedError, "abstract"
+    end
+
     # @abstract
     # Return all initialized versions for current verifier
     # @param [Verifier]
