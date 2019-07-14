@@ -26,6 +26,13 @@ bundle exec rake active_validation:install
 bundle exec rake active_record:active_validation
 ```
 
+## Naming conventions
+
+* method suffix `_klass` assumes, that the the method returns an object with
+  the name, which can be converted to `Class`, like `String` or `Symbol`, or
+  even `Class` itself.
+* method suffix `_class` assumes, that the method returns `Class`
+
 ## Contributing
 Contribution directions go here.
 
