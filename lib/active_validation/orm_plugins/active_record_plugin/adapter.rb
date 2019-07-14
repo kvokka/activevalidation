@@ -48,14 +48,17 @@ module ActiveValidation
           []
         end
 
+        # @see BaseAdapter
         def add_manifest(manifest_hash)
           Manifest.create!(manifest_hash)
         end
 
+        # @see BaseAdapter
         def find_manifests(wheres)
           Manifest.where(wheres).order(created_at: :desc)
         end
 
+        # @see BaseAdapter
         def find_manifest(wheres)
           Manifest.where(wheres).order(created_at: :desc).first
         end

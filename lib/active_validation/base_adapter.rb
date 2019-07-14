@@ -70,15 +70,53 @@ module ActiveValidation
     #     { type: "ValidatesMethod", argument: "some_column", options: { presence: true } }
     #     ]})
     #
-    # @return [ActiveSupport::HashWithIndifferentAccess]
+    # @return [ActiveSupport::HashWithIndifferentAccess] if
+    #         Verifier#@as_hash_with_indifferent_access == true
+    # @return [OrmDependent] Return raw object orm the ORM, and depends on selected
+    #         plugin. For example, it can be instance of class `ActiveRecord::Base`
+    #         if Verifier#@as_hash_with_indifferent_access == false
     def add_manifest(**_manifest_hash)
       raise NotImplementedError, "abstract"
     end
 
+    # @abstract
+    # Return the most recent Manifest, which meet the criteria
+    #
+    # @param [Hash] Look up criteria
+    # @option manifest_hash [String] :name Human readable name, by default build with selected
+    #         formatter for current manifest
+    # @option manifest_hash [String, Class] :base_klass (base_klass) Base klass for the Manifest
+    # @option manifest_hash [String, Symbol, Integer, Values::Version] :version (:current) Version
+    #         of the current manifest
+    #
+    # @example find_manifest({ base_klass: 'Bar' })
+    #
+    # @return [ActiveSupport::HashWithIndifferentAccess] if
+    #         Verifier#@as_hash_with_indifferent_access == true
+    # @return [OrmDependent] Return raw object orm the ORM, and depends on selected
+    #         plugin. For example, it can be instance of class `ActiveRecord::Base`
+    #         if Verifier#@as_hash_with_indifferent_access == false
     def find_manifest(**_wheres)
       raise NotImplementedError, "abstract"
     end
 
+    # @abstract
+    # Return the most recent Manifests, which meet the criteria
+    #
+    # @param [Hash] Look up criteria
+    # @option manifest_hash [String] :name Human readable name, by default build with selected
+    #         formatter for current manifest
+    # @option manifest_hash [String, Class] :base_klass (base_klass) Base klass for the Manifest
+    # @option manifest_hash [String, Symbol, Integer, Values::Version] :version (:current) Version
+    #         of the current manifest
+    #
+    # @example find_manifests({ base_klass: 'Bar' })
+    #
+    # @return [ActiveSupport::HashWithIndifferentAccess] if
+    #         Verifier#@as_hash_with_indifferent_access == true
+    # @return [OrmDependent] Return raw object orm the ORM, and depends on selected
+    #         plugin. For example, it can be instance of class `ActiveRecord::Base`
+    #         if Verifier#@as_hash_with_indifferent_access == false
     def find_manifests(**_wheres)
       raise NotImplementedError, "abstract"
     end
