@@ -6,8 +6,8 @@ module ActiveValidation
     # Here will be described shared ORM method
 
     module ClassMethods
-      def active_validation
-        ::ActiveValidation::Verifier.find_or_build self
+      def active_validation(&block)
+        ::ActiveValidation::Verifier.find_or_build self, &block
       end
     end
   end
