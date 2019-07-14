@@ -70,7 +70,9 @@ describe ActiveValidation::Verifier do
       expect(registry).not_to be_registered(model)
       described_class.new(model) { |v| v.version = :V300 }
       described_class.find_or_build(model) { |v| v.version = :V301 }
+      described_class.find_or_build(model) { |v| v.as_hash_with_indifferent_access = false }
       expect(registry.find(model).version).to eq ActiveValidation::Values::Version.new(301)
+      expect(registry.find(model).as_hash_with_indifferent_access).to be_falsey
     end
   end
 
