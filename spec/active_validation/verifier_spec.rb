@@ -51,7 +51,7 @@ describe ActiveValidation::Verifier do
 
   context "::find_or_build" do
     before do
-      define_const "#{model.name}::Validations::V300", "#{model.name}::Validations::V301"
+      define_consts "#{model.name}::Validations::V300", "#{model.name}::Validations::V301"
     end
 
     it "build new instance if it was not declared" do
@@ -78,9 +78,9 @@ describe ActiveValidation::Verifier do
     subject { described_class.new(model) }
 
     before  do
-      define_const "#{model.name}::Validations::V300",
-                   "#{model.name}::Validations::V301",
-                   "#{model.name}::Validations::V302"
+      define_consts "#{model.name}::Validations::V300",
+                    "#{model.name}::Validations::V301",
+                    "#{model.name}::Validations::V302"
     end
 
     it "use latest version by default" do
@@ -95,14 +95,12 @@ describe ActiveValidation::Verifier do
 
   context "#versions" do
     before do
-      define_const "Bar", superclass: ActiveRecord::Base do
-        active_validation
-      end
+      define_const "Bar", with_active_validation: true
 
-      define_const "Bar::Validations::V1",
-                   "Bar::Validations::V2",
-                   "Bar::Validations::V23",
-                   "Bar::Validations::V42"
+      define_consts "Bar::Validations::V1",
+                    "Bar::Validations::V2",
+                    "Bar::Validations::V23",
+                    "Bar::Validations::V42"
     end
 
     it "returns correct versions in asc order" do
@@ -113,7 +111,7 @@ describe ActiveValidation::Verifier do
   context "Manifest" do
     subject { described_class.find_or_build(bar) }
 
-    let(:bar) { define_const("Bar", superclass: ActiveRecord::Base) { active_validation } }
+    let(:bar) { define_const("Bar", with_active_validation: true) }
 
     before do
       subject
