@@ -4,6 +4,10 @@ describe ActiveValidation::Verifier do
   let(:model) { define_const "Foo" }
   let(:registry) { ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(described_class.registry) }
 
+  before { registry.clear }
+
+  after { registry.clear }
+
   context "simple examples" do
     subject do
       described_class.new(model) { |k| k.instance_variable_set :@bar, :setted }

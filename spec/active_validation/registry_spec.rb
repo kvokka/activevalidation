@@ -65,4 +65,12 @@ describe ActiveValidation::Registry do
     subject.delete :first_object
     expect(subject.to_a).to eq [second_registered_object]
   end
+
+  it "store object key as symbol" do
+    subject.register("first object", registered_object)
+    subject.register(42, registered_object)
+    expect(subject).to be_registered(:"first object")
+    expect(subject).to be_registered(:"42")
+    expect(subject).not_to be_registered(:not_exist)
+  end
 end

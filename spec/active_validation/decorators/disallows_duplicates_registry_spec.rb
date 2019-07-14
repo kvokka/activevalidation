@@ -12,4 +12,10 @@ describe ActiveValidation::Decorators::DisallowsDuplicatesRegistry do
     subject.register(:object_name, registered_object)
     expect { subject.register(:object_name, registered_object) }.to raise_error error_class
   end
+
+  it "find a registered class" do
+    define_const "Foo"
+    subject.register(:object_name, Foo)
+    expect { subject.register(:object_name, Foo) }.to raise_error error_class
+  end
 end

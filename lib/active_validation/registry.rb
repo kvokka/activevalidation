@@ -20,7 +20,7 @@ module ActiveValidation
     end
 
     def find(name)
-      @items.fetch(name)
+      @items.fetch(normalize_name(name))
     rescue KeyError => e
       raise key_error_with_custom_message(e)
     end
@@ -28,15 +28,15 @@ module ActiveValidation
     alias [] find
 
     def register(name, item)
-      @items[name] = item
+      @items[normalize_name(name)] = item
     end
 
     def registered?(name)
-      @items.key?(name)
+      @items.key?(normalize_name(name))
     end
 
     def delete(name)
-      @items.delete name
+      @items.delete(normalize_name(name))
     end
 
     private
@@ -46,6 +46,10 @@ module ActiveValidation
       error = KeyError.new(message)
       error.set_backtrace(key_error.backtrace)
       error
+    end
+
+    def normalize_name(key)
+      key.respond_to?(:to_sym) ? key.to_sym : key.to_s.to_sym
     end
   end
 end
