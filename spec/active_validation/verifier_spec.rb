@@ -147,7 +147,6 @@ describe ActiveValidation::Verifier do
 
     context "#find_manifest" do
       let!(:manifest) { create :manifest, base_klass: bar, version: 42 }
-      let(:as_json) { ActiveValidation::Manifest::Decorators::ToJsonWithNested.new(manifest).as_json }
 
       it do
         expect(subject.find_manifest).to include(name:       a_kind_of(String),
@@ -156,11 +155,11 @@ describe ActiveValidation::Verifier do
       end
 
       it "find existed Manifest" do
-        expect(subject.find_manifest(base_klass: "Bar")).to eq as_json
+        expect(subject.find_manifest(base_klass: "Bar")).to eq manifest.as_hash_with_indifferent_access
       end
 
       it "find existed Manifest if base_klass is Class" do
-        expect(subject.find_manifest(base_klass: Bar)).to eq as_json
+        expect(subject.find_manifest(base_klass: Bar)).to eq manifest.as_hash_with_indifferent_access
       end
 
       it "returns version value object" do

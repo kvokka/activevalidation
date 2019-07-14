@@ -14,6 +14,10 @@ module ActiveValidation
     def model_class
       base_klass.constantize
     end
+
+    def as_hash_with_indifferent_access
+      ActiveSupport::HashWithIndifferentAccess.new as_json(include: :checks, root: false)
+    end
   end
 end
 

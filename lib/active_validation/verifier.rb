@@ -30,11 +30,16 @@ module ActiveValidation
     # @note Custom name formatter for Manifests
     attr_accessor :manifest_name_formatter
 
+    # if true, return ActiveSupport::HashWithIndifferentAccess
+    # if false will return the object, as it represented in ORM
+    attr_accessor :as_hash_with_indifferent_access
+
     def initialize(base_klass)
       ActiveValidation.config.verifier_defaults.call self
       @base_klass = base_klass
       @orm_adapter ||= ActiveValidation.config.orm_adapter
       @manifest_name_formatter ||= ActiveValidation.config.manifest_name_formatter
+      @as_hash_with_indifferent_access = true
 
       yield self if block_given?
       self.class.registry.register base_klass, self
@@ -56,28 +61,38 @@ module ActiveValidation
     end
 
     def add_manifest(**manifest_hash)
-      h = normalize_input manifest_hash
-      h[:name] ||= manifest_name_formatter.call(base_klass)
+      normalize(manifest_hash) do |h|
+        h[:name] ||= manifest_name_formatter.call(base_klass)
 
-      orm_adapter.add_manifest(h)
+        orm_adapter.add_manifest(h)
+      end
     end
 
     def find_manifest(**wheres)
-      orm_adapter.find_manifest normalize_input wheres
+      normalize(wheres) do |h|
+        orm_adapter.find_manifest h
+      end
     end
 
     def find_manifests(**wheres)
-      orm_adapter.find_manifests normalize_input wheres
+      normalize(wheres) do |h|
+        orm_adapter.find_manifests h
+      end
     end
 
     private
 
-    def normalize_input(hash = {})
+    def normalize(hash = {})
       h = ActiveSupport::HashWithIndifferentAccess.new hash
       h[:version]     ||= version
       h[:base_klass]  ||= base_klass
       h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
-      h
+      result = yield h
+      return result unless as_hash_with_indifferent_access
+      return ActiveSupport::HashWithIndifferentAccess.new unless result
+      return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
+
+      result.map(&:as_hash_with_indifferent_access)
     end
   end
 end
