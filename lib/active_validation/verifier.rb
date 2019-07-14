@@ -63,6 +63,7 @@ module ActiveValidation
     def add_manifest(**manifest_hash)
       normalize(manifest_hash) do |h|
         h[:name] ||= manifest_name_formatter.call(base_klass)
+        h[:version] ||= version
 
         orm_adapter.add_manifest(h)
       end
@@ -84,7 +85,6 @@ module ActiveValidation
 
     def normalize(hash = {})
       h = ActiveSupport::HashWithIndifferentAccess.new hash
-      h[:version]     ||= version
       h[:base_klass]  ||= base_klass
       h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
       result = yield h

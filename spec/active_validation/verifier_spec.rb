@@ -179,17 +179,46 @@ describe ActiveValidation::Verifier do
           1.upto(5) { |n| create :manifest, base_klass: bar, version: n, name: "Bar#{n}" }
         end
 
-        it "find correct manifest be version" do
+        it "find correct manifest by version" do
           expect(subject.find_manifest(base_klass: "Bar", version: 3).fetch("name")).to eq "Bar3"
         end
 
         it "find latest manifest" do
-          expect(subject.find_manifest(base_klass: "Bar").fetch("name")).not_to match(/Bar\d/)
+          expect(subject.find_manifest(base_klass: "Bar").fetch("name")).to eq "Bar5"
         end
 
-        it "find nothing and return nil" do
+        it "find nothing and return HashWithIndifferentAccess" do
           expect(not_exist).to eq ActiveSupport::HashWithIndifferentAccess.new
         end
+      end
+    end
+
+    context "#find_manifests" do
+      let!(:bar_manifest1)   { create :manifest, base_klass: bar, version: 1 }
+      let!(:bar_manifest42)  { create :manifest, base_klass: bar, version: 42 }
+      let!(:foo_manifest13)  { create :manifest, base_klass: foo, version: 13 }
+
+      let(:foo) { define_const("Foo", with_active_validation: true) }
+
+      before do
+        subject
+        define_const "Foo::Validations::V13"
+      end
+
+      it "returns filtered results" do
+        result = [bar_manifest42.as_hash_with_indifferent_access, bar_manifest1.as_hash_with_indifferent_access]
+        expect(subject.find_manifests).to eq result
+        expect(subject.find_manifests(base_klass: "Bar")).to eq result
+      end
+
+      it "find nothing and return HashWithIndifferentAccess" do
+        expect(subject.find_manifest(version: 123)).to eq ActiveSupport::HashWithIndifferentAccess.new
+      end
+
+      it "return array if 1 element" do
+        create :manifest, base_klass: bar, version: 55
+        result = [bar_manifest42.as_hash_with_indifferent_access]
+        expect(subject.find_manifests(base_klass: "Bar", version: 42)).to eq result
       end
     end
   end
