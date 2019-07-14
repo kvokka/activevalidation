@@ -2,7 +2,7 @@
 
 describe ActiveValidation::Verifier do
   let(:model) { define_const "Foo" }
-  let(:registry) { described_class.registry }
+  let(:registry) { ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(described_class.registry) }
 
   context "simple examples" do
     subject do

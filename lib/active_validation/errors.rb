@@ -7,5 +7,7 @@ module ActiveValidation
         super
       end
     end
+
+    class DuplicateRegistryEntryError < RuntimeError; end
   end
 end
