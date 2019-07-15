@@ -14,13 +14,7 @@ describe ActiveValidation::Verifier, helpers: %i[only_with_active_record] do
       end
     end
 
-    before do
-      allow(described_class).to receive(:registry).and_return(registry)
-
-      subject
-      define_const "Bar::Validations::V1"
-      define_const "Bar::Validations::V42"
-    end
+    before { allow(described_class).to receive(:registry).and_return(registry) }
 
     context "#add_manifest" do
       it "returns right class" do
@@ -29,11 +23,6 @@ describe ActiveValidation::Verifier, helpers: %i[only_with_active_record] do
     end
 
     context "#find_manifest" do
-      before do
-        subject
-        define_const "Bar::Validations::V42"
-      end
-
       let!(:manifest) { create :manifest, base_klass: bar, version: 42 }
 
       it do

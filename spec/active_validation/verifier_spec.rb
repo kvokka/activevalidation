@@ -207,11 +207,6 @@ describe ActiveValidation::Verifier do
 
       let(:foo) { define_const("Foo", with_active_validation: true) }
 
-      before do
-        subject
-        define_const "Foo::Validations::V13"
-      end
-
       include_examples "manifest attributes check"
 
       it "returns filtered results" do
