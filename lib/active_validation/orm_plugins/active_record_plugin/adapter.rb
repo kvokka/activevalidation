@@ -50,7 +50,9 @@ module ActiveValidation
 
         # @see BaseAdapter
         def add_manifest(manifest_hash)
-          Manifest.create!(manifest_hash)
+          h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
+          h[:checks_attributes] = h.delete(:checks) if h[:checks]
+          Manifest.create!(h)
         end
 
         # @see BaseAdapter

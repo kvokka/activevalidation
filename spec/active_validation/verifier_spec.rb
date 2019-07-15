@@ -135,11 +135,11 @@ describe ActiveValidation::Verifier do
       end
 
       it "raises no error" do
-        expect { subject.add_manifest(checks_attributes: checks) }.not_to raise_error
+        expect { subject.add_manifest(checks: checks) }.not_to raise_error
       end
 
       it "returns right class" do
-        expect(subject.add_manifest(checks_attributes: checks)).to be_a ActiveSupport::HashWithIndifferentAccess
+        expect(subject.add_manifest(checks: checks)).to be_a ActiveSupport::HashWithIndifferentAccess
       end
 
       it "contain checks array with out checks" do
@@ -147,7 +147,7 @@ describe ActiveValidation::Verifier do
       end
 
       it "contain checks array with checks" do
-        expect(subject.add_manifest(checks_attributes: checks)).to have_key "checks"
+        expect(subject.add_manifest(checks: checks)).to have_key "checks"
       end
     end
 

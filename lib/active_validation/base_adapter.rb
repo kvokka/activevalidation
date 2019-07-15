@@ -66,7 +66,7 @@ module ActiveValidation
     #     add_manifest({  name: 'Cool Manifest',
     #        version: 42,
     #        base_klass: 'Bar',
-    #        checks_attributes: [
+    #        checks: [
     #     { type: "ValidatesMethod", argument: "some_column", options: { presence: true } }
     #     ]})
     #
