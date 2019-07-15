@@ -45,4 +45,8 @@ describe ActiveValidation::Configuration do
       expect { config.orm_adapter = "not_exist" }.to raise_error LoadError
     end
   end
+
+  context "#before_validation_callback_name" do
+    it { expect(subject.before_validation_callback_name).to eq :before_validation }
+  end
 end

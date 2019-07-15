@@ -34,11 +34,15 @@ module ActiveValidation
     # if false will return the object, as it represented in ORM
     attr_accessor :as_hash_with_indifferent_access
 
+    # name of the callback, which which should be executed before validation
+    attr_accessor :before_validation_callback_name
+
     def initialize(base_klass)
       ActiveValidation.config.verifier_defaults.call self
       @base_klass = base_klass
       @orm_adapter ||= ActiveValidation.config.orm_adapter
       @manifest_name_formatter ||= ActiveValidation.config.manifest_name_formatter
+      @before_validation_callback_name ||= ActiveValidation.config.before_validation_callback_name
       @as_hash_with_indifferent_access = true
 
       yield self if block_given?
