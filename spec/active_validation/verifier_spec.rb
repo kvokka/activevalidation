@@ -2,16 +2,17 @@
 
 describe ActiveValidation::Verifier do
   let(:model) { define_const "Foo" }
-  let(:registry) { ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(described_class.registry) }
 
-  before { registry.clear }
-
-  after { registry.clear }
+  let(:registry) do
+    ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
+  end
 
   context "simple examples" do
     subject do
       described_class.new(model) { |k| k.instance_variable_set :@bar, :setted }
     end
+
+    before { allow(described_class).to receive(:registry).and_return(registry) }
 
     it "setups base klass" do
       expect(subject.base_klass).to eq model
@@ -29,11 +30,12 @@ describe ActiveValidation::Verifier do
   context "with restored configuration" do
     subject { described_class.new(model) }
 
+    before { allow(described_class).to receive(:registry).and_return(registry) }
+
     around do |example|
       backup = ActiveValidation.config.verifier_defaults
       example.call
       ActiveValidation.config.verifier_defaults(&backup)
-      registry.clear
     end
 
     it "setups defaults from configuration" do
@@ -49,12 +51,13 @@ describe ActiveValidation::Verifier do
 
   context "::registry" do
     it "return the global registry for verifier" do
-      expect(registry).to eq ActiveValidation.config.verifiers_registry
+      expect(described_class.registry).to eq ActiveValidation.config.verifiers_registry
     end
   end
 
   context "::find_or_build" do
     before do
+      allow(described_class).to receive(:registry).and_return(registry)
       define_consts "#{model.name}::Validations::V300", "#{model.name}::Validations::V301"
     end
 
@@ -84,6 +87,8 @@ describe ActiveValidation::Verifier do
     subject { described_class.new(model) }
 
     before  do
+      allow(described_class).to receive(:registry).and_return(registry)
+
       define_consts "#{model.name}::Validations::V300",
                     "#{model.name}::Validations::V301",
                     "#{model.name}::Validations::V302"
@@ -120,6 +125,8 @@ describe ActiveValidation::Verifier do
     let(:bar) { define_const("Bar", with_active_validation: true) }
 
     before do
+      allow(described_class).to receive(:registry).and_return(registry)
+
       subject
       define_const "Bar::Validations::V1"
       define_const "Bar::Validations::V42"
