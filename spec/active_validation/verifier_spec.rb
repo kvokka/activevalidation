@@ -135,14 +135,12 @@ describe ActiveValidation::Verifier do
     context "#add_manifest" do
       let(:checks) { [attributes_for(:check_validates)] }
 
+      include_examples "manifest attributes check"
+
       it do
         expect(subject.add_manifest).to include(name:       a_kind_of(String),
                                                 base_klass: a_kind_of(String),
                                                 version:    a_kind_of(ActiveValidation::Values::Version))
-      end
-
-      it "raises no error" do
-        expect { subject.add_manifest(checks: checks) }.not_to raise_error
       end
 
       it "returns right class" do
@@ -160,6 +158,8 @@ describe ActiveValidation::Verifier do
 
     context "#find_manifest" do
       let!(:manifest) { create :manifest, base_klass: bar, version: 42 }
+
+      include_examples "manifest attributes check"
 
       it do
         expect(subject.find_manifest).to include(name:       a_kind_of(String),
@@ -211,6 +211,8 @@ describe ActiveValidation::Verifier do
         subject
         define_const "Foo::Validations::V13"
       end
+
+      include_examples "manifest attributes check"
 
       it "returns filtered results" do
         result = [bar_manifest42.as_hash_with_indifferent_access, bar_manifest1.as_hash_with_indifferent_access]
