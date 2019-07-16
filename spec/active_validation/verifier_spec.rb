@@ -10,11 +10,17 @@ describe ActiveValidation::Verifier do
   end
 
   context "with fake registry" do
+    subject { described_class.new model }
+
     let(:registry) do
       ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
     end
 
     before { allow(described_class).to receive(:registry).and_return(registry) }
+
+    %i[versions add_manifest find_manifest find_manifests].each do |m|
+      it { is_expected.to delegate(m).to(:proxy) }
+    end
 
     context "simple examples" do
       subject do
@@ -35,8 +41,6 @@ describe ActiveValidation::Verifier do
     end
 
     context "with restored configuration" do
-      subject { described_class.new(model) }
-
       around do |example|
         backup = ActiveValidation.config.verifier_defaults
         example.call
@@ -82,9 +86,7 @@ describe ActiveValidation::Verifier do
     end
 
     context "#version" do
-      subject { described_class.new(model) }
-
-      before  do
+      before do
         define_consts "#{model.name}::Validations::V300",
                       "#{model.name}::Validations::V301",
                       "#{model.name}::Validations::V302"
