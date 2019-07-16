@@ -45,6 +45,8 @@ module ActiveValidation
       self.class.registry.register base_klass, self
     end
 
+    delegate :versions, :add_manifest, :find_manifest, :find_manifests, to: :proxy
+
     # @note Version manual lock
     def version
       @version ||= versions.last
@@ -56,50 +58,10 @@ module ActiveValidation
       @version = other_value
     end
 
-    def versions
-      orm_adapter.versions self
-    end
-
-    def add_manifest(**manifest_hash)
-      normalize(manifest_hash) do |h|
-        h[:name] ||= manifest_name_formatter.call(base_klass)
-        h[:version] ||= version
-
-        orm_adapter.add_manifest(h)
-      end
-    end
-
-    def find_manifest(**wheres)
-      normalize(wheres) do |h|
-        orm_adapter.find_manifest h
-      end
-    end
-
-    def find_manifests(**wheres)
-      normalize(wheres) do |h|
-        orm_adapter.find_manifests h
-      end
-    end
-
     private
 
-    def normalize(hash = {})
-      h = ActiveSupport::HashWithIndifferentAccess.new hash
-      unsupported_options = h.keys - supported_manifest_options
-      raise ArgumentError, "Provided unsupported options #{unsupported_options}" if unsupported_options.any?
-
-      h[:base_klass]  ||= base_klass
-      h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
-      result = yield h
-      return result unless as_hash_with_indifferent_access
-      return ActiveSupport::HashWithIndifferentAccess.new unless result
-      return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
-
-      result.map(&:as_hash_with_indifferent_access)
-    end
-
-    def supported_manifest_options
-      %w[base_klass name version checks created_at]
+    def proxy
+      @proxy ||= VerifierProxy.new(self)
     end
   end
 end
