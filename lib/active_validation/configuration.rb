@@ -8,12 +8,9 @@ module ActiveValidation
       @verifiers_registry    = Decorators::DisallowsDuplicatesRegistry.new(Registry.new("Verifiers"))
       @orm_adapters_registry = Registry.new("Orm adapters")
       @manifest_name_formatter = Formatters::ManifestNameFormatter
-      @before_validation_callback_name = :before_validation
     end
 
     attr_accessor :manifest_name_formatter
-
-    attr_accessor :before_validation_callback_name
 
     attr_reader :orm_adapter
 

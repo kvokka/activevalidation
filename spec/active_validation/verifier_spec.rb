@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Verifier do
-  subject { described_class.new(model) }
-
   let(:model) { define_const "Foo" }
 
   let(:registry) do
@@ -226,12 +224,6 @@ describe ActiveValidation::Verifier do
         result = [bar_manifest42.as_hash_with_indifferent_access]
         expect(subject.find_manifests(base_klass: "Bar", version: 42)).to eq result
       end
-    end
-  end
-
-  context "#before_validation_callback_name" do
-    it "setups default value" do
-      expect(subject.before_validation_callback_name).to eq ActiveValidation.config.before_validation_callback_name
     end
   end
 end
