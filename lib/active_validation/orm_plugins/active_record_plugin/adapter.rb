@@ -21,13 +21,6 @@ module ActiveValidation
         def setup
           installator = lambda do
             ::ActiveRecord::Base.include ActiveValidation::ModelExtension
-            # require_relative "models/active_validation/concerns/protect_from_mutable_instance_methods"
-            # require_relative "models/active_validation/check"
-            # require_relative "models/active_validation/check/concerns/method_must_be_allowed"
-            # require_relative "models/active_validation/check/validate_method"
-            # require_relative "models/active_validation/check/validates_method"
-            # require_relative "models/active_validation/check/validate_with_method"
-            # require_relative "models/active_validation/manifest"
             ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
           end
 
