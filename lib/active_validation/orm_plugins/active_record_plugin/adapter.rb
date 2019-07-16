@@ -42,7 +42,7 @@ module ActiveValidation
         # @param [Verifier]
         # @return [Array<Value::Version>] Sorted list of versions.
         def versions(verifier)
-          verifier.base_klass.const_get(validations_module_name)
+          verifier.base_class.const_get(validations_module_name)
                   .constants.map { |k| ActiveValidation::Values::Version.new(k) }.sort
         rescue NameError
           []

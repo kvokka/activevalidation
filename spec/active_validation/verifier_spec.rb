@@ -103,4 +103,16 @@ describe ActiveValidation::Verifier do
       expect(subject.version).to eq ActiveValidation::Values::Version.new(300)
     end
   end
+
+  context "#base_class" do
+    before { allow(described_class).to receive(:registry).and_return(registry) }
+
+    it "return Class if base_klass as String given" do
+      expect(described_class.new(model.name).base_class).to eq model
+    end
+
+    it "return Class if base_klass as Class given" do
+      expect(described_class.new(model).base_class).to eq model
+    end
+  end
 end

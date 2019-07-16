@@ -16,7 +16,7 @@ module ActiveValidation
              to: :verifier
 
     def versions
-      orm_adapter.versions self
+      orm_adapter.versions verifier
     end
 
     def add_manifest(**manifest_hash)

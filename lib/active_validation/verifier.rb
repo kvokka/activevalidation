@@ -58,6 +58,10 @@ module ActiveValidation
       @version = other_value
     end
 
+    def base_class
+      base_klass.is_a?(Class) ? base_klass : base_klass.constantize
+    end
+
     private
 
     def proxy
