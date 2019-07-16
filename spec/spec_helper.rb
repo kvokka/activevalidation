@@ -27,6 +27,7 @@ require "pry"
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 Dir["#{File.dirname(__FILE__)}/support/shared_examples/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/matchers/*.rb"].each { |f| require f }
 
 # load ORM related support modules
 require_relative "support/orm/#{ENV['ORM']}/setup"

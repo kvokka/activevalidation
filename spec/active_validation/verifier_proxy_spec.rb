@@ -7,6 +7,10 @@ describe ActiveValidation::VerifierProxy do
     ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
   end
 
+  %i[base_klass version orm_adapter manifest_name_formatter as_hash_with_indifferent_access].each do |m|
+    it { is_expected.to delegate(m).to(:verifier) }
+  end
+
   context "#versions" do
     before do
       define_const "Bar", with_active_validation: true
