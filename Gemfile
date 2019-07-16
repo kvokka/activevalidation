@@ -28,5 +28,3 @@ group :local_development do
   gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
   gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
 end
-
-gem "zeitwerk", github: "kvokka/zeitwerk", branch: "bugfix/fix_workflow_with_adapter_pattern"
