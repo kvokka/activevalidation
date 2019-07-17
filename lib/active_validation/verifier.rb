@@ -45,7 +45,7 @@ module ActiveValidation
       self.class.registry.register base_klass, self
     end
 
-    delegate :versions, :add_manifest, :find_manifest, :find_manifests, to: :proxy
+    delegate_missing_to :proxy
 
     # @note Version manual lock
     def version
