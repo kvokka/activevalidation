@@ -44,8 +44,6 @@ module ActiveValidation
 
     def normalize(hash = {})
       h = ActiveSupport::HashWithIndifferentAccess.new hash
-      unsupported_options = h.keys - supported_manifest_options
-      raise ArgumentError, "Provided unsupported options #{unsupported_options}" if unsupported_options.any?
 
       h[:base_klass]  ||= base_klass
       h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
@@ -55,10 +53,6 @@ module ActiveValidation
       return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
 
       result.map(&:as_hash_with_indifferent_access)
-    end
-
-    def supported_manifest_options
-      %w[base_klass name version checks created_at]
     end
   end
 end

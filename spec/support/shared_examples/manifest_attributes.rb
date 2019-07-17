@@ -6,8 +6,4 @@ RSpec.shared_examples "manifest attributes check" do |_parameter|
       expect { subject.add_manifest(attr => value) }.not_to raise_error
     end
   end
-
-  it "raise an error with insupportable attribute" do
-    expect { subject.add_manifest(unsupported: 42) }.to raise_error ArgumentError
-  end
 end
