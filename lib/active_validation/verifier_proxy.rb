@@ -43,16 +43,19 @@ module ActiveValidation
     private
 
     def normalize(hash = {})
-      h = ActiveSupport::HashWithIndifferentAccess.new hash
-
-      h[:base_klass]  ||= base_klass
-      h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
-      result = yield h
+      result = yield(normalize_options(hash))
       return result unless as_hash_with_indifferent_access
       return ActiveSupport::HashWithIndifferentAccess.new unless result
       return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
 
       result.map(&:as_hash_with_indifferent_access)
+    end
+
+    def normalize_options(hash = {})
+      h = ActiveSupport::HashWithIndifferentAccess.new hash
+      h[:base_klass]  ||= base_klass
+      h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
+      h
     end
   end
 end
