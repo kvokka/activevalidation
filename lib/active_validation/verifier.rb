@@ -47,7 +47,7 @@ module ActiveValidation
 
     delegate_missing_to :proxy
 
-    # @note Version manual lock
+    # @!group Manual version lock
     def version
       @version ||= versions.last
     end
@@ -57,6 +57,17 @@ module ActiveValidation
       versions.include?(other_value) or raise ArgumentError, "Version #{other} not found"
       @version = other_value
     end
+
+    # @!endgroup
+
+    # @!group Manual manifest management
+    def manifest=(manifest)
+      @manifest = manifest.is_a?(Hash) ? manifest : manifest.as_hash_with_indifferent_access
+    end
+
+    attr_reader :manifest
+
+    # @!endgroup
 
     def base_class
       base_klass.is_a?(Class) ? base_klass : base_klass.constantize
