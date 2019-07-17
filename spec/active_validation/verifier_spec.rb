@@ -112,19 +112,39 @@ describe ActiveValidation::Verifier do
       end
     end
 
-    context "#lock_manidest" do
+    context "with manifests" do
       let!(:manifest1) { create(:manifest, base_klass: model.name) }
       let!(:manifest2) { create(:manifest, base_klass: model.name) }
       let!(:manifest3) { create(:manifest, base_klass: model.name) }
 
-      it "locks manifest in with manifest2 as as_hash_with_indifferent_access" do
-        subject = described_class.new(model) { |k| k.manifest = manifest2 }
-        expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+      context "#lock_manidest" do
+        it "locks manifest in with manifest2 as as_hash_with_indifferent_access" do
+          subject = described_class.new(model) { |k| k.manifest = manifest2 }
+          expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+        end
+
+        it "locks manifest in with manifest2 hash as as_hash_with_indifferent_access" do
+          subject = described_class.new(model) { |k| k.manifest = manifest2.as_hash_with_indifferent_access }
+          expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+        end
       end
 
-      it "locks manifest in with manifest2 hash as as_hash_with_indifferent_access" do
-        subject = described_class.new(model) { |k| k.manifest = manifest2.as_hash_with_indifferent_access }
-        expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+      context "#current_manifest" do
+        it "return manifest if it is set" do
+          subject = described_class.new(model) { |k| k.manifest = manifest2 }
+          expect(subject.current_manifest).to eq manifest2.as_hash_with_indifferent_access
+        end
+
+        it "return the latest manifest if manifest is not set" do
+          expect(subject.current_manifest).to eq manifest3.as_hash_with_indifferent_access
+        end
+
+        it "return right manifest if version bumped" do
+          last = create(:manifest, base_klass: model.name, version: 3)
+          create(:manifest, base_klass: model.name, version: 2)
+
+          expect(subject.current_manifest).to eq last.as_hash_with_indifferent_access
+        end
       end
     end
   end

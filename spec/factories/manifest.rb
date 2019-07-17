@@ -21,7 +21,7 @@ FactoryBot.define do
     after(:build) do |record, evaluator|
       records = Set.new evaluator.with_versions + [record.version]
       records.each do |n|
-        constant_name = "#{record.base_klass}::Versions::V#{n}"
+        constant_name = "#{record.base_klass}::Validations::V#{n}"
         RSpec::Mocks::ConstantMutator.stub(constant_name, Class.new)
       end
     end
