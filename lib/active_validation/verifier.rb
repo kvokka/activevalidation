@@ -77,6 +77,13 @@ module ActiveValidation
 
     # @!endgroup
 
+    def current_manifest
+      return manifest if manifest
+
+      result = find_manifest version: version
+      result.is_a?(ActiveSupport::HashWithIndifferentAccess) ? result : result.as_hash_with_indifferent_access
+    end
+
     def base_class
       base_klass.is_a?(Class) ? base_klass : base_klass.constantize
     end
