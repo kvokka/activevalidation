@@ -62,14 +62,10 @@ module ActiveValidation
 
     # @!group Manual manifest management
 
-    # @param [ActiveSupport::HashWithIndifferentAccess, #as_hash_with_indifferent_access]
+    # @param [ActiveSupport::HashWithIndifferentAccess, #with_indifferent_access]
     # @return [ActiveSupport::HashWithIndifferentAccess]
     def manifest=(manifest)
-      @manifest = if manifest.is_a?(ActiveSupport::HashWithIndifferentAccess)
-                    manifest
-                  else
-                    manifest.as_hash_with_indifferent_access
-                  end
+      @manifest = manifest.with_indifferent_access
     end
 
     # @return [ActiveSupport::HashWithIndifferentAccess]
@@ -80,8 +76,7 @@ module ActiveValidation
     def current_manifest
       return manifest if manifest
 
-      result = find_manifest version: version
-      result.is_a?(ActiveSupport::HashWithIndifferentAccess) ? result : result.as_hash_with_indifferent_access
+      find_manifest(version: version).with_indifferent_access
     end
 
     def base_class

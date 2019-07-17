@@ -48,9 +48,8 @@ module ActiveValidation
       raise(Errors::NotFoundError, "Manifest with #{h} not found") if result.blank?
 
       return result unless as_hash_with_indifferent_access
-      return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
 
-      result.map(&:as_hash_with_indifferent_access)
+      result.respond_to?(:map) ? result.map(&:with_indifferent_access) : result.with_indifferent_access
     end
 
     def normalize_options(hash = {})

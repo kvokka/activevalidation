@@ -72,11 +72,11 @@ describe ActiveValidation::VerifierProxy do
       end
 
       it "find existed Manifest" do
-        expect(subject.find_manifest(base_klass: "Bar")).to eq manifest.as_hash_with_indifferent_access
+        expect(subject.find_manifest(base_klass: "Bar")).to eq manifest.with_indifferent_access
       end
 
       it "find existed Manifest if base_klass is Class" do
-        expect(subject.find_manifest(base_klass: Bar)).to eq manifest.as_hash_with_indifferent_access
+        expect(subject.find_manifest(base_klass: Bar)).to eq manifest.with_indifferent_access
       end
 
       it "returns version value object" do
@@ -114,7 +114,7 @@ describe ActiveValidation::VerifierProxy do
       include_examples "manifest attributes check"
 
       it "returns filtered results" do
-        result = [bar_manifest42.as_hash_with_indifferent_access, bar_manifest1.as_hash_with_indifferent_access]
+        result = [bar_manifest42.with_indifferent_access, bar_manifest1.with_indifferent_access]
         expect(subject.find_manifests).to eq result
         expect(subject.find_manifests(base_klass: "Bar")).to eq result
       end
@@ -125,7 +125,7 @@ describe ActiveValidation::VerifierProxy do
 
       it "return array if 1 element" do
         create :manifest, base_klass: bar, version: 55
-        result = [bar_manifest42.as_hash_with_indifferent_access]
+        result = [bar_manifest42.with_indifferent_access]
         expect(subject.find_manifests(base_klass: "Bar", version: 42)).to eq result
       end
     end

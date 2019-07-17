@@ -78,6 +78,8 @@ describe ActiveValidation::Verifier do
       it "execute the block after build for existed verifier" do
         expect(registry).not_to be_registered(model)
         described_class.new(model) { |v| v.version = :V300 }
+        described_class.find_or_build(model) { |v| v.as_hash_with_indifferent_access = true }
+        expect(registry.find(model).as_hash_with_indifferent_access).to be_truthy
         described_class.find_or_build(model) { |v| v.version = :V301 }
         described_class.find_or_build(model) { |v| v.as_hash_with_indifferent_access = false }
         expect(registry.find(model).version).to eq ActiveValidation::Values::Version.new(301)
@@ -117,33 +119,33 @@ describe ActiveValidation::Verifier do
       let!(:manifest2) { create(:manifest, base_klass: model.name) }
       let!(:manifest3) { create(:manifest, base_klass: model.name) }
 
-      context "#lock_manidest" do
-        it "locks manifest in with manifest2 as as_hash_with_indifferent_access" do
+      context "#lock_manifest" do
+        it "locks manifest in with manifest2 as with_indifferent_access" do
           subject = described_class.new(model) { |k| k.manifest = manifest2 }
-          expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+          expect(subject.manifest).to eq manifest2.with_indifferent_access
         end
 
         it "locks manifest in with manifest2 hash as as_hash_with_indifferent_access" do
-          subject = described_class.new(model) { |k| k.manifest = manifest2.as_hash_with_indifferent_access }
-          expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+          subject = described_class.new(model) { |k| k.manifest = manifest2.with_indifferent_access }
+          expect(subject.manifest).to eq manifest2.with_indifferent_access
         end
       end
 
       context "#current_manifest" do
         it "return manifest if it is set" do
           subject = described_class.new(model) { |k| k.manifest = manifest2 }
-          expect(subject.current_manifest).to eq manifest2.as_hash_with_indifferent_access
+          expect(subject.current_manifest).to eq manifest2.with_indifferent_access
         end
 
         it "return the latest manifest if manifest is not set" do
-          expect(subject.current_manifest).to eq manifest3.as_hash_with_indifferent_access
+          expect(subject.current_manifest).to eq manifest3.with_indifferent_access
         end
 
         it "return right manifest if version bumped" do
           last = create(:manifest, base_klass: model.name, version: 3)
           create(:manifest, base_klass: model.name, version: 2)
 
-          expect(subject.current_manifest).to eq last.as_hash_with_indifferent_access
+          expect(subject.current_manifest).to eq last.with_indifferent_access
         end
       end
     end
