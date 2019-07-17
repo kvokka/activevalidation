@@ -61,10 +61,18 @@ module ActiveValidation
     # @!endgroup
 
     # @!group Manual manifest management
+
+    # @param [ActiveSupport::HashWithIndifferentAccess, #as_hash_with_indifferent_access]
+    # @return [ActiveSupport::HashWithIndifferentAccess]
     def manifest=(manifest)
-      @manifest = manifest.is_a?(Hash) ? manifest : manifest.as_hash_with_indifferent_access
+      @manifest = if manifest.is_a?(ActiveSupport::HashWithIndifferentAccess)
+                    manifest
+                  else
+                    manifest.as_hash_with_indifferent_access
+                  end
     end
 
+    # @return [ActiveSupport::HashWithIndifferentAccess]
     attr_reader :manifest
 
     # @!endgroup

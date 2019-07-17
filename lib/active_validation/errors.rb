@@ -9,5 +9,7 @@ module ActiveValidation
     end
 
     class DuplicateRegistryEntryError < RuntimeError; end
+
+    class NotFoundError < RuntimeError; end
   end
 end

@@ -99,7 +99,7 @@ describe ActiveValidation::VerifierProxy do
         end
 
         it "find nothing and return HashWithIndifferentAccess" do
-          expect(not_exist).to eq ActiveSupport::HashWithIndifferentAccess.new
+          expect { not_exist }.to raise_error ActiveValidation::Errors::NotFoundError
         end
       end
     end
@@ -120,7 +120,7 @@ describe ActiveValidation::VerifierProxy do
       end
 
       it "find nothing and return HashWithIndifferentAccess" do
-        expect(subject.find_manifest(version: 123)).to eq ActiveSupport::HashWithIndifferentAccess.new
+        expect { subject.find_manifest(version: 123) }.to raise_error ActiveValidation::Errors::NotFoundError
       end
 
       it "return array if 1 element" do

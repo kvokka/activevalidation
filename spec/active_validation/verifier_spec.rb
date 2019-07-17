@@ -111,5 +111,21 @@ describe ActiveValidation::Verifier do
         expect(described_class.new(model).base_class).to eq model
       end
     end
+
+    context "#lock_manidest" do
+      let!(:manifest1) { create(:manifest, base_klass: model.name) }
+      let!(:manifest2) { create(:manifest, base_klass: model.name) }
+      let!(:manifest3) { create(:manifest, base_klass: model.name) }
+
+      it "locks manifest in with manifest2 as as_hash_with_indifferent_access" do
+        subject = described_class.new(model) { |k| k.manifest = manifest2 }
+        expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+      end
+
+      it "locks manifest in with manifest2 hash as as_hash_with_indifferent_access" do
+        subject = described_class.new(model) { |k| k.manifest = manifest2.as_hash_with_indifferent_access }
+        expect(subject.manifest).to eq manifest2.as_hash_with_indifferent_access
+      end
+    end
   end
 end

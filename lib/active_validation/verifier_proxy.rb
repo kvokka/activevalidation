@@ -43,9 +43,11 @@ module ActiveValidation
     private
 
     def normalize(hash = {})
-      result = yield(normalize_options(hash))
+      h = normalize_options(hash)
+      result = yield(h.dup)
+      raise(Errors::NotFoundError, "Manifest with #{h} not found") if result.blank?
+
       return result unless as_hash_with_indifferent_access
-      return ActiveSupport::HashWithIndifferentAccess.new unless result
       return result.as_hash_with_indifferent_access unless result.respond_to?(:map)
 
       result.map(&:as_hash_with_indifferent_access)
