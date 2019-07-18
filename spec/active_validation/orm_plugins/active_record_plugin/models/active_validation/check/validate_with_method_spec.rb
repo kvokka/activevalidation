@@ -15,13 +15,13 @@ describe ActiveValidation::Check::ValidateWithMethod, helpers: %i[only_with_acti
     end
 
     it "is not valid record with incorrect validator" do
-      record = build(:check_validate_with, argument: "NotExist")
+      record = build(:check_validate_with, argument: "NotExist", with_validator_klass: false)
       expect(record).not_to be_valid
       expect(record.errors[:argument].size).to eq 1
     end
 
     it "is not valid record without validator" do
-      record = build(:check_validate_with, argument: "")
+      record = build(:check_validate_with, argument: "", with_validator_klass: false)
       expect(record).not_to be_valid
       expect(record.errors[:argument].size).to eq 1
     end
