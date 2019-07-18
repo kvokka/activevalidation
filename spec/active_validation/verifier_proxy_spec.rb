@@ -129,5 +129,12 @@ describe ActiveValidation::VerifierProxy do
         expect(subject.find_manifests(base_klass: "Bar", version: 42)).to eq result
       end
     end
+
+    context "private #normalize_records" do
+      it "return correct error class" do
+        msg = "The object 42 with class Integer must respond_to method #with_indifferent_access"
+        expect { subject.send(:normalize_records, 42) }.to raise_error(ActiveValidation::Errors::MustRespondTo, msg)
+      end
+    end
   end
 end

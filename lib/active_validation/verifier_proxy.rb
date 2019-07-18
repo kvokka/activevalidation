@@ -47,9 +47,7 @@ module ActiveValidation
       result = yield(h.dup)
       raise(Errors::NotFoundError, "Manifest with #{h} not found") if result.blank?
 
-      return result unless as_hash_with_indifferent_access
-
-      result.respond_to?(:map) ? result.map(&:with_indifferent_access) : result.with_indifferent_access
+      normalize_records result
     end
 
     def normalize_options(hash = {})
@@ -57,6 +55,17 @@ module ActiveValidation
       h[:base_klass]  ||= base_klass
       h[:base_klass]    = h[:base_klass].name if h[:base_klass].is_a?(Class)
       h
+    end
+
+    def normalize_records(hash_or_records)
+      return hash_or_records unless as_hash_with_indifferent_access
+      return hash_or_records.map(&:with_indifferent_access) if hash_or_records.respond_to?(:map)
+
+      hash_or_records.with_indifferent_access
+    rescue NoMethodError => e
+      raise unless e.name == :with_indifferent_access
+
+      raise Errors::MustRespondTo.new(base: hash_or_records, method_name: e.name)
     end
   end
 end
