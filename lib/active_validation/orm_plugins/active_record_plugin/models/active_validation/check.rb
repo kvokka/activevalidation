@@ -16,5 +16,11 @@ module ActiveValidation
         raise NotImplementedError, "abstract"
       end
     end
+
+    def method_name
+      raise NotImplementedError, "abstract" unless self.class < Check
+
+      self.class.name.demodulize.sub(/Method\z/, "").underscore
+    end
   end
 end
