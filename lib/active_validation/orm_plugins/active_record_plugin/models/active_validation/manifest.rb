@@ -16,7 +16,8 @@ module ActiveValidation
     end
 
     def with_indifferent_access
-      ActiveSupport::HashWithIndifferentAccess.new as_json(include: :checks, root: false)
+      options = { include: { checks: { methods: %i[method_name type] } }, root: false }
+      ActiveSupport::HashWithIndifferentAccess.new as_json(options)
     end
   end
 end

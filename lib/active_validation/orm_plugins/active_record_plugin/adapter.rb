@@ -44,7 +44,11 @@ module ActiveValidation
         # @see BaseAdapter
         def add_manifest(manifest_hash)
           h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
-          h[:checks_attributes] = h.delete(:checks) if h[:checks]
+          h[:checks_attributes] ||= h.delete(:checks) || []
+          h[:checks_attributes].each do |check|
+            check[:type] ||= check.delete(:method_name)&.camelcase&.concat("Method")
+          end
+
           Manifest.create!(h)
         end
 
