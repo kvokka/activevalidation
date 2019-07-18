@@ -58,6 +58,11 @@ describe ActiveValidation::VerifierProxy do
       it "contain checks array with checks" do
         expect(subject.add_manifest(checks: checks)).to have_key "checks"
       end
+
+      it "accept checks with simplified type" do
+        checks = [{ method_name: "validates", argument: "name", options: { presence: true } }]
+        expect(subject.add_manifest(checks: checks)).to have_key "checks"
+      end
     end
 
     context "#find_manifest" do
