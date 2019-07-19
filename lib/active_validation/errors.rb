@@ -12,6 +12,8 @@ module ActiveValidation
 
     class NotFoundError < RuntimeError; end
 
+    class InconsistentRegistryError < ArgumentError; end
+
     class MustRespondTo < RuntimeError
       attr_reader :method_name, :base
       def initialize(base:, method_name:)
