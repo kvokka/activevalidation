@@ -2,7 +2,7 @@
 
 module ActiveValidation
   class Check < ActiveRecord::Base
-    class ValidateWithMethod < Check
+    class ValidatesWithMethod < Check
       validate :validator_must_be_defined
 
       class << self

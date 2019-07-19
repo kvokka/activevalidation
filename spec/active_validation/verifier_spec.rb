@@ -175,10 +175,8 @@ describe ActiveValidation::Verifier do
 
       before do
         create :manifest, :validate
+        create :manifest, :validates_with
         create :manifest, :validates
-
-        # HERE TYPO!!!
-        # create :manifest, :validate_with
 
         model.include ActiveModel::Validations
         described_class.find_or_build("Foo").setup_validations

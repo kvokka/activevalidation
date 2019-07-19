@@ -17,7 +17,7 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
       described_class.create name: "foo's manifest", version: 1, base_klass: "Foo", checks_attributes: [
         attributes_for(:check_validates),
         attributes_for(:check_validate),
-        attributes_for(:check_validate_with)
+        attributes_for(:check_validates_with)
       ]
 
       expect(described_class.count).to eq 1
@@ -26,7 +26,7 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
   end
 
   context "factories traits" do
-    %i[validate validates validate_with].each do |trait|
+    %i[validate validates validates_with].each do |trait|
       it "accept Factory trait #{trait} and build corresponding check" do
         expect(build(:manifest, trait).checks.size).to eq 1
       end

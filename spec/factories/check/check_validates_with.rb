@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :check_validate_with, class: "ActiveValidation::Check::ValidateWithMethod" do
+  factory :check_validates_with, class: "ActiveValidation::Check::ValidatesWithMethod" do
     transient do
       # Generate validator for the argument
       with_validator_klass { true }
