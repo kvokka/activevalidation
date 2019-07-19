@@ -7,7 +7,6 @@ FactoryBot.define do
       with_validator_klass { true }
     end
 
-    type { "ValidateWithMethod" }
     argument { "FooValidator" }
 
     after(:build) do |record, evaluator|

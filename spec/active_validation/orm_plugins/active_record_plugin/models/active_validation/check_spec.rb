@@ -27,4 +27,10 @@ describe ActiveValidation::Check, helpers: %i[only_with_active_record] do
       expect(klass.new.method_name).to eq "foo"
     end
   end
+
+  context "with_indifferent_access" do
+    it "raises an error as abstract class" do
+      expect { subject.with_indifferent_access }.to raise_error NotImplementedError
+    end
+  end
 end

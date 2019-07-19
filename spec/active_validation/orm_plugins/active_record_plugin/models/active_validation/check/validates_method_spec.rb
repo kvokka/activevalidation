@@ -5,6 +5,10 @@ describe ActiveValidation::Check::ValidatesMethod, helpers: %i[only_with_active_
     expect(described_class.argument_description).to match "^Should contain"
   end
 
+  include_examples "check attributes check"
+
+  it("contains field type") { expect(subject.attributes).to have_key("type") }
+
   context "validate the method invocation" do
     before do
       define_model "Foo" do

@@ -37,7 +37,7 @@ describe ActiveValidation::VerifierProxy do
     end
 
     context "#add_manifest" do
-      let(:checks) { [attributes_for(:check_validates)] }
+      let(:checks) { [build(:check_validates).with_indifferent_access] }
 
       include_examples "manifest attributes check"
 
@@ -57,6 +57,7 @@ describe ActiveValidation::VerifierProxy do
 
       it "contain checks array with checks" do
         expect(subject.add_manifest(checks: checks)).to have_key "checks"
+        expect(subject.find_manifest(base_klass: "Bar").fetch(:checks).size).to eq 1
       end
 
       it "accept checks with simplified type" do
