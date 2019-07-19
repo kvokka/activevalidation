@@ -149,5 +149,25 @@ describe ActiveValidation::Verifier do
         end
       end
     end
+
+    context "#descendants_with_active_validation" do
+      subject { described_class.find_or_build(foo_descendant3).descendants_with_active_validation }
+
+      let!(:should_not_be_in_the_list) { define_const "ShouldNotBeInTheList" }
+      let!(:bar) { define_const "Bar", superclass: should_not_be_in_the_list, with_active_validation: true }
+
+      let(:foo) { define_const "Foo", superclass: should_not_be_in_the_list, with_active_validation: true }
+      let(:foo_descendant1) { define_const "FooDescendant1", superclass: foo }
+      let(:foo_descendant2) { define_const "FooDescendant2", superclass: foo_descendant1 }
+      let(:foo_descendant3) { define_const "FooDescendant3", superclass: foo_descendant2 }
+
+      it "returns only Foo based constants" do
+        expect(subject).to match [foo_descendant2, foo_descendant1, foo]
+      end
+
+      it "returns empty array for foo" do
+        expect(described_class.find_or_build(foo).descendants_with_active_validation).to be_empty
+      end
+    end
   end
 end
