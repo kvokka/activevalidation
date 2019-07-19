@@ -105,8 +105,12 @@ module ActiveValidation
     # @return [void]
     def setup_validations(manifest = nil)
       manifest ||= current_manifest
+
       manifest.fetch(:checks).each do |check|
-        base_class.send(check[:method_name].to_sym, check[:argument].to_sym, check[:options] || {})
+        method_name = check[:method_name].to_sym
+        argument = method_name == :validates_with ? check[:argument].constantize : check[:argument].to_sym
+        options = check[:options] || {}
+        base_class.send(method_name, argument, options)
       end
     end
 

@@ -172,23 +172,47 @@ describe ActiveValidation::Verifier do
 
     context "#setup_validations" do
       let!(:model) { define_const("Foo") { def foo_allowed; end } }
+      let(:callbacks) { model.__callbacks[:validate].send(:chain).map(&:filter) }
 
-      before do
-        create :manifest, :validate
-        create :manifest, :validates_with
-        create :manifest, :validates
+      before { model.include ActiveModel::Validations }
 
-        model.include ActiveModel::Validations
-        described_class.find_or_build("Foo").setup_validations
+      context "only 1 validation with manifest" do
+        before do
+          create :manifest, :validate
+          create :manifest, :validates_with
+          create :manifest, :validates
+
+          described_class.find_or_build("Foo").setup_validations
+        end
+
+        it "setups default factories validations to default model" do
+          expect(model.validators).to all be_a ActiveModel::Validations::PresenceValidator
+        end
+
+        it "setups default factories callbacks to default model" do
+          expect(callbacks).to all be_a ActiveModel::Validations::PresenceValidator
+        end
       end
 
-      it "setups default factories validations to default model" do
-        expect(model.validators).to all be_a ActiveModel::Validations::PresenceValidator
-      end
+      context "few validations with manifest" do
+        before do
+          define_const("FooValidator", superclass: ActiveModel::Validator) { def validate(*); true; end }
 
-      it "setups default factories callbacks to default model" do
-        callbacks = model.__callbacks[:validate].send(:chain).map(&:filter)
-        expect(callbacks).to all be_a ActiveModel::Validations::PresenceValidator
+          create :manifest, :validates
+          create :manifest, :validates, :validates_with, :validate
+
+          described_class.find_or_build("Foo").setup_validations
+        end
+
+        it "setups default factories validations to default model" do
+          expect(model.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
+          expect(model.validators).to include a_kind_of FooValidator
+          expect(model.validators.size).to eq 2
+        end
+
+        it "setups default factories callbacks to default model" do
+          expect(callbacks.size).to eq 3
+        end
       end
     end
   end
