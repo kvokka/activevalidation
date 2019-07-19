@@ -5,7 +5,10 @@ module ActiveValidation
     attr_reader :verifiers_registry, :orm_adapters_registry
 
     def initialize
-      @verifiers_registry    = Decorators::DisallowsDuplicatesRegistry.new(Registry.new("Verifiers"))
+      @verifiers_registry    = Decorators::ConsistentRegistry.new Verifier,
+                                                                  Decorators::DisallowsDuplicatesRegistry.new(
+                                                                    Registry.new("Verifiers")
+                                                                  )
       @orm_adapters_registry = Registry.new("Orm adapters")
       @manifest_name_formatter = Formatters::ManifestNameFormatter
     end

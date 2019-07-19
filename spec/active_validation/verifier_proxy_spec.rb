@@ -3,9 +3,7 @@
 describe ActiveValidation::VerifierProxy do
   subject { described_class.new ActiveValidation::Verifier.find_or_build "Bar" }
 
-  let(:registry) do
-    ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
-  end
+  include_examples "verifiers registry"
 
   %i[base_klass version orm_adapter manifest_name_formatter as_hash_with_indifferent_access].each do |m|
     it { is_expected.to delegate(m).to(:verifier) }

@@ -6,13 +6,7 @@ module ActiveValidation
       # @param [Class] Class of the corresponding model
       # @yieldparam [Verifier] optional Invokes the block with self as argument
       # @return [Verifier]
-      def find_or_build(base_klass, &block)
-        return new(base_klass, &block) unless registry.registered?(base_klass)
-
-        found = registry.find(base_klass)
-        found.instance_exec(found, &block) if block_given?
-        found
-      end
+      delegate :find_or_build, to: :registry
 
       # Shortcut for the global verifiers registry instance
       # @return [Registry]

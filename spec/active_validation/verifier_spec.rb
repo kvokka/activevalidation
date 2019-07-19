@@ -12,11 +12,7 @@ describe ActiveValidation::Verifier do
   context "with fake registry" do
     subject { described_class.find_or_build model }
 
-    let(:registry) do
-      ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
-    end
-
-    before { allow(described_class).to receive(:registry).and_return(registry) }
+    include_examples "verifiers registry"
 
     %i[versions add_manifest find_manifest find_manifests].each do |m|
       it { is_expected.to delegate(m).to(:proxy) }
