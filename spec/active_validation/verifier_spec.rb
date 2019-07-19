@@ -10,7 +10,7 @@ describe ActiveValidation::Verifier do
   end
 
   context "with fake registry" do
-    subject { described_class.new model }
+    subject { described_class.find_or_build model }
 
     let(:registry) do
       ActiveValidation::Decorators::DisallowsDuplicatesRegistry.new(ActiveValidation::Registry.new("Dummy"))
@@ -167,6 +167,30 @@ describe ActiveValidation::Verifier do
 
       it "returns empty array for foo" do
         expect(described_class.find_or_build(foo).descendants_with_active_validation).to be_empty
+      end
+    end
+
+    context "#setup_validations" do
+      let!(:model) { define_const("Foo") { def foo_allowed; end } }
+
+      before do
+        create :manifest, :validate
+        create :manifest, :validates
+
+        # HERE TYPO!!!
+        # create :manifest, :validate_with
+
+        model.include ActiveModel::Validations
+        described_class.find_or_build("Foo").setup_validations
+      end
+
+      it "setups default factories validations to default model" do
+        expect(model.validators).to all be_a ActiveModel::Validations::PresenceValidator
+      end
+
+      it "setups default factories callbacks to default model" do
+        callbacks = model.__callbacks[:validate].send(:chain).map(&:filter)
+        expect(callbacks).to all be_a ActiveModel::Validations::PresenceValidator
       end
     end
   end

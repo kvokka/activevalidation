@@ -97,6 +97,23 @@ module ActiveValidation
       end
     end
 
+    # set validations on the current validator.
+    #
+    # @param [HashWithIndifferentAccess] :manifest, by default will be
+    #     calculated current_manifest
+    #
+    # @return [void]
+    def setup_validations(manifest = nil)
+      manifest ||= current_manifest
+      manifest.fetch(:checks).each do |check|
+        base_class.send(check[:method_name].to_sym, check[:argument].to_sym, check[:options] || {})
+      end
+    end
+
+    # def install
+    #   descendants_with_active_validation.reverse_each(&:set_validations)
+    # end
+
     private
 
     def proxy
