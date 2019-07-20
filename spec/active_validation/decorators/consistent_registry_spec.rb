@@ -73,6 +73,32 @@ describe ActiveValidation::Decorators::ConsistentRegistry do
     end
   end
 
+  context "#find_or_add" do
+    context "with existed record" do
+      before { subject.register(bar.name, klass.new(bar)) }
+
+      it "finds" do
+        expect(subject.find_or_add(bar.name)).to be_a klass
+      end
+
+      it "do not try to add record to registry" do
+        expect(registry).to include subject.find_or_add(bar.name)
+        expect(registry.count).to eq 1
+      end
+    end
+
+    context "with new record" do
+      it "finds" do
+        expect(subject.find_or_add(bar.name)).to be_a klass
+      end
+
+      it "add record to registry" do
+        expect(registry).to include subject.find_or_add(bar.name)
+        expect(registry.count).to eq 1
+      end
+    end
+  end
+
   context "register" do
     context "raise" do
       it "with inconsistent value" do

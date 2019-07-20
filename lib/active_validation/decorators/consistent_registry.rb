@@ -21,6 +21,11 @@ module ActiveValidation
         found
       end
 
+      def find_or_add(name, &block)
+        record = find_or_build(name, &block)
+        registered?(name) ? record : register(name, record)
+      end
+
       def register(name, item)
         raise Errors::InconsistentRegistryError unless item.is_a? klass
 
