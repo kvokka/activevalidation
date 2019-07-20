@@ -15,7 +15,7 @@ RSpec::Matchers.define :have_attr_reader do |field|
   end
 
   description do
-    "checks to see if there is an attr reader on the instance."
+    "checks to see if there is an attr reader #{field} on the instance."
   end
 end
 
@@ -34,7 +34,7 @@ RSpec::Matchers.define :have_attr_writer do |field|
   end
 
   description do
-    "checks to see if there is an attr writer on the instance."
+    "checks to see if there is an attr writer #{field} on the instance."
   end
 end
 
@@ -53,6 +53,6 @@ RSpec::Matchers.define :have_attr_accessor do |field|
   end
 
   description do
-    "checks to see if there is an attr accessor on the instance."
+    "checks to see if there is an attr accessor #{field} on the instance."
   end
 end
