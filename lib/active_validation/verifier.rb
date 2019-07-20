@@ -47,9 +47,8 @@ module ActiveValidation
     end
 
     def version=(other)
-      other_value = ActiveValidation::Values::Version.new(other)
-      versions.include?(other_value) or raise ArgumentError, "Version #{other} not found"
-      @version = other_value
+      @version = versions.detect { |a| a == ActiveValidation::Values::Version.new(other) } or
+        raise ArgumentError, "Version #{other} not found"
     end
 
     # @!endgroup
@@ -69,9 +68,7 @@ module ActiveValidation
 
     # @return [ActiveSupport::HashWithIndifferentAccess]
     def current_manifest
-      return manifest if manifest
-
-      find_manifest(version: version).with_indifferent_access
+      manifest or find_manifest(version: version).with_indifferent_access
     end
 
     # @return [Class]
