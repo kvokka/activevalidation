@@ -9,6 +9,10 @@ describe ActiveValidation::Configuration do
     expect(subject.orm_adapters_registry).to be_a ActiveValidation::Registry
   end
 
+  it "has method name values registry" do
+    expect(subject.method_name_values_registry).to be_a ActiveValidation::Registry
+  end
+
   context "manifest name formatter" do
     it "has value" do
       expect(subject.manifest_name_formatter).to eq ActiveValidation::Formatters::ManifestNameFormatter

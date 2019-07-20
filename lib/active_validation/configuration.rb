@@ -2,7 +2,7 @@
 
 module ActiveValidation
   class Configuration
-    attr_reader :verifiers_registry, :orm_adapters_registry
+    attr_reader :verifiers_registry, :orm_adapters_registry, :method_name_values_registry
 
     def initialize
       @verifiers_registry    = Decorators::ConsistentRegistry.new Verifier,
@@ -10,6 +10,11 @@ module ActiveValidation
                                                                     Registry.new("Verifiers")
                                                                   )
       @orm_adapters_registry = Registry.new("Orm adapters")
+      @method_name_values_registry = Decorators::ConsistentRegistry.new Values::MethodName,
+                                                                        Decorators::DisallowsDuplicatesRegistry.new(
+                                                                          Registry.new("Validation methods")
+                                                                        )
+
       @manifest_name_formatter = Formatters::ManifestNameFormatter
     end
 
