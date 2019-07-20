@@ -20,7 +20,7 @@ module ActiveValidation
       end
 
       def ==(other)
-        value == other
+        value == (other.class == self.class ? other.value : other)
       end
 
       def to_s

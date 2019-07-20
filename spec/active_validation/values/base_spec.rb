@@ -24,11 +24,22 @@ describe ActiveValidation::Values::Base do
   end
 
   context "==" do
-    let(:version1) { described_class.new 1 }
-    let(:another_version1) { described_class.new 1 }
+    context "comarison instance vs value" do
+      let(:version1) { described_class.new 1 }
+      let(:another_version1) { described_class.new 1 }
 
-    it("is equal") { expect(version1).to eq another_version1 }
-    it("is not equal") { expect(version1).not_to eq subject }
+      it("is equal") { expect(version1).to eq another_version1 }
+      it("is not equal") { expect(version1).not_to eq subject }
+    end
+
+    context "comarison instance vs instance" do
+      let(:struct) { Struct.new(:foo) }
+      let(:version1) { described_class.new struct.new(foo: 42) }
+      let(:another_version1) { described_class.new struct.new(foo: 42) }
+
+      it("is equal") { expect(version1).to eq another_version1 }
+      it("is not equal") { expect(version1).not_to eq subject }
+    end
   end
 
   context "to_s" do
