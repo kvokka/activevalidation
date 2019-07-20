@@ -32,8 +32,12 @@ describe ActiveValidation::Values::Base do
   end
 
   context "to_s" do
-    it("convert to integer to string") { expect(described_class.new(1).to_s).to eq "1" }
-    it("convert to symbol to string") { expect(described_class.new(:foo).to_s).to eq "foo" }
+    it("convert integer to string") { expect(described_class.new(1).to_s).to eq "1" }
+    it("convert symbol to string") { expect(described_class.new(:foo).to_s).to eq "foo" }
+  end
+
+  context "to_sym" do
+    it("convert string to symbol") { expect(described_class.new(:foo).to_sym).to eq :foo }
   end
 
   context "to_json" do

@@ -27,6 +27,10 @@ module ActiveValidation
         value.to_s
       end
 
+      def to_sym
+        value.to_sym
+      end
+
       def as_json(*)
         value
       end
