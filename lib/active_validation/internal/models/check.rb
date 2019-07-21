@@ -34,6 +34,10 @@ module ActiveValidation
           ]
         end
 
+        def to_internal_check
+          self
+        end
+
         private
 
         def registry

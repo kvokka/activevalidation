@@ -8,6 +8,7 @@ FactoryBot.define do
     end
 
     argument { "FooValidator" }
+    options { {} }
 
     after(:build) do |record, evaluator|
       next unless evaluator.with_validator_klass

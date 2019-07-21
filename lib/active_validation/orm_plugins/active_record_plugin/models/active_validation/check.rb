@@ -16,5 +16,10 @@ module ActiveValidation
 
       self.class.name.demodulize.sub(/Method\z/, "").underscore
     end
+
+    def to_internal_check
+      json_options = { methods: %i[method_name], root: false }
+      ActiveValidation::Internal::Models::Check.new as_json(json_options).to_options!
+    end
   end
 end

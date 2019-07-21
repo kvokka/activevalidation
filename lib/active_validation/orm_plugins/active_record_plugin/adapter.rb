@@ -50,7 +50,7 @@ module ActiveValidation
         def search(wheres)
           relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc)
           relation = yield relation if block_given?
-          relation.is_a?(ActiveRecord::Base) ? relation.to_internal : relation.map(&:to_internal)
+          relation.is_a?(ActiveRecord::Base) ? relation.to_internal_manifest : relation.map(&:to_internal_manifest)
         end
       end
     end

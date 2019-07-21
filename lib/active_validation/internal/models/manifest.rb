@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+using ActiveValidation::Internal::Models::Concerns::ToInternal::Check
+
 module ActiveValidation
   module Internal
     module Models
@@ -24,7 +26,7 @@ module ActiveValidation
         def initialize(version:, base_klass:, checks: [], options: {}, **other)
           @version = ActiveValidation::Values::Version.new version
           @base_klass = base_klass.to_s
-          @checks = Array(checks).map { |c| c.is_a?(Check) ? c : Check.new(c.to_options!) }
+          @checks = Array(checks).map(&:to_internal_check)
           @other = ActiveSupport::OrderedOptions.new other
 
           @id = other[:id]
@@ -77,6 +79,10 @@ module ActiveValidation
             end
             only.each { |el| acc[el.to_sym] = public_send(el).as_json }
           end
+        end
+
+        def to_internal_manifest
+          self
         end
 
         private
