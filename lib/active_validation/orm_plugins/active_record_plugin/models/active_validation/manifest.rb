@@ -19,6 +19,11 @@ module ActiveValidation
       options = { include: { checks: { methods: %i[method_name type] } }, root: false }
       ActiveSupport::HashWithIndifferentAccess.new as_json(options)
     end
+
+    def to_internal
+      json_options = { include: { checks: { methods: %i[method_name] } }, root: false }
+      ActiveValidation::Internal::Models::Manifest.new as_json(json_options).to_options!
+    end
   end
 end
 

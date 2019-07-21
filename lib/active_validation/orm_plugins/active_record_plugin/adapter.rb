@@ -36,25 +36,21 @@ module ActiveValidation
 
         # @see BaseAdapter
         def find_manifests(wheres)
-          search(wheres).map(&ActiveValidation::Internal::Models::Manifest.method(:new))
+          search(wheres)
         end
 
         # @see BaseAdapter
         def find_manifest(wheres)
-          ActiveValidation::Internal::Models::Manifest.new search(wheres, &:first!)
+          search(wheres, &:first!)
         end
 
         private
 
         # @api internal
         def search(wheres)
-          json_options = { include: { checks: { methods: %i[method_name] } }, root: false }
           relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc)
           relation = yield relation if block_given?
-          record_or_collection = relation.as_json(json_options)
-          return record_or_collection.map(&:to_options!) if record_or_collection.is_a?(Array)
-
-          record_or_collection.to_options!
+          relation.is_a?(ActiveRecord::Base) ? relation.to_internal : relation.map(&:to_internal)
         end
       end
     end

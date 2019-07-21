@@ -48,4 +48,30 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
       end
     end
   end
+
+  context "#to_internal" do
+    let(:subject) { build :manifest, :validate }
+
+    it "produces right class" do
+      expect(subject.to_internal).to be_a ActiveValidation::Internal::Models::Manifest
+    end
+
+    context "has value" do
+      %w[name version base_klass].each do |key|
+        it key.to_s do
+          expect(subject.to_internal.public_send(key)).to eq subject.public_send(key)
+        end
+      end
+
+      context "checks" do
+        subject { build(:manifest, :validate, :validates).to_internal.checks }
+
+        let!(:wrong) { build(:manifest, :validate) }
+
+        it { is_expected.to be_a Array }
+        it { is_expected.to all a_kind_of ActiveValidation::Internal::Models::Check }
+        it { is_expected.to have_attributes length: 2 }
+      end
+    end
+  end
 end
