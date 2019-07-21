@@ -84,12 +84,6 @@ module ActiveValidation
         def to_internal_manifest
           self
         end
-
-        private
-
-        def registry
-          # ActiveValidation.config.method_name_values_registry
-        end
       end
     end
   end
