@@ -89,7 +89,7 @@ module ActiveValidation
     # return [Internal::Manifest, Array<Internal::Manifest>]
 
     %i[add_manifest find_manifest find_manifests].each do |m|
-      define_method(m) { |**hash| add_defaults_for_orm_adapter(hash) { |**h| orm_adapter.send m, h } }
+      define_method(m) { |**hash| add_defaults_for_orm_adapter(hash) { |**h| orm_adapter.public_send m, h } }
     end
 
     private

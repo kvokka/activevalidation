@@ -73,9 +73,9 @@ module ActiveValidation
               only.delete(k)
               as = v.delete(:as)
               key_name = (as || k).to_sym
-              acc[key_name] = send(k).as_json(v)
+              acc[key_name] = public_send(k).as_json(v)
             end
-            only.each { |el| acc[el.to_sym] = send(el).as_json }
+            only.each { |el| acc[el.to_sym] = public_send(el).as_json }
           end
         end
 

@@ -23,7 +23,7 @@ module ActiveValidation
         end
 
         def as_json(only: %i[method_name argument options], **_options)
-          only.each_with_object({}) { |el, acc| acc[el.to_sym] = send(el).as_json }
+          only.each_with_object({}) { |el, acc| acc[el.to_sym] = public_send(el).as_json }
         end
 
         def to_send_arguments
