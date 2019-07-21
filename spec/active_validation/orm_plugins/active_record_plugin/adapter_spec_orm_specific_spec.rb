@@ -16,6 +16,14 @@ describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter, helpers: %i[
     ActiveValidation::Internal::Models::Check.new method_name: "validates_with", argument: "MyValidator"
   end
 
+  it "has right plugin name" do
+    expect(described_class.plugin_name).to eq "active_record_plugin"
+  end
+
+  it "has right adapter name" do
+    expect(described_class.adapter_name).to eq "active_record"
+  end
+
   context "#add_manifest" do
     it "Add manifest with out checks" do
       expect(subject.add_manifest(manifest)).to eq manifest
