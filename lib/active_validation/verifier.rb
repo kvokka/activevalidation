@@ -67,18 +67,8 @@ module ActiveValidation
 
     # @!endgroup
 
-    # @!group Manual manifest management
-
-    # @param [ActiveSupport::HashWithIndifferentAccess, #with_indifferent_access]
-    # @return [ActiveSupport::HashWithIndifferentAccess]
-    def manifest=(manifest)
-      @manifest = manifest.with_indifferent_access
-    end
-
-    # @return [ActiveSupport::HashWithIndifferentAccess]
-    attr_reader :manifest
-
-    # @!endgroup
+    # @return [Internal::Manifest]
+    attr_accessor :manifest
 
     # @return [ActiveSupport::HashWithIndifferentAccess]
     def current_manifest
@@ -102,22 +92,22 @@ module ActiveValidation
       end
     end
 
-    # set validations on the current validator.
+    # # set validations on the current validator.
+    # #
+    # # @param [HashWithIndifferentAccess] :manifest, by default will be
+    # #     calculated current_manifest
+    # #
+    # # @return [void]
+    # def setup_validations(manifest = nil)
+    #   manifest ||= current_manifest
     #
-    # @param [HashWithIndifferentAccess] :manifest, by default will be
-    #     calculated current_manifest
-    #
-    # @return [void]
-    def setup_validations(manifest = nil)
-      manifest ||= current_manifest
-
-      manifest.fetch(:checks).each do |check|
-        method_name = check[:method_name].to_sym
-        argument = method_name == :validates_with ? check[:argument].constantize : check[:argument].to_sym
-        options = check[:options] || {}
-        base_class.send(method_name, argument, options)
-      end
-    end
+    #   manifest.fetch(:checks).each do |check|
+    #     method_name = check[:method_name].to_sym
+    #     argument = method_name == :validates_with ? check[:argument].constantize : check[:argument].to_sym
+    #     options = check[:options] || {}
+    #     base_class.send(method_name, argument, options)
+    #   end
+    # end
 
     # Forward the normalized request to ORM mapper
     #

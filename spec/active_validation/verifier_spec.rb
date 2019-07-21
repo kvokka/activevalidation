@@ -175,7 +175,7 @@ describe ActiveValidation::Verifier do
       let!(:manifest2) { create(:manifest, base_klass: model.name) }
       let!(:manifest3) { create(:manifest, base_klass: model.name) }
 
-      context "#lock_manifest" do
+      context "#manifest" do
         it "locks manifest in with manifest2 as with_indifferent_access" do
           subject = described_class.new(model) { |k| k.manifest = manifest2 }
           expect(subject.manifest).to eq manifest2.with_indifferent_access
@@ -226,50 +226,61 @@ describe ActiveValidation::Verifier do
       end
     end
 
-    context "#setup_validations" do
-      let!(:model) { define_const("Foo") { def foo_allowed; end } }
-      let(:callbacks) { model.__callbacks[:validate].send(:chain).map(&:filter) }
-
-      before { model.include ActiveModel::Validations }
-
-      context "only 1 validation with manifest" do
-        before do
-          create :manifest, :validate
-          create :manifest, :validates_with
-          create :manifest, :validates
-
-          described_class.find_or_build("Foo").setup_validations
-        end
-
-        it "setups default factories validations to default model" do
-          expect(model.validators).to all be_a ActiveModel::Validations::PresenceValidator
-        end
-
-        it "setups default factories callbacks to default model" do
-          expect(callbacks).to all be_a ActiveModel::Validations::PresenceValidator
-        end
-      end
-
-      context "few validations with manifest" do
-        before do
-          define_const("FooValidator", superclass: ActiveModel::Validator) { def validate(*); true; end }
-
-          create :manifest, :validates
-          create :manifest, :validates, :validates_with, :validate
-
-          described_class.find_or_build("Foo").setup_validations
-        end
-
-        it "setups default factories validations to default model" do
-          expect(model.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
-          expect(model.validators).to include a_kind_of FooValidator
-          expect(model.validators.size).to eq 2
-        end
-
-        it "setups default factories callbacks to default model" do
-          expect(callbacks.size).to eq 3
-        end
-      end
-    end
+    # context "#setup_validations" do
+    #   let!(:model) { define_const("Foo") { def foo_allowed; end } }
+    #   let(:callbacks) { model.__callbacks[:validate].send(:chain).map(&:filter) }
+    #
+    #   before { model.include ActiveModel::Validations }
+    #
+    #   context "only 1 validation with manifest" do
+    #     before do
+    #       create :manifest, :validate
+    #       create :manifest, :validates_with
+    #       create :manifest, :validates
+    #
+    #       described_class.find_or_build("Foo").setup_validations
+    #     end
+    #
+    #     it "setups default factories validations to default model" do
+    #       expect(model.validators).to all be_a ActiveModel::Validations::PresenceValidator
+    #     end
+    #
+    #     it "setups default factories callbacks to default model" do
+    #       expect(callbacks).to all be_a ActiveModel::Validations::PresenceValidator
+    #     end
+    #   end
+    #
+    #   # context "few validations with manifest" do
+    #   #   let(:manifest) { ActiveValidation::Internal::Models::Manifest.new version: 1, base_klass: "Foo" }
+    #   #   let(:check_validates) do
+    #   #     ActiveValidation::Internal::Models::Check.new method_name: "validates",
+    #   #                                                   argument:    "name",
+    #   #                                                   options:     { presence: true }
+    #   #   end
+    #   #   let(:check_validate) do
+    #   #     ActiveValidation::Internal::Models::Check.new method_name: "validate", argument: "my_method"
+    #   #   end
+    #   #
+    #   #   let(:check_validates_with) do
+    #   #     define_const "MyValidator", superclass: ActiveModel::Validator
+    #   #     ActiveValidation::Internal::Models::Check.new method_name: "validates_with", argument: "MyValidator"
+    #   #   end
+    #   #
+    #   #   before do
+    #   #     described_class.find_or_build("Foo") { |v| v.manifest = manifest }
+    #   #     described_class.find_or_build("Foo").setup_validations
+    #   #   end
+    #   #
+    #   #   it "setups default factories validations to default model" do
+    #   #     expect(model.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
+    #   #     expect(model.validators).to include a_kind_of FooValidator
+    #   #     expect(model.validators.size).to eq 2
+    #   #   end
+    #   #
+    #   #   it "setups default factories callbacks to default model" do
+    #   #     expect(callbacks.size).to eq 3
+    #   #   end
+    #   # end
+    # end
   end
 end

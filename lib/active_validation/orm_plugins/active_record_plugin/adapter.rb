@@ -6,6 +6,7 @@ module ActiveValidation
       class Adapter < ActiveValidation::BaseAdapter
         loading_paths << "models"
         loading_paths << "types"
+        loading_paths << "internals"
 
         def initialize
           setup unless self.class.initialised
@@ -16,6 +17,7 @@ module ActiveValidation
           installator = lambda do
             ::ActiveRecord::Base.include ActiveValidation::ModelExtension
             ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
+            ActiveValidation::Internal::Models::Check.include(ActiveValidation::InternalModelExtensions::Check)
           end
 
           if defined?(::ActiveRecord::Base)
@@ -27,24 +29,32 @@ module ActiveValidation
         end
 
         # @see BaseAdapter
-        def add_manifest(manifest_hash)
-          h = ActiveSupport::HashWithIndifferentAccess.new manifest_hash
-          h[:checks_attributes] ||= h.delete(:checks) || []
-          h[:checks_attributes].each do |check|
-            check[:type] ||= check.delete(:method_name)&.camelcase&.concat("Method")
-          end
-
-          Manifest.create!(h)
+        def add_manifest(manifest)
+          Manifest.create manifest.as_json(checks: { only: %i[type argument options], as: :checks_attributes })
+          manifest
         end
 
         # @see BaseAdapter
         def find_manifests(wheres)
-          Manifest.where(wheres).order(created_at: :desc)
+          search(wheres).map(&ActiveValidation::Internal::Models::Manifest.method(:new))
         end
 
         # @see BaseAdapter
         def find_manifest(wheres)
-          Manifest.where(wheres).order(created_at: :desc).first
+          ActiveValidation::Internal::Models::Manifest.new search(wheres, &:first!)
+        end
+
+        private
+
+        # @api internal
+        def search(wheres)
+          json_options = { include: { checks: { methods: %i[method_name] } }, root: false }
+          relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc)
+          relation = yield relation if block_given?
+          record_or_collection = relation.as_json(json_options)
+          return record_or_collection.map(&:to_options!) if record_or_collection.is_a?(Array)
+
+          record_or_collection.to_options!
         end
       end
     end
