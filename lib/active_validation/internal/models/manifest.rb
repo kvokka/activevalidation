@@ -6,6 +6,21 @@ module ActiveValidation
       class Manifest
         attr_reader :version, :base_klass, :created_at, :checks, :options, :other, :id, :name
 
+        # @param [Hash] Manifest options hash
+        # @option manifest_hash [String] :name Human readable name, by default build with selected
+        #         formatter for current manifest
+        # @option manifest_hash [String, #to_s] :base_klass (base_klass) Base klass for the Manifest
+        # @option manifest_hash [String, Symbol, Integer, Values::Version] :version (:current) Version
+        #         of the current manifest
+        # @option manifest_hash [Internal::Check] :checks ([])
+        #
+        # @example Add new manifest:
+        #     new({  name: 'Cool Manifest',
+        #        version: 42,
+        #        base_klass: 'Bar',
+        #        checks: [
+        #           { method_name: "validates", argument: "name", options: { presence: true } }
+        #        ]})
         def initialize(version:, base_klass:, checks: [], options: {}, **other)
           @version = ActiveValidation::Values::Version.new version
           @base_klass = base_klass.to_s
