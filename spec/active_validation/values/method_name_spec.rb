@@ -2,8 +2,9 @@
 
 describe ActiveValidation::Values::MethodName do
   context "::new" do
-    %i[validates validates_with validate].each do |name|
+    %w[validates validates_with validate].each do |name|
       it("generate #{name}") { expect(described_class.new(name).value).to eq name }
+      it("is a String #{name}") { expect(described_class.new(name).value).to be_a String }
     end
 
     context "raise" do
