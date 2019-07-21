@@ -5,12 +5,22 @@ describe ActiveValidation::Internal::Models::Manifest do
 
   before { define_const "Foo" }
 
-  %i[version base_klass created_at checks options other].each do |m|
-    it { is_expected.to have_attr_reader m }
+  let(:check_validates) do
+    ActiveValidation::Internal::Models::Check.new method_name: "validates",
+                                                  argument:    "name",
+                                                  options:     { presence: true }
+  end
+  let(:check_validate) do
+    ActiveValidation::Internal::Models::Check.new method_name: "validate", argument: "my_method"
   end
 
-  %i[id created_at name].each do |m|
-    it { is_expected.to delegate(m).to(:other) }
+  let(:check_validates_with) do
+    define_const("MyValidator", superclass: ActiveModel::Validator) { def initialize(*); end }
+    ActiveValidation::Internal::Models::Check.new method_name: "validates_with", argument: "MyValidator"
+  end
+
+  %i[version base_klass created_at checks options other id name].each do |m|
+    it { is_expected.to have_attr_reader m }
   end
 
   context "#class_name" do
@@ -39,9 +49,85 @@ describe ActiveValidation::Internal::Models::Manifest do
     it "converts to Hash with out coercion" do
       expect { Hash(subject) }.not_to raise_error
     end
+  end
 
+  context "#as_json" do
     %i[version base_klass checks name id].each do |attr|
-      it("should have '#{attr}' attribute") { expect(Hash(subject)[attr]).to be_truthy }
+      it("should have '#{attr}' attribute") { expect(subject.as_json).to have_key attr }
+    end
+
+    it "works correctly with out 'only' option" do
+      expect(subject.as_json).to eq subject.to_hash
+    end
+
+    it "produce right output with 'only' option base_klass" do
+      expect(subject.as_json(only: [:base_klass])).to eq(base_klass: "Foo")
+    end
+
+    context "with checks" do
+      subject { described_class.new version: 1, base_klass: "Foo", checks: [check1, check2] }
+
+      let(:check1) { ActiveValidation::Internal::Models::Check.new(method_name: "validates", argument: "check1") }
+      let(:check2) { ActiveValidation::Internal::Models::Check.new(method_name: "validate", argument: "check2") }
+
+      it "with out options" do
+        hash = { version:    1,
+                 base_klass: "Foo",
+                 checks:     [{ method_name: "validates", argument: "check1", options: {} },
+                              { method_name: "validate", argument: "check2", options: {} }],
+                 name:       nil,
+                 id:         nil }
+        expect(subject.as_json).to eq hash
+      end
+
+      it "with options for manifest" do
+        hash = { version: 1,
+                 checks:  [{ method_name: "validates", argument: "check1", options: {} },
+                           { method_name: "validate", argument: "check2", options: {} }] }
+        expect(subject.as_json(only: %i[checks version])).to eq hash
+      end
+
+      it "with options for checks" do
+        hash = { version:    1,
+                 base_klass: "Foo",
+                 checks:     [{ argument: "check1" },
+                              { argument: "check2" }],
+                 name:       nil,
+                 id:         nil }
+        expect(subject.as_json(checks: { only: [:argument] })).to eq hash
+      end
+
+      it "with renamed checks" do
+        hash = { version:           1,
+                 base_klass:        "Foo",
+                 checks_attributes: [{ method_name: "validates", argument: "check1", options: {} },
+                                     { method_name: "validate", argument: "check2", options: {} }],
+                 name:              nil,
+                 id:                nil }
+        expect(subject.as_json(checks: { as: :checks_attributes })).to eq hash
+      end
+    end
+  end
+
+  context "#install" do
+    subject { described_class.new version: 1, base_klass: "Bar" }
+
+    let(:callbacks) { Bar.__callbacks[:validate].send(:chain).map(&:filter) }
+
+    before do
+      define_const("Bar") { include ActiveModel::Validations }
+      subject.checks << check_validate << check_validates << check_validates_with
+      subject.install
+    end
+
+    it "setup validations to base_klass" do
+      expect(Bar.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
+      expect(Bar.validators).to include a_kind_of MyValidator
+      expect(Bar.validators.size).to eq 2
+    end
+
+    it "setups default factories callbacks to default model" do
+      expect(callbacks.size).to eq 3
     end
   end
 end

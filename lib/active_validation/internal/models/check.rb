@@ -8,7 +8,7 @@ module ActiveValidation
         def initialize(method_name:, argument:, options: {}, created_at: nil, **_other)
           @method_name = registry.find_or_add method_name
           @argument = argument
-          @options = options
+          @options = options.to_h.to_options!
           @created_at = created_at
         end
 
@@ -19,7 +19,19 @@ module ActiveValidation
         end
 
         def to_hash
-          { method_name: method_name, argument: argument, options: options }
+          as_json
+        end
+
+        def as_json(only: %i[method_name argument options], **_options)
+          only.each_with_object({}) { |el, acc| acc[el.to_sym] = send(el).as_json }
+        end
+
+        def to_send_arguments
+          [
+            method_name.to_sym,
+            method_name.to_sym == :validates_with ? argument.constantize : argument.to_sym,
+            options
+          ]
         end
 
         private
