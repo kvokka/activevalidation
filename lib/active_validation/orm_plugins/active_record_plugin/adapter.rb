@@ -7,17 +7,11 @@ module ActiveValidation
         loading_paths << "models"
         loading_paths << "types"
 
-        # Name of the folder, where all validations method should be scoped.
-        # Inside, in corresponding sub-folder with version name shall be
-        # stored validation related methods
-        attr_accessor :validations_module_name
-
         def initialize
           setup unless self.class.initialised
-          self.validations_module_name = "Validations"
         end
 
-        # @return [void]
+        # @return [true]
         def setup
           installator = lambda do
             ::ActiveRecord::Base.include ActiveValidation::ModelExtension
@@ -30,15 +24,6 @@ module ActiveValidation
             ::ActiveSupport.on_load(:active_record_adapter, &installator)
           end
           self.class.initialised = true
-        end
-
-        # @param [Verifier]
-        # @return [Array<Value::Version>] Sorted list of versions.
-        def versions(verifier)
-          verifier.base_class.const_get(validations_module_name)
-                  .constants.map { |k| ActiveValidation::Values::Version.new(k) }.sort
-        rescue NameError
-          []
         end
 
         # @see BaseAdapter

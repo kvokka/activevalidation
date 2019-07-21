@@ -14,8 +14,68 @@ describe ActiveValidation::Verifier do
 
     include_examples "verifiers registry"
 
-    %i[versions add_manifest find_manifest find_manifests].each do |m|
-      it { is_expected.to delegate(m).to(:proxy) }
+    # %i[add_manifest find_manifest find_manifests].each do |m|
+    #   it { is_expected.to delegate(m).to(:proxy) }
+    # end
+
+    context "cleaned up" do
+      subject { described_class.find_or_build "Bar" }
+
+      let!(:bar) { define_const "Bar", with_active_validation: true }
+
+      context "orm methods" do
+        context "#add_manifest" do
+          before do
+            allow(subject.orm_adapter).to receive(:add_manifest)
+            define_const "Bar::Validations::V17"
+          end
+
+          it "set defaults" do
+            subject.add_manifest
+            defaults = { base_klass: bar.to_s, version: ActiveValidation::Values::Version.new(17) }
+            expect(subject.orm_adapter).to have_received(:add_manifest).with(defaults)
+          end
+        end
+
+        context "#find_manifest" do
+          before { allow(subject.orm_adapter).to receive(:find_manifest) }
+
+          it "set defaults" do
+            subject.find_manifest
+            defaults = { base_klass: bar.to_s }
+            expect(subject.orm_adapter).to have_received(:find_manifest).with(defaults)
+          end
+        end
+
+        context "#find_manifests" do
+          before { allow(subject.orm_adapter).to receive(:find_manifests) }
+
+          it "set defaults" do
+            subject.find_manifests
+            defaults = { base_klass: bar.to_s }
+            expect(subject.orm_adapter).to have_received(:find_manifests).with(defaults)
+          end
+        end
+      end
+
+      context "#versions" do
+        before do
+          define_const "Bar", with_active_validation: true
+
+          define_consts "Bar::Validations::V1",
+                        "Bar::Validations::V2",
+                        "Bar::Validations::V23",
+                        "Bar::Validations::V42"
+        end
+
+        it "returns correct versions in asc order" do
+          expect(subject.versions.map(&:to_i)).to eq [1, 2, 23, 42]
+        end
+
+        it "returns only value version type" do
+          expect(subject.versions).to all be_an ActiveValidation::Values::Version
+        end
+      end
     end
 
     context "simple examples" do
@@ -24,7 +84,7 @@ describe ActiveValidation::Verifier do
       end
 
       it "setups base klass" do
-        expect(subject.base_klass).to eq model
+        expect(subject.base_klass).to eq model.to_s
       end
 
       it "yield provided block" do
@@ -137,12 +197,12 @@ describe ActiveValidation::Verifier do
           expect(subject.current_manifest).to eq manifest3.with_indifferent_access
         end
 
-        it "return right manifest if version bumped" do
-          last = create(:manifest, base_klass: model.name, version: 3)
-          create(:manifest, base_klass: model.name, version: 2)
-
-          expect(subject.current_manifest).to eq last.with_indifferent_access
-        end
+        # it "return right manifest if version bumped" do
+        #   last = create(:manifest, base_klass: model.name, version: 3)
+        #   create(:manifest, base_klass: model.name, version: 2)
+        #
+        #   expect(subject.current_manifest).to eq last.with_indifferent_access
+        # end
       end
     end
 

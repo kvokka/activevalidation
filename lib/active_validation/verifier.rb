@@ -15,6 +15,11 @@ module ActiveValidation
       end
     end
 
+    # Name of the folder, where all validations method should be scoped.
+    # Inside, in corresponding sub-folder with version name shall be
+    # stored validation related methods
+    attr_accessor :validations_module_name
+
     # @note The corresponding model class
     attr_reader :base_klass
 
@@ -30,16 +35,25 @@ module ActiveValidation
 
     def initialize(base_klass)
       ActiveValidation.config.verifier_defaults.call self
-      @base_klass = base_klass
+      @base_klass = base_klass.to_s
       @orm_adapter ||= ActiveValidation.config.orm_adapter
       @manifest_name_formatter ||= ActiveValidation.config.manifest_name_formatter
       @as_hash_with_indifferent_access = true
+      @validations_module_name = "Validations"
 
       yield self if block_given?
       self.class.registry.register base_klass, self
     end
 
-    delegate_missing_to :proxy
+    # delegate_missing_to :proxy
+
+    # @return [Array<Value::Version>] Sorted list of versions.
+    def versions
+      base_class.const_get(validations_module_name)
+                .constants.map { |k| ActiveValidation::Values::Version.new(k) }.sort
+    rescue NameError
+      []
+    end
 
     # @!group Manual version lock
     def version
@@ -105,14 +119,25 @@ module ActiveValidation
       end
     end
 
-    # def install
-    #   descendants_with_active_validation.reverse_each(&:set_validations)
-    # end
+    # Forward the normalized request to ORM mapper
+    #
+    # param [Hash]
+    # return [Internal::Manifest, Array<Internal::Manifest>]
+
+    %i[add_manifest find_manifest find_manifests].each do |m|
+      define_method(m) { |**hash| add_defaults_for_orm_adapter(hash) { |**h| orm_adapter.send m, h } }
+    end
 
     private
 
-    def proxy
-      @proxy ||= VerifierProxy.new(self)
+    # def proxy
+    #   @proxy ||= VerifierProxy.new(self)
+    # end
+
+    def add_defaults_for_orm_adapter(**hash)
+      hash[:base_klass] ||= base_klass
+      hash[:version]    ||= version if version
+      block_given? ? yield(hash) : hash
     end
   end
 end
