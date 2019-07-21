@@ -33,22 +33,6 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
     end
   end
 
-  context "#as_hash_with_indifferent_access" do
-    let(:subject) { build :manifest, :validate }
-
-    it "produces right class" do
-      expect(subject.with_indifferent_access).to be_a ActiveSupport::HashWithIndifferentAccess
-    end
-
-    context "has key" do
-      %w[name version base_klass checks].each do |key|
-        it key.to_s do
-          expect(subject.with_indifferent_access).to have_key key
-        end
-      end
-    end
-  end
-
   context "#to_internal" do
     let(:subject) { build :manifest, :validate }
 

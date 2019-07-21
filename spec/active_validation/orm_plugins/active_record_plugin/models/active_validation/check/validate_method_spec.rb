@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::Check::ValidateMethod, helpers: %i[only_with_active_record] do
-  it "provides the description of the validation class" do
-    expect(described_class.argument_description).to match "^Should contain"
-  end
-
   include_examples "check attributes check"
 
   it("contains field type") { expect(subject.attributes).to have_key("type") }

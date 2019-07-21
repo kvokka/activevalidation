@@ -5,12 +5,6 @@ module ActiveValidation
     class ValidatesWithMethod < Check
       validate :validator_must_be_defined
 
-      class << self
-        def argument_description
-          "Should contain ActiveModel::Validator sub-class"
-        end
-      end
-
       private
 
       def validator_must_be_defined

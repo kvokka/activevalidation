@@ -11,21 +11,10 @@ module ActiveValidation
 
     validates :argument, presence: true
 
-    class << self
-      def argument_description
-        raise NotImplementedError, "abstract"
-      end
-    end
-
     def method_name
       raise NotImplementedError, "abstract" unless self.class < Check
 
       self.class.name.demodulize.sub(/Method\z/, "").underscore
-    end
-
-    def with_indifferent_access
-      options = {  methods: %i[method_name], root: false }
-      ActiveSupport::HashWithIndifferentAccess.new as_json(options)
     end
   end
 end

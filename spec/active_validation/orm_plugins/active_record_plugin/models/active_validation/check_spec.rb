@@ -11,26 +11,7 @@ describe ActiveValidation::Check, helpers: %i[only_with_active_record] do
     end
   end
 
-  context "arstract" do
-    it "expect to raise on ::argument_description" do
-      expect { described_class.argument_description }.to raise_error NotImplementedError
-    end
-  end
-
-  context "::method_name" do
-    it "expect to raise on ::argument_description" do
-      expect { described_class.new.method_name }.to raise_error NotImplementedError
-    end
-
-    it "return right name" do
-      klass = define_const "FooMethod", superclass: ActiveValidation::Check
-      expect(klass.new.method_name).to eq "foo"
-    end
-  end
-
-  context "with_indifferent_access" do
-    it "raises an error as abstract class" do
-      expect { subject.with_indifferent_access }.to raise_error NotImplementedError
-    end
+  context "#method_name" do
+    it { expect { subject.method_name }.to raise_error NotImplementedError }
   end
 end

@@ -11,15 +11,6 @@ module ActiveValidation
     has_many :checks
     accepts_nested_attributes_for :checks, allow_destroy: false
 
-    def model_class
-      base_klass.constantize
-    end
-
-    def with_indifferent_access
-      options = { include: { checks: { methods: %i[method_name type] } }, root: false }
-      ActiveSupport::HashWithIndifferentAccess.new as_json(options)
-    end
-
     def to_internal
       json_options = { include: { checks: { methods: %i[method_name] } }, root: false }
       ActiveValidation::Internal::Models::Manifest.new as_json(json_options).to_options!
