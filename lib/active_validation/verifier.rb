@@ -11,6 +11,7 @@ module ActiveValidation
 
       delegate :find_or_build, to: :registry
     end
+    delegate :config, to: :ActiveValidation
 
     # Name of the folder, where all validations method should be scoped.
     # Inside, in corresponding sub-folder with version name shall be
@@ -31,10 +32,10 @@ module ActiveValidation
     attr_accessor :manifest
 
     def initialize(base_klass)
-      ActiveValidation.config.verifier_defaults.call self
+      config.verifier_defaults.call self
       @base_klass = base_klass.to_s
-      @orm_adapter ||= ActiveValidation.config.orm_adapter
-      @manifest_name_formatter ||= ActiveValidation.config.manifest_name_formatter
+      @orm_adapter ||= config.orm_adapter
+      @manifest_name_formatter ||= config.manifest_name_formatter
       @validations_module_name = "Validations"
 
       yield self if block_given?
