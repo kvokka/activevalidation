@@ -10,22 +10,14 @@ module ActiveValidation
 
         def initialize
           setup unless self.class.initialised
+          self.class.initialised = true
         end
 
         # @return [true]
         def setup
-          installator = lambda do
-            ::ActiveRecord::Base.include ActiveValidation::ModelExtension
-            ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
-            ActiveValidation::Internal::Models::Check.include(ActiveValidation::InternalModelExtensions::Check)
-          end
+          return installer if defined?(::ActiveRecord::Base)
 
-          if defined?(::ActiveRecord::Base)
-            installator.call
-          else
-            ::ActiveSupport.on_load(:active_record_adapter, &installator)
-          end
-          self.class.initialised = true
+          ::ActiveSupport.on_load(:active_record_adapter, &method(:installer))
         end
 
         # @see BaseAdapter
@@ -51,6 +43,14 @@ module ActiveValidation
           relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc)
           relation = yield relation if block_given?
           relation.is_a?(ActiveRecord::Base) ? relation.to_internal_manifest : relation.map(&:to_internal_manifest)
+        end
+
+        # @return [true]
+        def installer
+          ::ActiveRecord::Base.include ActiveValidation::ModelExtension
+          ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
+          ActiveValidation::Internal::Models::Check.include(ActiveValidation::InternalModelExtensions::Check)
+          true
         end
       end
     end
