@@ -26,16 +26,12 @@ module ActiveValidation
           only.each_with_object({}) { |el, acc| acc[el.to_sym] = public_send(el).as_json }
         end
 
-        def to_send_arguments
-          [
-            method_name.to_sym,
-            method_name.to_sym == :validates_with ? argument.constantize : argument.to_sym,
-            options
-          ]
-        end
-
         def to_internal_check
           self
+        end
+
+        def normalized_argument
+          method_name.to_sym == :validates_with ? argument.to_s.constantize : argument.to_sym
         end
 
         private

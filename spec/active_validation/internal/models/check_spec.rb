@@ -44,18 +44,18 @@ describe ActiveValidation::Internal::Models::Check do
     end
   end
 
-  context "#to_send_arguments" do
+  context "#normalized_argument" do
     %i[validate validates].each do |m|
-      it "set for #{m}" do
-        check = described_class.new method_name: m, argument: "name", options: { name: "foo" }
-        expect(check.to_send_arguments).to match_array [m, :name, { name: "foo" }]
+      it "for #{m}" do
+        check = described_class.new method_name: m, argument: "name"
+        expect(check.normalized_argument).to eq :name
       end
     end
 
-    it "set for validates_with" do
+    it "for validates_with" do
       define_const "MyValidator", superclass: ActiveModel::Validator
-      check = described_class.new method_name: :validates_with, argument: "MyValidator", options: { name: "foo" }
-      expect(check.to_send_arguments).to match_array [:validates_with, MyValidator, { name: "foo" }]
+      check = described_class.new method_name: :validates_with, argument: "MyValidator"
+      expect(check.normalized_argument).to eq MyValidator
     end
   end
 

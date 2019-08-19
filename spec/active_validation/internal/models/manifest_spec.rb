@@ -15,7 +15,11 @@ describe ActiveValidation::Internal::Models::Manifest do
   end
 
   let(:check_validates_with) do
-    define_const("MyValidator", superclass: ActiveModel::Validator) { def initialize(*); end }
+    define_const("MyValidator", superclass: ActiveModel::Validator) do
+      def initialize(*); end
+
+      def validate(*); end
+    end
     ActiveValidation::Internal::Models::Check.new method_name: "validates_with", argument: "MyValidator"
   end
 
@@ -112,22 +116,94 @@ describe ActiveValidation::Internal::Models::Manifest do
   context "#install" do
     subject { described_class.new version: 1, base_klass: "Bar" }
 
-    let(:callbacks) { Bar.__callbacks[:validate].send(:chain).map(&:filter) }
+    let(:callbacks) { Bar.__callbacks[:validate].send(:chain) }
 
     before do
       define_const("Bar") { include ActiveModel::Validations }
-      subject.checks << check_validate << check_validates << check_validates_with
-      subject.install
     end
 
-    it "setup validations to base_klass" do
-      expect(Bar.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
-      expect(Bar.validators).to include a_kind_of MyValidator
-      expect(Bar.validators.size).to eq 2
+    context "with 3 validations" do
+      before do
+        subject.checks << check_validate << check_validates << check_validates_with
+        subject.install
+      end
+
+      it "setup validations to base_klass" do
+        expect(Bar.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
+        expect(Bar.validators).to include a_kind_of MyValidator
+        expect(Bar.validators.size).to eq 2
+      end
+
+      it "setups default factories callbacks to default model" do
+        expect(callbacks.size).to eq 3
+      end
     end
 
-    it "setups default factories callbacks to default model" do
-      expect(callbacks.size).to eq 3
+    context "validations should be in the right context" do
+      let(:callback) { callbacks.last }
+      let(:bar) { Bar.new }
+
+      shared_examples "check with context" do
+        it "does not execute with out the context" do
+          bar.valid?
+          expect(validator).not_to have_received(:validate)
+        end
+
+        it "executes with the context" do
+          bar.valid?(subject.context)
+          expect(validator).to have_received(:validate)
+        end
+      end
+
+      context "validates_with" do
+        let(:validator) { instance_double MyValidator }
+
+        before do
+          subject.checks << check_validates_with
+          allow(MyValidator).to receive(:new).and_return(validator)
+          allow(validator).to receive(:validate)
+          subject.install
+        end
+
+        include_examples "check with context"
+      end
+
+      context "validates" do
+        let(:validator) { instance_double ActiveModel::Validations::PresenceValidator }
+
+        before do
+          subject.checks << check_validates
+          allow(ActiveModel::Validations::PresenceValidator).to receive(:new).and_return(validator)
+          allow(validator).to receive(:validate)
+          subject.install
+        end
+
+        include_examples "check with context"
+      end
+
+      context "validate" do
+        before do
+          define_const("Bar") do
+            include ActiveModel::Validations
+            def my_method; end
+          end
+
+          subject.checks << check_validate
+          allow(Bar).to receive(:new).and_return(bar)
+          allow(bar).to receive(:my_method)
+          subject.install
+        end
+
+        it "does not execute with out the context" do
+          bar.valid?
+          expect(bar).not_to have_received(:my_method)
+        end
+
+        it "executes with the context" do
+          bar.valid?(subject.context)
+          expect(bar).to have_received(:my_method)
+        end
+      end
     end
   end
 end
