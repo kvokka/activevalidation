@@ -16,9 +16,10 @@ module ActiveValidation
                                                                         )
 
       @manifest_name_formatter = Formatters::ManifestNameFormatter
+      @validation_context_formatter = Formatters::ValidationContextFormatter
     end
 
-    attr_accessor :manifest_name_formatter
+    attr_accessor :manifest_name_formatter, :validation_context_formatter
 
     attr_reader :orm_adapter
 

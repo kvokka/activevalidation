@@ -2,11 +2,11 @@
 
 module ActiveValidation
   module Formatters
-    module ManifestNameFormatter
-      module_function
-
-      def call(base_klass)
-        "Manifest for #{base_klass}"
+    class ManifestNameFormatter
+      class << self
+        def call(base_klass)
+          "Manifest for #{base_klass}"
+        end
       end
     end
   end

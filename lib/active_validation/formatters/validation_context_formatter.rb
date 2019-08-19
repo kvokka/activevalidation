@@ -2,12 +2,24 @@
 
 module ActiveValidation
   module Formatters
-    module ValidationContextFormatter
-      module_function
+    class ValidationContextFormatter
+      class << self
+        def call(*args)
+          new(*args).call
+        end
+      end
 
-      def call(manifest_id, on = nil)
-        base = "manifest#{manifest_id}"
-        on.blank? ? base : [base, on].join("_")
+      def initialize(manifest)
+        @manifest = manifest
+      end
+
+      delegate_missing_to :@manifest
+
+      def call
+        ["active_validation", "v#{version}"].tap do |base|
+          base << "on_#{options[:on]}" if options[:on]
+          base << name.to_s.underscore unless name.blank?
+        end.join("_")
       end
     end
   end
