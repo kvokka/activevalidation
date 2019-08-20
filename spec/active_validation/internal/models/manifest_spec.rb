@@ -57,7 +57,7 @@ describe ActiveValidation::Internal::Models::Manifest do
 
   context "#as_json" do
     %i[version base_klass checks name id].each do |attr|
-      it("should have '#{attr}' attribute") { expect(subject.as_json).to have_key attr }
+      it("has '#{attr}' attribute") { expect(subject.as_json).to have_key attr }
     end
 
     it "works correctly with out 'only' option" do

@@ -27,7 +27,7 @@ describe ActiveValidation::Internal::Models::Check do
 
   context "#as_json" do
     %i[method_name argument options].each do |attr|
-      it("should have '#{attr}' attribute") { expect(subject.as_json[attr]).to be_truthy }
+      it("has '#{attr}' attribute") { expect(subject.as_json[attr]).to be_truthy }
     end
 
     it "works correctly with out 'only' option" do

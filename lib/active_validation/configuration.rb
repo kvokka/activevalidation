@@ -5,15 +5,9 @@ module ActiveValidation
     attr_reader :verifiers_registry, :orm_adapters_registry, :method_name_values_registry
 
     def initialize
-      @verifiers_registry    = Decorators::ConsistentRegistry.new Verifier,
-                                                                  Decorators::DisallowsDuplicatesRegistry.new(
-                                                                    Registry.new("Verifiers")
-                                                                  )
       @orm_adapters_registry = Registry.new("Orm adapters")
-      @method_name_values_registry = Decorators::ConsistentRegistry.new Values::MethodName,
-                                                                        Decorators::DisallowsDuplicatesRegistry.new(
-                                                                          Registry.new("Validation methods")
-                                                                        )
+      @verifiers_registry    = strict_registry name: "Verifiers", klass: Verifier
+      @method_name_values_registry = strict_registry name: "Validation methods", klass: Values::MethodName
 
       @manifest_name_formatter = Formatters::ManifestNameFormatter
       @validation_context_formatter = Formatters::ValidationContextFormatter
@@ -47,6 +41,12 @@ module ActiveValidation
       return @verifier_defaults unless block_given?
 
       @verifier_defaults = block
+    end
+
+    private
+
+    def strict_registry(name:, klass:)
+      Decorators::ConsistentRegistry.new(klass, Decorators::DisallowsDuplicatesRegistry.new(Registry.new(name)))
     end
   end
 end

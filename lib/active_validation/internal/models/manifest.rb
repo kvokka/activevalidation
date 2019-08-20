@@ -52,12 +52,12 @@ module ActiveValidation
           as_json
         end
 
+        # Add all checks (validations) to base_class
+        #
+        # @return [true]
         def install
-          checks.each do |check|
-            base_class.public_send(check.method_name.to_sym,
-                                   check.normalized_argument,
-                                   check.options.merge(on: context) { |_, old, new| Array(new) + Array(old) })
-          end
+          checks.each { |check| base_class.public_send(*check.to_validation_arguments(context: context)) }
+          true
         end
 
         # ActiveSupport#as_json interface
@@ -72,6 +72,7 @@ module ActiveValidation
         #     as_json(only: :version, checks: { as: :checks_attributes,
         #                                       only: [:argument] })
         #
+        # @return [Hash]
         def as_json(only: %i[version base_klass checks name id], **options)
           only = Array(only)
           {}.tap do |acc|
@@ -89,6 +90,10 @@ module ActiveValidation
           self
         end
 
+        # Formatted context, as it will be stored on `on` option with the
+        # validations
+        #
+        # @return [String]
         def context
           @context ||= ActiveValidation.config.validation_context_formatter.call self
         end

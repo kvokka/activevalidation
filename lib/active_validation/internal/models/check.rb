@@ -34,6 +34,12 @@ module ActiveValidation
           method_name.to_sym == :validates_with ? argument.to_s.constantize : argument.to_sym
         end
 
+        def to_validation_arguments(context: nil)
+          [method_name.to_sym,
+           normalized_argument,
+           options.merge(on: context) { |_, old, new| Array(new) + Array(old) }]
+        end
+
         private
 
         def registry
