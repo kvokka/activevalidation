@@ -24,9 +24,9 @@ module ActiveValidation
           # @return [TrueClass]
           def install
             @installed_callbacks = chain_mutex.synchronize do
-              before = callbacks_chain.each.to_a
+              before = callbacks_chain_elements
               checks.each { |check| base_class.public_send(*check.to_validation_arguments(context: context)) }
-              callbacks_chain.each.to_a - before
+              callbacks_chain_elements - before
             end
             true
           end
@@ -36,10 +36,7 @@ module ActiveValidation
           # @return [FalseClass]
           def uninstall
             chain_mutex.synchronize do
-              installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
-              validators
-                .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
-                .delete_if { |_, v| v.empty?  }
+              uninstall_installed_validators
 
               installed_callbacks.each { |callback| callbacks_chain.delete(callback) }.clear
             end
@@ -52,6 +49,13 @@ module ActiveValidation
 
           private
 
+          # We cannot call `chain` method directly, so we have to use this hack
+          #
+          # @return [Array<ActiveSupport::Callbacks>]
+          def callbacks_chain_elements
+            callbacks_chain.each.to_a
+          end
+
           # Mutex from ActiveSupport::Callbacks::CallbackChain for `base_class`
           #
           # @return [Mutex]
@@ -61,6 +65,13 @@ module ActiveValidation
 
           def validators
             base_class._validators
+          end
+
+          def uninstall_installed_validators
+            installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
+            validators
+              .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
+              .delete_if { |_, v| v.empty?  }
           end
         end
       end
