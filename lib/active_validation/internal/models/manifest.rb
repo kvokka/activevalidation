@@ -6,7 +6,7 @@ module ActiveValidation
   module Internal
     module Models
       class Manifest
-        attr_reader :version, :base_klass, :created_at, :checks, :options, :other, :id, :name
+        attr_reader :version, :base_klass, :created_at, :checks, :options, :other, :id, :name, :installed_callbacks
 
         # @param [Hash] Manifest options hash
         # @option manifest_hash [String] :name Human readable name, by default build with selected
@@ -54,10 +54,44 @@ module ActiveValidation
 
         # Add all checks (validations) to base_class
         #
-        # @return [true]
+        # @note we have to use the hack with
+        # `callbacks_chain.each.to_a # => chain` since `chain` method is
+        # protected.
+        #
+        # @return [TrueClass]
         def install
-          checks.each { |check| base_class.public_send(*check.to_validation_arguments(context: context)) }
-          true
+          return true if installed?
+
+          @installed_callbacks = chain_mutex.synchronize do
+            before = callbacks_chain.each.to_a
+            checks.each { |check| base_class.public_send(*check.to_validation_arguments(context: context)) }
+            callbacks_chain.each.to_a - before
+          end
+          @installed = true
+        end
+
+        # Remove all checks (validations) from base_class
+        #
+        # @return [FalseClass]
+        def uninstall
+          return false unless installed?
+
+          chain_mutex.synchronize do
+            installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
+            validators
+              .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
+              .delete_if { |_, v| v.empty?  }
+
+            installed_callbacks.each { |callback| callbacks_chain.delete(callback) }.clear
+          end
+          @installed = false
+        end
+
+        # Are the callbacks installed to the `base_class`?
+        #
+        # @return [TrueClass, FalseClass]
+        def installed?
+          !!@installed
         end
 
         # ActiveSupport#as_json interface
@@ -96,6 +130,23 @@ module ActiveValidation
         # @return [String]
         def context
           @context ||= ActiveValidation.config.validation_context_formatter.call self
+        end
+
+        private
+
+        # Mutex from ActiveSupport::Callbacks::CallbackChain for `base_class`
+        #
+        # @return [Mutex]
+        def chain_mutex
+          callbacks_chain.instance_variable_get(:@mutex)
+        end
+
+        def callbacks_chain
+          base_class._validate_callbacks
+        end
+
+        def validators
+          base_class._validators
         end
       end
     end

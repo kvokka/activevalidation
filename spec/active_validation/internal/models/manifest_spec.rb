@@ -102,7 +102,7 @@ describe ActiveValidation::Internal::Models::Manifest do
   context "#install" do
     subject { described_class.new version: 1, base_klass: "Bar" }
 
-    let(:callbacks) { Bar.__callbacks[:validate].send(:chain) }
+    let(:callbacks) { Bar._validate_callbacks.send(:chain) }
 
     before do
       define_const("Bar") { include ActiveModel::Validations }
@@ -122,6 +122,12 @@ describe ActiveValidation::Internal::Models::Manifest do
 
       it "setups default factories callbacks to default model" do
         expect(callbacks.size).to eq 3
+      end
+
+      it("is installed") { expect(subject).to be_installed }
+
+      it "setups installed callbacks to default model" do
+        expect(subject.installed_callbacks.size).to eq 3
       end
     end
 
@@ -190,6 +196,61 @@ describe ActiveValidation::Internal::Models::Manifest do
           expect(bar).to have_received(:my_method)
         end
       end
+    end
+  end
+
+  context "#uninstall" do
+    subject { described_class.new version: 1, base_klass: "Bar" }
+
+    let(:callbacks) { Bar._validate_callbacks.send(:chain) }
+
+    let(:check_validate2)       { build :internal_check_validate       }
+    let(:check_validates2)      { build :internal_check_validates      }
+    let(:check_validates_with2) { build :internal_check_validates_with, argument: "MyValidator2" }
+
+    before do
+      define_const("Bar") { include ActiveModel::Validations }
+      subject.checks << check_validate << check_validates << check_validates_with
+      subject.install
+    end
+
+    context "should correctly remove all checks" do
+      before { subject.uninstall }
+
+      it("does not have any callback chain") { expect(callbacks).to be_empty }
+      it("does not ne installed") { expect(subject).not_to be_installed }
+
+      it("does not contain any validators") { expect(Bar.validators).to be_empty }
+    end
+
+    context "does not affect checks from another manifest on another class" do
+      let(:manifest2) { described_class.new version: 1, base_klass: "Baz" }
+
+      before do
+        define_const("Baz") { include ActiveModel::Validations }
+        manifest2.checks << check_validate2 << check_validates2 << check_validates_with2
+        manifest2.install
+        subject.uninstall
+      end
+
+      it("does not have any callback chain") { expect(callbacks).to be_empty }
+      it("does not ne installed") { expect(subject).not_to be_installed }
+
+      it("does not affect manifest2 checks") { expect(manifest2.send(:callbacks_chain).count).to eq 3 }
+    end
+
+    context "does not other affect native checks on the base class" do
+      before do
+        subject.base_class.public_send(*check_validate2.to_validation_arguments)
+        subject.base_class.public_send(*check_validates_with2.to_validation_arguments)
+        subject.uninstall
+      end
+
+      it("has 3 callbacks in the chain") { expect(callbacks.count).to eq 2 }
+      it("does not be installed") { expect(subject).not_to be_installed }
+
+      it("have correct validator") { expect(Bar.validators).to all(be_a_kind_of(MyValidator2)) }
+      it("has only one validator") { expect(Bar.validators.size).to eq 1 }
     end
   end
 end
