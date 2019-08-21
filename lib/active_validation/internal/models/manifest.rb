@@ -6,7 +6,9 @@ module ActiveValidation
   module Internal
     module Models
       class Manifest
-        attr_reader :version, :base_klass, :created_at, :checks, :options, :other, :id, :name, :installed_callbacks
+        attr_reader :version, :base_klass, :created_at, :checks, :options, :other, :id, :name
+
+        delegate :installed_callbacks, to: :installer
 
         # @param [Hash] Manifest options hash
         # @option manifest_hash [String] :name Human readable name, by default build with selected
@@ -52,39 +54,16 @@ module ActiveValidation
           as_json
         end
 
-        # Add all checks (validations) to base_class
-        #
-        # @note we have to use the hack with
-        # `callbacks_chain.each.to_a # => chain` since `chain` method is
-        # protected.
-        #
-        # @return [TrueClass]
+        # rubocop:disable Naming/MemoizedInstanceVariableName
         def install
-          return true if installed?
-
-          @installed_callbacks = chain_mutex.synchronize do
-            before = callbacks_chain.each.to_a
-            checks.each { |check| base_class.public_send(*check.to_validation_arguments(context: context)) }
-            callbacks_chain.each.to_a - before
-          end
-          @installed = true
+          @installed ||= installer.install
         end
+        # rubocop:enable Naming/MemoizedInstanceVariableName
 
-        # Remove all checks (validations) from base_class
-        #
-        # @return [FalseClass]
         def uninstall
           return false unless installed?
 
-          chain_mutex.synchronize do
-            installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
-            validators
-              .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
-              .delete_if { |_, v| v.empty?  }
-
-            installed_callbacks.each { |callback| callbacks_chain.delete(callback) }.clear
-          end
-          @installed = false
+          @installed = installer.uninstall
         end
 
         # Are the callbacks installed to the `base_class`?
@@ -134,19 +113,8 @@ module ActiveValidation
 
         private
 
-        # Mutex from ActiveSupport::Callbacks::CallbackChain for `base_class`
-        #
-        # @return [Mutex]
-        def chain_mutex
-          callbacks_chain.instance_variable_get(:@mutex)
-        end
-
-        def callbacks_chain
-          base_class._validate_callbacks
-        end
-
-        def validators
-          base_class._validators
+        def installer
+          @installer ||= Installer.new(base_class: base_class, checks: checks, context: context)
         end
       end
     end

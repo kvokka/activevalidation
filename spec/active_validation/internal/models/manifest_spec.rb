@@ -99,158 +99,38 @@ describe ActiveValidation::Internal::Models::Manifest do
     end
   end
 
-  context "#install" do
-    subject { described_class.new version: 1, base_klass: "Bar" }
-
-    let(:callbacks) { Bar._validate_callbacks.send(:chain) }
-
+  context "installation" do
     before do
-      define_const("Bar") { include ActiveModel::Validations }
+      allow(ActiveValidation::Internal::Models::Manifest::Installer).to receive(:new).and_return(installer)
     end
 
-    context "with 3 validations" do
-      before do
-        subject.checks << check_validate << check_validates << check_validates_with
+    let(:installer) do
+      instance_double ActiveValidation::Internal::Models::Manifest::Installer, uninstall: false, install: true
+    end
+
+    context "install" do
+      before { subject.install }
+
+      it("installs once installed") do
         subject.install
+        expect(installer).to have_received(:install).once
       end
 
-      it "setup validations to base_klass" do
-        expect(Bar.validators).to include a_kind_of ActiveModel::Validations::PresenceValidator
-        expect(Bar.validators).to include a_kind_of MyValidator
-        expect(Bar.validators.size).to eq 2
-      end
-
-      it "setups default factories callbacks to default model" do
-        expect(callbacks.size).to eq 3
-      end
-
-      it("is installed") { expect(subject).to be_installed }
-
-      it "setups installed callbacks to default model" do
-        expect(subject.installed_callbacks.size).to eq 3
-      end
+      it { expect(subject).to be_installed }
     end
 
-    context "validations should be in the right context" do
-      let(:callback) { callbacks.last }
-      let(:bar) { Bar.new }
-
-      shared_examples "check with context" do
-        it "does not execute with out the context" do
-          bar.valid?
-          expect(validator).not_to have_received(:validate)
-        end
-
-        it "executes with the context" do
-          bar.valid?(subject.context)
-          expect(validator).to have_received(:validate)
-        end
-      end
-
-      context "validates_with" do
-        let(:validator) { instance_double MyValidator }
-
-        before do
-          subject.checks << check_validates_with
-          allow(MyValidator).to receive(:new).and_return(validator)
-          allow(validator).to receive(:validate)
-          subject.install
-        end
-
-        include_examples "check with context"
-      end
-
-      context "validates" do
-        let(:validator) { instance_double ActiveModel::Validations::PresenceValidator }
-
-        before do
-          subject.checks << check_validates
-          allow(ActiveModel::Validations::PresenceValidator).to receive(:new).and_return(validator)
-          allow(validator).to receive(:validate)
-          subject.install
-        end
-
-        include_examples "check with context"
-      end
-
-      context "validate" do
-        before do
-          define_const("Bar") do
-            include ActiveModel::Validations
-            def my_method; end
-          end
-
-          subject.checks << check_validate
-          allow(Bar).to receive(:new).and_return(bar)
-          allow(bar).to receive(:my_method)
-          subject.install
-        end
-
-        it "does not execute with out the context" do
-          bar.valid?
-          expect(bar).not_to have_received(:my_method)
-        end
-
-        it "executes with the context" do
-          bar.valid?(subject.context)
-          expect(bar).to have_received(:my_method)
-        end
-      end
-    end
-  end
-
-  context "#uninstall" do
-    subject { described_class.new version: 1, base_klass: "Bar" }
-
-    let(:callbacks) { Bar._validate_callbacks.send(:chain) }
-
-    let(:check_validate2)       { build :internal_check_validate       }
-    let(:check_validates2)      { build :internal_check_validates      }
-    let(:check_validates_with2) { build :internal_check_validates_with, argument: "MyValidator2" }
-
-    before do
-      define_const("Bar") { include ActiveModel::Validations }
-      subject.checks << check_validate << check_validates << check_validates_with
-      subject.install
-    end
-
-    context "should correctly remove all checks" do
-      before { subject.uninstall }
-
-      it("does not have any callback chain") { expect(callbacks).to be_empty }
-      it("does not ne installed") { expect(subject).not_to be_installed }
-
-      it("does not contain any validators") { expect(Bar.validators).to be_empty }
-    end
-
-    context "does not affect checks from another manifest on another class" do
-      let(:manifest2) { described_class.new version: 1, base_klass: "Baz" }
-
+    context "uninstall" do
       before do
-        define_const("Baz") { include ActiveModel::Validations }
-        manifest2.checks << check_validate2 << check_validates2 << check_validates_with2
-        manifest2.install
+        subject.install
         subject.uninstall
       end
 
-      it("does not have any callback chain") { expect(callbacks).to be_empty }
-      it("does not ne installed") { expect(subject).not_to be_installed }
-
-      it("does not affect manifest2 checks") { expect(manifest2.send(:callbacks_chain).count).to eq 3 }
-    end
-
-    context "does not other affect native checks on the base class" do
-      before do
-        subject.base_class.public_send(*check_validate2.to_validation_arguments)
-        subject.base_class.public_send(*check_validates_with2.to_validation_arguments)
+      it("uninstalls once when installed") do
         subject.uninstall
+        expect(installer).to have_received(:uninstall).once
       end
 
-      it("has 3 callbacks in the chain") { expect(callbacks.count).to eq 2 }
-      it("does not be installed") { expect(subject).not_to be_installed }
-
-      it("have correct validator") { expect(Bar.validators).to all(be_a_kind_of(MyValidator2)) }
-      it("has only one validator") { expect(Bar.validators.size).to eq 1 }
+      it { expect(subject).not_to be_installed }
     end
   end
 end
