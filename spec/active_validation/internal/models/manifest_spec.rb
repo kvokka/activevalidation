@@ -5,23 +5,9 @@ describe ActiveValidation::Internal::Models::Manifest do
 
   before { define_const "Foo" }
 
-  let(:check_validates) do
-    ActiveValidation::Internal::Models::Check.new method_name: "validates",
-                                                  argument:    "name",
-                                                  options:     { presence: true }
-  end
-  let(:check_validate) do
-    ActiveValidation::Internal::Models::Check.new method_name: "validate", argument: "my_method"
-  end
-
-  let(:check_validates_with) do
-    define_const("MyValidator", superclass: ActiveModel::Validator) do
-      def initialize(*); end
-
-      def validate(*); end
-    end
-    ActiveValidation::Internal::Models::Check.new method_name: "validates_with", argument: "MyValidator"
-  end
+  let(:check_validate)       { build :internal_check_validate       }
+  let(:check_validates)      { build :internal_check_validates      }
+  let(:check_validates_with) { build :internal_check_validates_with }
 
   %i[version base_klass created_at checks options other id name].each do |m|
     it { is_expected.to have_attr_reader m }
@@ -71,13 +57,13 @@ describe ActiveValidation::Internal::Models::Manifest do
     context "with checks" do
       subject { described_class.new version: 1, base_klass: "Foo", checks: [check1, check2] }
 
-      let(:check1) { ActiveValidation::Internal::Models::Check.new(method_name: "validates", argument: "check1") }
-      let(:check2) { ActiveValidation::Internal::Models::Check.new(method_name: "validate", argument: "check2") }
+      let(:check1) { build :internal_check_validates, argument: "check1" }
+      let(:check2) { build :internal_check_validate,  argument: "check2" }
 
       it "with out options" do
         hash = { version:    1,
                  base_klass: "Foo",
-                 checks:     [{ method_name: "validates", argument: "check1", options: {} },
+                 checks:     [{ method_name: "validates", argument: "check1", options: { "presence" => true } },
                               { method_name: "validate", argument: "check2", options: {} }],
                  name:       nil,
                  id:         nil }
@@ -86,7 +72,7 @@ describe ActiveValidation::Internal::Models::Manifest do
 
       it "with options for manifest" do
         hash = { version: 1,
-                 checks:  [{ method_name: "validates", argument: "check1", options: {} },
+                 checks:  [{ method_name: "validates", argument: "check1", options: { "presence" => true } },
                            { method_name: "validate", argument: "check2", options: {} }] }
         expect(subject.as_json(only: %i[checks version])).to eq hash
       end
@@ -104,7 +90,7 @@ describe ActiveValidation::Internal::Models::Manifest do
       it "with renamed checks" do
         hash = { version:           1,
                  base_klass:        "Foo",
-                 checks_attributes: [{ method_name: "validates", argument: "check1", options: {} },
+                 checks_attributes: [{ method_name: "validates", argument: "check1", options: { "presence" => true } },
                                      { method_name: "validate", argument: "check2", options: {} }],
                  name:              nil,
                  id:                nil }
