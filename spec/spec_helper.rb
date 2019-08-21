@@ -30,7 +30,7 @@ Dir["#{File.dirname(__FILE__)}/support/shared_examples/*.rb"].each { |f| require
 Dir["#{File.dirname(__FILE__)}/support/matchers/*.rb"].each { |f| require f }
 
 # load ORM related support modules
-require_relative "support/orm/#{ENV['ORM']}/setup"
+require_relative "orm/#{ENV['ORM']}/setup"
 
 # Load models for selected ORM
 
