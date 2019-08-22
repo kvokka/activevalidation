@@ -33,13 +33,17 @@ module ActiveValidation
 
           # Remove all checks (validations) from base_class
           #
+          # we can not use ActiveSupport provided methods, since we already have
+          # our installed callbacks.
+          #
           # @return [FalseClass]
           def uninstall
-            chain_mutex.synchronize do
-              uninstall_installed_validators
+            installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
 
-              installed_callbacks.each { |callback| callbacks_chain.delete(callback) }.clear
+            ([base_class] + ActiveSupport::DescendantsTracker.descendants(base_class)).reverse_each do |target|
+              uninstall! target: target, installed_validators: installed_validators
             end
+            installed_callbacks.clear
             false
           end
 
@@ -63,16 +67,28 @@ module ActiveValidation
             callbacks_chain.instance_variable_get(:@mutex)
           end
 
-          def validators
-            base_class._validators
+          def uninstall!(target:, installed_validators:)
+            chain = target._validate_callbacks
+
+            chain.instance_variable_get(:@mutex).synchronize do
+              target._validators
+                    .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
+                    .delete_if { |_, v| v.empty?  }
+
+              installed_callbacks.each { |callback| chain.delete(callback) }
+            end
           end
 
-          def uninstall_installed_validators
-            installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
-            validators
-              .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
-              .delete_if { |_, v| v.empty?  }
-          end
+          # def validators
+          #   base_class._validators
+          # end
+          #
+          # def uninstall_installed_validators
+          #   installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
+          #   validators
+          #     .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
+          #     .delete_if { |_, v| v.empty?  }
+          # end
         end
       end
     end

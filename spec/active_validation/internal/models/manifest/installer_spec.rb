@@ -149,10 +149,29 @@ describe ActiveValidation::Internal::Models::Manifest::Installer do
         subject.uninstall
       end
 
-      it("has 3 callbacks in the chain") { expect(callbacks.count).to eq 2 }
+      it("has 2 callbacks in the chain") { expect(callbacks.count).to eq 2 }
 
       it("have correct validator") { expect(Bar.validators).to all(be_a_kind_of(MyValidator2)) }
       it("has only one validator") { expect(Bar.validators.size).to eq 1 }
+    end
+
+    context "with nested class" do
+      let(:child) { described_class.new base_class: BarChild, context: context }
+      let(:child_callbacks) { BarChild._validate_callbacks.send(:chain) }
+
+      before do
+        define_const "BarChild", superclass: Bar
+      end
+
+      it("has 3 callbacks in the chain") { expect(child_callbacks.count).to eq 3 }
+      it("has 2 validators") { expect(BarChild.validators.size).to eq 2 }
+
+      context "after uninstall on the parent" do
+        before { subject.uninstall }
+
+        it("has 0 callbacks in the chain") { expect(child_callbacks.count).to eq 0 }
+        it("has 0 validators") { expect(BarChild.validators.size).to eq 0 }
+      end
     end
   end
 end
