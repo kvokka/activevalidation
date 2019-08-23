@@ -7,6 +7,7 @@ module ActiveValidation
         loading_paths << "models"
         loading_paths << "types"
         loading_paths << "internals"
+        loading_paths << "model_extension"
 
         def initialize
           setup unless self.class.initialised
@@ -47,9 +48,9 @@ module ActiveValidation
 
         # @return [true]
         def installer
-          ::ActiveRecord::Base.include ActiveValidation::ModelExtension
           ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
           ActiveValidation::Internal::Models::Check.include(ActiveValidation::InternalModelExtensions::Check)
+          ::ActiveRecord::Base.include ActiveValidation::ModelExtension
           true
         end
       end

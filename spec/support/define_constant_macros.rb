@@ -5,7 +5,7 @@ module DefineConstantMacros
     const = stub_const(path, type.new(superclass))
     if with_active_validation
       const.class_eval do
-        include ActiveValidation::ModelExtension
+        include ActiveValidation::ModelExtensionBase
         active_validation
       end
     end

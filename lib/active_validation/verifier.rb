@@ -84,6 +84,11 @@ module ActiveValidation
       end
     end
 
+    def install(instance_manifest: nil)
+      instance_manifest ||= find_manifest
+      instance_manifest.to_internal_manifest.install
+    end
+
     # Forward the normalized request to ORM mapper
     #
     # param [Hash]
