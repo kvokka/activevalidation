@@ -8,7 +8,7 @@ module ActiveValidation
 
     def initialize(name)
       @name  = name
-      @items = ActiveSupport::HashWithIndifferentAccess.new
+      @items = Concurrent::Map.new
     end
 
     def clear
@@ -19,10 +19,10 @@ module ActiveValidation
       @items.values.uniq.each(&block)
     end
 
-    def find(name)
-      @items.fetch(normalize_name(name))
+    def find(item_name)
+      @items.fetch(normalize_name(item_name))
     rescue KeyError => e
-      raise key_error_with_custom_message(e)
+      raise key_error_with_custom_message(e, item_name)
     end
 
     alias [] find
@@ -41,8 +41,8 @@ module ActiveValidation
 
     private
 
-    def key_error_with_custom_message(key_error)
-      message = key_error.message.sub("key not found", "#{@name} not registered")
+    def key_error_with_custom_message(key_error, item_name)
+      message = key_error.message.sub("key not found", %(#{@name} not registered: "#{item_name}"))
       error = KeyError.new(message)
       error.set_backtrace(key_error.backtrace)
       error
