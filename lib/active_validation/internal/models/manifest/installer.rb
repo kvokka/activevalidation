@@ -13,6 +13,7 @@ module ActiveValidation
             @base_class = base_class
             @checks = checks
             @context = context
+            @installed_callbacks = []
           end
 
           # Add all checks (validations) to base_class
@@ -78,17 +79,6 @@ module ActiveValidation
               installed_callbacks.each { |callback| chain.delete(callback) }
             end
           end
-
-          # def validators
-          #   base_class._validators
-          # end
-          #
-          # def uninstall_installed_validators
-          #   installed_validators = installed_callbacks.map(&:filter).select { |f| f.is_a? ActiveModel::Validator }
-          #   validators
-          #     .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
-          #     .delete_if { |_, v| v.empty?  }
-          # end
         end
       end
     end
