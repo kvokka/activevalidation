@@ -9,6 +9,7 @@ module ActiveValidation
         NOT_FOUND = :not_found
         ALREADY_INSTALLED = :already_installed
         INSTALLED = :installed
+        UNINSTALLED = :uninstalled
 
         attr_reader :verifier, :installed_manifests, :last_failed_attempt_time
 
@@ -40,6 +41,20 @@ module ActiveValidation
           return ALREADY_INSTALLED if found.installed?
 
           install! internal_manifest: found
+        end
+
+        # Uninstall the manifest.
+        #
+        # @return Symbol
+        def uninstall(manifest_id:)
+          lock.with_write_lock do
+            internal_manifest = find(manifest_id: manifest_id)
+            return NOT_FOUND unless internal_manifest&.installed?
+
+            internal_manifest.uninstall
+            installed_manifests.delete internal_manifest
+          end
+          UNINSTALLED
         end
 
         # We omit the error and only save the error time to prevent

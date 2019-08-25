@@ -157,10 +157,45 @@ describe ActiveValidation::Internal::Observers::Manifest do
         expect(subject.installed_manifests).to include manifest
       end
 
+      it "run install method in the manifest" do
+        subject.install!(internal_manifest: manifest)
+        expect(manifest).to have_received(:install)
+      end
+
       it("returns status") do
         expect(subject.install!(internal_manifest: manifest)).to eq described_class::INSTALLED
       end
     end
   end
   # rubocop:enable RSpec/SubjectStub
+
+  context "uninstall" do
+    context "with not found manifest" do
+      it("returns status") { expect(subject.uninstall(manifest_id: manifest_id)).to eq described_class::NOT_FOUND }
+    end
+
+    context "found" do
+      let(:manifest) do
+        instance_double ActiveValidation::Internal::Models::Manifest, installed?: true, id: manifest_id, uninstall: nil
+      end
+
+      before do
+        subject.installed_manifests << manifest
+      end
+
+      it("returns status") do
+        expect(subject.uninstall(manifest_id: manifest_id)).to eq described_class::UNINSTALLED
+      end
+
+      it "run uninstall method in the manifest" do
+        subject.uninstall(manifest_id: manifest_id)
+        expect(manifest).to have_received(:uninstall)
+      end
+
+      it "installed manifest include the manifest" do
+        subject.uninstall(manifest_id: manifest_id)
+        expect(subject.installed_manifests).to be_empty
+      end
+    end
+  end
 end
