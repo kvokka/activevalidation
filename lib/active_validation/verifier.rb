@@ -31,14 +31,37 @@ module ActiveValidation
     # @return [Internal::Manifest]
     attr_accessor :manifest
 
+    # Contains Internal::Observers::Manifest, which store everything about used
+    # manifests
+    #
+    # @return [Internal::Observers::Manifest]
+    attr_reader :observer
+
+    # Main switch for this class. After switch, all installed validators
+    # remain in place, while new installations will be turned off.
+    #
+    # @return [TrueClass, FalseClass]
+    attr_accessor :enabled
+    def enabled?; !!enabled; end
+
+    # If something go wrong or there is no any Manifests for selected class yet,
+    # to prevent DB flooding we just until the situation resolves.
+    # Here we can specify the period between the attempts
+    #
+    attr_accessor :failed_attempt_retry_time
+
     def initialize(base_klass)
       config.verifier_defaults.call self
       @base_klass = base_klass.to_s
       @orm_adapter ||= config.orm_adapter
       @manifest_name_formatter ||= config.manifest_name_formatter
-      @validations_module_name = "Validations"
+      @validations_module_name ||= "Validations"
+      @enabled ||= true
+      @failed_attempt_retry_time ||= 1.day
 
       yield self if block_given?
+
+      @observer = Internal::Observers::Manifest.new self
       self.class.registry.register base_klass, self
     end
 
@@ -62,9 +85,9 @@ module ActiveValidation
 
     # @!endgroup
 
-    # @return [ActiveSupport::HashWithIndifferentAccess]
+    # @return [Internal::Manifest]
     def current_manifest
-      manifest or find_manifest(version: version)
+      manifest or find_manifest
     end
 
     # @return [Class]
@@ -72,15 +95,10 @@ module ActiveValidation
       base_klass.is_a?(Class) ? base_klass : base_klass.constantize
     end
 
-    def install(instance_manifest: nil)
-      instance_manifest ||= find_manifest
-      instance_manifest.to_internal_manifest.install
-    end
-
     # Forward the normalized request to ORM mapper
     #
     # param [Hash]
-    # return [Internal::Manifest, Array<Internal::Manifest>]
+    # @return [Internal::Manifest, Array<Internal::Manifest>]
 
     %i[add_manifest find_manifest find_manifests].each do |m|
       define_method(m) { |**hash| add_defaults_for_orm_adapter(hash) { |**h| orm_adapter.public_send m, h } }

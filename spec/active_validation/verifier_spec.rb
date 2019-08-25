@@ -15,9 +15,14 @@ describe ActiveValidation::Verifier do
     it { is_expected.to delegate(:find_or_build).to(:registry) }
   end
 
-  %i[validations_module_name base_klass orm_adapter manifest_name_formatter manifest].each do |m|
-    it { is_expected.to have_attr_reader m }
-  end
+  %i[failed_attempt_retry_time
+     enabled
+     observer
+     validations_module_name
+     base_klass
+     orm_adapter
+     manifest_name_formatter
+     manifest].each { |m| it { is_expected.to have_attr_reader m } }
 
   context "with fake registry" do
     subject { described_class.find_or_build "Bar" }
@@ -119,7 +124,7 @@ describe ActiveValidation::Verifier do
         allow(subject).to receive(:find_manifest) # rubocop:disable RSpec/SubjectStub
         define_consts "Bar::Validations::V11"
         subject.current_manifest
-        expect(subject).to have_received(:find_manifest).with(version: 11)
+        expect(subject).to have_received(:find_manifest)
       end
     end
 
@@ -137,6 +142,20 @@ describe ActiveValidation::Verifier do
         allow(ActiveValidation.config.verifier_defaults).to receive(:call)
         expect(ActiveValidation.config.verifier_defaults).to have_received(:call).with(subject)
       end
+    end
+  end
+
+  context "#enabled" do
+    context "true" do
+      subject { described_class.find_or_build("Foo") { |c| c.enabled = true }.enabled? }
+
+      it { is_expected.to be true }
+    end
+
+    context "false" do
+      subject { described_class.find_or_build("Foo") { |c| c.enabled = false }.enabled? }
+
+      it { is_expected.to be false }
     end
   end
 end
