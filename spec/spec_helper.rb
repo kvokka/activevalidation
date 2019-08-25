@@ -2,7 +2,6 @@
 
 ENV["ORM"] = "active_record"
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
 puts "\n==> ORM = #{ENV['ORM'].inspect}"
 
 RSpec.configure do |config|
@@ -22,7 +21,6 @@ RSpec.configure do |config|
 end
 
 require "active_validation"
-require "active_support/concern"
 require "pry"
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
