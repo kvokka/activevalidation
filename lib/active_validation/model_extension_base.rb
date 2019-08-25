@@ -27,8 +27,7 @@ module ActiveValidation
     #
     # @return nil
     def process_active_validation
-      ::ActiveValidation::Verifier.find(self.class).install(instance_manifest: manifest)
-      nil
+      ::ActiveValidation::Verifier.find_or_build(self.class).install(manifest_id: manifest_id)
     end
   end
 end

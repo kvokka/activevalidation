@@ -24,6 +24,8 @@ describe ActiveValidation::Verifier do
      manifest_name_formatter
      manifest].each { |m| it { is_expected.to have_attr_reader m } }
 
+  it { is_expected.to delegate(:install).to(:observer) }
+
   context "with fake registry" do
     subject { described_class.find_or_build "Bar" }
 

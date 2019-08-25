@@ -50,6 +50,8 @@ module ActiveValidation
     #
     attr_accessor :failed_attempt_retry_time
 
+    delegate :install, to: :observer
+
     def initialize(base_klass)
       config.verifier_defaults.call self
       @base_klass = base_klass.to_s

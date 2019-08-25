@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe ActiveValidation::ModelExtensionBase do
-  context "::active_validation" do
-    let(:klass) { Class.new { include ActiveValidation::ModelExtensionBase } }
+  let(:klass) { Class.new { include ActiveValidation::ModelExtensionBase } }
 
+  context "::active_validation" do
     it { expect(klass).to respond_to :active_validation }
 
     it "pass forward the block" do
@@ -32,6 +32,39 @@ describe ActiveValidation::ModelExtensionBase do
         allow(::ActiveValidation::Verifier.registry).to receive(:registered?).and_return(true)
         klass.active_validation
         expect(klass).not_to have_received(:register_active_validation_relations)
+      end
+    end
+  end
+
+  context "#process_active_validation" do
+    let(:verifier) { instance_double ::ActiveValidation::Verifier }
+
+    before do
+      allow(::ActiveValidation::Verifier).to receive(:find_or_build).with(klass).and_return(verifier)
+      allow(verifier).to receive(:install)
+    end
+
+    context "with manifest_id" do
+      before do
+        klass.define_method(:manifest_id) { 42 }
+      end
+
+      it "installs the manifest" do
+        klass.new.send(:process_active_validation)
+        expect(::ActiveValidation::Verifier).to have_received(:find_or_build)
+        expect(verifier).to have_received(:install).with(manifest_id: 42)
+      end
+    end
+
+    context "with out manifest_id" do
+      before do
+        klass.define_method(:manifest_id) { nil }
+      end
+
+      it "installs the manifest" do
+        klass.new.send(:process_active_validation)
+        expect(::ActiveValidation::Verifier).to have_received(:find_or_build)
+        expect(verifier).to have_received(:install).with(manifest_id: nil)
       end
     end
   end
