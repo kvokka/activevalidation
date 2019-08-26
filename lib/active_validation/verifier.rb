@@ -97,6 +97,18 @@ module ActiveValidation
       base_klass.is_a?(Class) ? base_klass : base_klass.constantize
     end
 
+    # Return the list af parents with active_validation
+    # @return [Array]
+    def descendants_with_active_validation
+      [].tap do |descendants|
+        k = base_class.superclass
+        while k.respond_to?(:active_validation)
+          descendants << k
+          k = k.superclass
+        end
+      end
+    end
+
     # Forward the normalized request to ORM mapper
     #
     # param [Hash]
