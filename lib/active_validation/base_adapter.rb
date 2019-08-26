@@ -21,7 +21,7 @@ module ActiveValidation
 
         @loader = Zeitwerk::Loader.new
         loading_paths.each do |loading_path|
-          @loader.push_dir [__dir__, "orm_plugins", plugin_name, loading_path].join("/")
+          @loader.push_dir(Pathname.new(File.expand_path(__dir__)).join("orm_plugins", plugin_name, loading_path))
         end
         @loader.setup
         @loader

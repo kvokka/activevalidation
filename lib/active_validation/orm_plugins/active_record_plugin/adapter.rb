@@ -50,7 +50,7 @@ module ActiveValidation
         def installer
           ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter.loader
           ActiveValidation::Internal::Models::Check.include(ActiveValidation::InternalModelExtensions::Check)
-          ::ActiveRecord::Base.include ActiveValidation::ModelExtension
+          ::ActiveRecord::Base.include ActiveValidation::ActiveRecordModelExtension
           true
         end
       end
