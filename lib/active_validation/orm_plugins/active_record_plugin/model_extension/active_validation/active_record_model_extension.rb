@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveValidation
-  module ModelExtension
+  module ActiveRecordModelExtension
     extend ActiveSupport::Concern
     include ModelExtensionBase
 
