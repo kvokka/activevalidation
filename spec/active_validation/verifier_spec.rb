@@ -29,7 +29,12 @@ describe ActiveValidation::Verifier do
   context "with fake registry" do
     subject { described_class.find_or_build "Bar" }
 
-    let!(:bar) { define_const "Bar", with_active_validation: true }
+    let!(:bar) do
+      define_const "Bar" do
+        include ActiveValidation::ModelExtensionBase
+        active_validation
+      end
+    end
 
     include_examples "verifiers registry"
 
@@ -70,8 +75,6 @@ describe ActiveValidation::Verifier do
 
     context "#versions" do
       before do
-        define_const "Bar", with_active_validation: true
-
         define_consts "Bar::Validations::V1",
                       "Bar::Validations::V2",
                       "Bar::Validations::V23",
