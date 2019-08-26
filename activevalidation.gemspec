@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "activerecord", ">= 4.2.0", "< 6.0"
   spec.add_development_dependency "bundler", "~> 1.17"
+  spec.add_development_dependency "cucumber", "~> 3.1.0"
   spec.add_development_dependency "factory_bot", "~> 5.0.0"
   spec.add_development_dependency "rspec", "~> 3.8"
   spec.add_development_dependency "simplecov", "~> 0.16"
