@@ -7,7 +7,7 @@ describe ActiveValidation::Check::ValidatesMethod, helpers: %i[only_with_active_
 
   context "validate the method invocation" do
     before do
-      define_model "Foo" do
+      define_const("Foo", superclass: ActiveRecord::Base) do
         def foo_allowed; end
 
         def foo_not_allowed; end

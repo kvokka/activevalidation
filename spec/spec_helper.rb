@@ -23,13 +23,13 @@ end
 require "active_validation"
 require "pry"
 
-Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
-Dir["#{File.dirname(__FILE__)}/support/shared_examples/*.rb"].each { |f| require f }
-Dir["#{File.dirname(__FILE__)}/support/matchers/*.rb"].each { |f| require f }
-
 # load ORM related support modules
 require_relative "orm/#{ENV['ORM']}/setup"
 
 # Load models for selected ORM
 
 ActiveValidation.config.orm_adapter = ENV["ORM"]
+
+Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/shared_examples/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/matchers/*.rb"].each { |f| require f }

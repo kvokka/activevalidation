@@ -9,7 +9,7 @@ describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
 
   context "with existed model" do
     before do
-      define_model("Foo")
+      define_const("Foo", superclass: ActiveRecord::Base)
       define_const("FooValidator", superclass: ActiveModel::Validator)
     end
 
