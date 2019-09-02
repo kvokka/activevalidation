@@ -109,6 +109,14 @@ module ActiveValidation
       end
     end
 
+    # Install parent models and self
+    #
+    # Return Symbol Installation status
+    def install!(*args)
+      descendants_with_active_validation.each { |klass| klass.active_validation.install }
+      install(*args)
+    end
+
     # Forward the normalized request to ORM mapper
     #
     # param [Hash]

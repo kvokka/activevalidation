@@ -194,4 +194,18 @@ describe ActiveValidation::Verifier do
       it { is_expected.to be false }
     end
   end
+
+  context "#install!" do
+    let!(:bar) { define_const "Bar", superclass: model }
+
+    before do
+      model.include ActiveValidation::ModelExtensionBase
+      allow(Foo.active_validation).to receive(:install)
+      allow(Bar.active_validation).to receive(:install)
+      described_class.find_or_build("Bar").install!
+    end
+
+    it("installs on Foo") { expect(Foo.active_validation).to have_received(:install) }
+    it("installs on Bar") { expect(Bar.active_validation).to have_received(:install) }
+  end
 end

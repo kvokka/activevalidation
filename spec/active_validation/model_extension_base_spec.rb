@@ -41,7 +41,7 @@ describe ActiveValidation::ModelExtensionBase do
 
     before do
       allow(::ActiveValidation::Verifier).to receive(:find_or_build).with(klass).and_return(verifier)
-      allow(verifier).to receive(:install)
+      allow(verifier).to receive(:install!)
     end
 
     context "with manifest_id" do
@@ -52,7 +52,7 @@ describe ActiveValidation::ModelExtensionBase do
       it "installs the manifest" do
         klass.new.send(:process_active_validation)
         expect(::ActiveValidation::Verifier).to have_received(:find_or_build)
-        expect(verifier).to have_received(:install).with(manifest_id: 42)
+        expect(verifier).to have_received(:install!).with(manifest_id: 42)
       end
     end
 
@@ -64,7 +64,7 @@ describe ActiveValidation::ModelExtensionBase do
       it "installs the manifest" do
         klass.new.send(:process_active_validation)
         expect(::ActiveValidation::Verifier).to have_received(:find_or_build)
-        expect(verifier).to have_received(:install).with(manifest_id: nil)
+        expect(verifier).to have_received(:install!).with(manifest_id: nil)
       end
     end
   end
