@@ -18,6 +18,10 @@ RSpec.configure do |config|
   config.default_formatter = "doc" if config.files_to_run.one?
   config.order = :random
   Kernel.srand config.seed
+
+  config.before do
+    ActiveValidation.configuration.verifiers_registry.clear
+  end
 end
 
 require "active_validation"
