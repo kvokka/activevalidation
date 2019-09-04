@@ -15,6 +15,13 @@ describe ActiveValidation::Check, helpers: %i[only_with_active_record] do
     it { expect { subject.method_name }.to raise_error NotImplementedError }
   end
 
+  context "#method_name=" do
+    it("Set correct type") do
+      subject.method_name = "foo"
+      expect(subject.type).to eq "FooMethod"
+    end
+  end
+
   context "#to_internal_check" do
     %i[check_validate check_validates check_validates_with].each do |type|
       context(type) do
