@@ -89,7 +89,7 @@ module ActiveValidation
 
     # @return [Internal::Manifest]
     def current_manifest
-      manifest or find_manifest
+      manifest or find_manifests.first
     end
 
     # @return [Class]

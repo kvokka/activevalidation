@@ -157,11 +157,11 @@ describe ActiveValidation::Verifier do
         expect(subject.current_manifest).to eq manifest
       end
 
-      it "call #find_manifest if manifest is not set" do
-        allow(subject).to receive(:find_manifest) # rubocop:disable RSpec/SubjectStub
+      it "call #find_manifests if manifest is not set" do
+        allow(subject).to receive(:find_manifests).and_return([]) # rubocop:disable RSpec/SubjectStub
         define_consts "Bar::Validations::V11"
-        subject.current_manifest
-        expect(subject).to have_received(:find_manifest)
+        expect(subject.current_manifest).to be_nil
+        expect(subject).to have_received(:find_manifests)
       end
     end
 
