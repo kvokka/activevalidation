@@ -2,7 +2,7 @@
 
 Feature: Validate instance is possible
   With manual installation we can validate the instance with
-  provided validations
+  provided validations, when there are a few manifests.
 
   Background:
     Given class Foo with active validation with out ORM
@@ -13,14 +13,19 @@ Feature: Validate instance is possible
     And  Foo have manifest version unprovided with checks:
       | method_name | argument  | options            |
       |   validates | my_method | { presence: true } |
-    And  active validation for class Foo installed
+    And active validation for class Foo installed
+    And store Foo instance in record variable
+    And klass Foo have method 'another_method'
+    And Foo have manifest version unprovided with checks:
+      | method_name | argument       | options            |
+      |   validates | another_method | { presence: true } |
 
 
   Scenario: The validations from the manifest should not apply on the instance with out the context
-    Then class Foo instance should be valid
+    Then variable record should be valid
 
   Scenario: The validations from the manifest should apply on the instance with correct context
-    Then class Foo instance in context 'active_validation_v1' should not be valid
+    Then variable record in context 'active_validation_v1' should not be valid
 
   Scenario: The validations from the manifest should not apply on the instance with incorrect context
-    Then class Foo instance in context 'active_validation_v42' should be valid
+    Then variable record in context 'active_validation_v42' should be valid
