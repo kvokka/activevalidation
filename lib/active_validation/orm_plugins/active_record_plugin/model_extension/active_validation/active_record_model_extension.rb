@@ -13,7 +13,7 @@ module ActiveValidation
 
         belongs_to :manifest, class_name: "::ActiveValidation::Manifest", dependent: :destroy
 
-        ActiveValidation::Manifest.has_many name.underscore.pluralize
+        ActiveValidation::Manifest.has_many name.underscore.pluralize.to_sym
 
         before_validation :process_active_validation
 

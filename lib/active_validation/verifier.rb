@@ -102,7 +102,7 @@ module ActiveValidation
     def descendants_with_active_validation
       [].tap do |descendants|
         k = base_class.superclass
-        while k.respond_to?(:active_validation)
+        while k.respond_to?(:active_validation) && k.instance_methods.include?(:manifest)
           descendants << k
           k = k.superclass
         end

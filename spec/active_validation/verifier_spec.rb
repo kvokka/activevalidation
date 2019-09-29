@@ -3,7 +3,7 @@
 describe ActiveValidation::Verifier do
   subject { described_class.find_or_build "Foo" }
 
-  let(:model) { define_const "Foo" }
+  let(:model) { define_const("Foo") { attr_reader :manifest } }
 
   context "class methods" do
     subject { described_class }
@@ -132,12 +132,13 @@ describe ActiveValidation::Verifier do
         define_const("Foo", superclass: should_not_be_in_the_list) do
           include ActiveValidation::ModelExtensionBase
           active_validation
+          attr_reader :manifest
         end
       end
 
-      let(:foo_descendant1) { define_const "FooDescendant1", superclass: foo }
-      let(:foo_descendant2) { define_const "FooDescendant2", superclass: foo_descendant1 }
-      let(:foo_descendant3) { define_const "FooDescendant3", superclass: foo_descendant2 }
+      let(:foo_descendant1) { define_const("FooDescendant1", superclass: foo) { attr_reader :manifest } }
+      let(:foo_descendant2) { define_const("FooDescendant2", superclass: foo_descendant1) { attr_reader :manifest } }
+      let(:foo_descendant3) { define_const("FooDescendant3", superclass: foo_descendant2) }
 
       it "returns only Foo based constants" do
         expect(subject).to match [foo_descendant2, foo_descendant1, foo]
@@ -196,7 +197,7 @@ describe ActiveValidation::Verifier do
   end
 
   context "#install!" do
-    let!(:bar) { define_const "Bar", superclass: model }
+    let!(:bar) { define_const("Bar", superclass: model) { attr_reader :manifest } }
 
     before do
       model.include ActiveValidation::ModelExtensionBase
