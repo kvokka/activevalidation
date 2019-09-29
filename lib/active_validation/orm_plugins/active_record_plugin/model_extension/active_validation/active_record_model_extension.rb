@@ -13,11 +13,12 @@ module ActiveValidation
 
         belongs_to :manifest, class_name: "::ActiveValidation::Manifest", dependent: :destroy
 
-        ActiveValidation::Manifest.has_many name.underscore.pluralize.to_sym
-
-        before_validation :process_active_validation
-
+        ActiveValidation::Manifest.has_many realtion_plural_name
         nil
+      end
+
+      def realtion_plural_name
+        name.underscore.pluralize.to_sym
       end
     end
   end
