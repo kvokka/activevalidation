@@ -37,6 +37,16 @@ class PrepareDb
         t.datetime   :updated_at
       end
     end
+
+    def create_bars
+      create_table :bars do |t|
+        t.integer    :manifest_id
+        t.string     :name
+
+        t.datetime   :created_at
+        t.datetime   :updated_at
+      end
+    end
   end
 
   include Migrations

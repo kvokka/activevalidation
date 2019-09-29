@@ -8,7 +8,7 @@ module ActiveValidation
         def initialize(method_name:, argument:, options: {}, created_at: nil, **_other)
           @method_name = registry.find_or_add method_name
           @argument = argument
-          @options = options.to_h.to_options!
+          @options = options.to_h.deep_symbolize_keys
           @created_at = created_at
         end
 

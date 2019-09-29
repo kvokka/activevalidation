@@ -3,7 +3,7 @@
 Feature: New record do correct checks and store validation version
 
   Background:
-    Given class Foo with active validation
+    Given class Foo with active validation and superclass ActiveRecord::Base
     And   defined versions are:
       | klass | version |
       |   Foo |       1 |

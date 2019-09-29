@@ -57,10 +57,7 @@ end
 # rubocop:enable Security/Eval
 
 step("store :klass instance in :string variable") do |klass, variable|
-  instance = klass.new
-  instance.manifest = klass.active_validation.current_manifest
-
-  instance_variable_set("@#{variable}", instance)
+  instance_variable_set("@#{variable}", klass.new)
 end
 
 step("variable :string method ':string' returns :string") do |instance_var_name, method_name, returns|

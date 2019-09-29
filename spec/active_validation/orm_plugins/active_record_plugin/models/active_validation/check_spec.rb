@@ -32,9 +32,13 @@ describe ActiveValidation::Check, type: :active_record do
         end
 
         context "has value" do
-          %w[method_name argument options].each do |key|
+          %w[method_name argument].each do |key|
             it key.to_s do
               expect(subject.to_internal_check.public_send(key)).to eq subject.public_send(key)
+            end
+
+            it "options" do
+              expect(subject.to_internal_check.options).to eq subject.options.deep_symbolize_keys
             end
           end
         end
