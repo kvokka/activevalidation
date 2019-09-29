@@ -11,5 +11,5 @@ module OnlyWithActiveRecord
 end
 
 RSpec.configure do |config|
-  config.include OnlyWithActiveRecord, helpers: :only_with_active_record
+  config.include OnlyWithActiveRecord, type: :active_record
 end

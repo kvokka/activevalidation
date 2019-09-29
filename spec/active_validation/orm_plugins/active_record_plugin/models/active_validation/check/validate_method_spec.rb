@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::Check::ValidateMethod, helpers: %i[only_with_active_record] do
+describe ActiveValidation::Check::ValidateMethod, type: :active_record do
   include_examples "check attributes check"
 
   it("contains field type") { expect(subject.attributes).to have_key("type") }

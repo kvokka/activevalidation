@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter, helpers: %i[only_with_active_record] do
+describe ActiveValidation::OrmPlugins::ActiveRecordPlugin::Adapter, type: :active_record do
   let(:manifest) { ActiveValidation::Internal::Models::Manifest.new version: 1, base_klass: "Foo", name: "subject" }
   let(:check_validates) do
     ActiveValidation::Internal::Models::Check.new method_name: "validates",

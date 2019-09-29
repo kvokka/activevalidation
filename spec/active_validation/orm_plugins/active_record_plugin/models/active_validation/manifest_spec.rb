@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveValidation::Manifest, helpers: %i[only_with_active_record] do
+describe ActiveValidation::Manifest, type: :active_record do
   %i[update update_attribute update_attributes].each do |method|
     it "raises on #{method}" do
       expect { subject.send(method) }.to raise_error ActiveValidation::Errors::ImmutableError
