@@ -11,21 +11,16 @@
 
 appraise "am-5.0" do
   gem "activerecord", "~> 5.0.0"
-  # TODO: Add mongoid
 end
 
 appraise "am-5.1" do
   gem "activerecord", "~> 5.1.0"
-  # TODO: Add mongoid
 end
 
 appraise "am-5.2" do
   gem "activerecord", "~> 5.2.0"
-  # TODO: Add mongoid
 end
 
 appraise "am-6.0" do
-  # TODO: Use actual version number once 6.0 final is released
-  gem "activerecord", "~> 6.0.0.beta1"
-  # TODO: Add mongoid
+  gem "activerecord", "~> 6.0.0"
 end

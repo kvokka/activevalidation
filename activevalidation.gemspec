@@ -24,12 +24,12 @@ Gem::Specification.new do |spec|
   # Minor version requirement adopted from zeitwerk gem
   spec.required_ruby_version = ">= 2.4.4"
 
-  spec.add_dependency("activemodel",   ">= 5.0.0", "< 6.0")
-  spec.add_dependency("activesupport", ">= 5.0.0", "< 6.0")
+  spec.add_dependency("activemodel",   ">= 5.0.0", "< 6.1")
+  spec.add_dependency("activesupport", ">= 5.0.0", "< 6.1")
   spec.add_dependency("concurrent-ruby", ">= 1.0.0", "< 2.0")
   spec.add_dependency("zeitwerk", "~> 2.1.9")
 
-  spec.add_development_dependency "activerecord", ">= 4.2.0", "< 6.0"
+  spec.add_development_dependency "activerecord", ">= 4.2.0", "< 6.1"
   spec.add_development_dependency "bundler", "~> 1.17"
   spec.add_development_dependency "database_cleaner", "~> 1.7.0"
   spec.add_development_dependency "factory_bot", "~> 5.0.0"
