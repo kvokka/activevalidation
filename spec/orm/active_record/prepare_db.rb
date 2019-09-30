@@ -58,23 +58,12 @@ class PrepareDb
   end
 
   def call
-    require_db_adapteer_gem
-
     establish_connection
 
     Migrations.instance_methods(false).each { |m| public_send(m) }
   end
 
   private
-
-  def require_db_adapteer_gem
-    require case ENV["DB"]
-            when "sqlite" then "sqlite3"
-            when "mysql" then "mysql2"
-            when "postgres" then "pg"
-            else raise "Un-ssuported DB"
-            end
-  end
 
   def establish_connection
     relative_path = "db_adapters/database.#{ENV['DB']}.yml"
