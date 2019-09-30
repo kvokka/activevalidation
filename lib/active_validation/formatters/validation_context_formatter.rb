@@ -16,7 +16,7 @@ module ActiveValidation
       delegate_missing_to :@manifest
 
       def call
-        ["active_validation", "v#{version}"].tap do |base|
+        ["active_validation", "id#{id}"].tap do |base|
           base << "on_#{options[:on]}" if options[:on]
           base << name.to_s.underscore unless name.blank?
         end.join("_")
