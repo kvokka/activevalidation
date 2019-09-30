@@ -23,9 +23,10 @@ env:
     - CC_TEST_REPORTER_ID=73c88f60a4ed839ffb0da252514d11374fff29c811beebd0796311faffa7b6b5
     - COVERAGE=1
     - TRAVIS_TEST_RESULT=simplecov
-  - DB=mysql
-  - DB=sqlite
-  - DB=postgres
+  matrix:
+    - DB=mysql
+    - DB=sqlite
+    - DB=postgres
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
