@@ -24,7 +24,7 @@ group :local_development do
   gem "reek",       "~> 5.4.0"
   gem "rubocop",       "~> 0.72.0"
   gem "rubocop-rspec", "~> 1.32"
-
-  gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-  gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
 end
+
+gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
+gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
