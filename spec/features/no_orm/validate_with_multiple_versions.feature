@@ -16,6 +16,7 @@ Feature: Validate instance is possible
       |   validates | my_method | { presence: true } |
     And active validation for class Foo installed
     And store Foo instance in record variable
+    And set variable record manifest to current
     And defined versions are:
       | klass | version |
       |   Foo |       2 |
@@ -24,18 +25,18 @@ Feature: Validate instance is possible
       | method_name | argument       | options            |
       |   validates | another_method | { presence: true } |
     And store Foo instance in record_v2 variable
+    And set active validation version for klass Foo to 2
+    And active validation for class Foo installed
 
 
-  Scenario: The validations from the manifest should not apply on the instance with out the context
-    Then variable record should be valid
+  Scenario: Should ve validated with version 1
+    Then variable record should not be valid
+    Then variable record error message should be on my_method
 
-  Scenario: The validations from the manifest should apply on the instance with correct context
-    Then variable record in context 'active_validation_v1' should not be valid
-
-  Scenario: The validations from the manifest should not apply on the instance with incorrect context
-    Then variable record in context 'active_validation_v42' should be valid
+  Scenario: The v2 record should check only another_method and be valid
+    When variable record_v2 method 'another_method' returns something
+    Then variable record_v2 should be valid
 
   Scenario: The v2 record should check only another_method
-    When variable record_v2 method 'another_method' returns something
-    Then variable record_v2 in context 'active_validation_v1' should not be valid
-    Then variable record_v2 in context 'active_validation_v2' should be valid
+    Then variable record_v2 should not be valid
+    Then variable record_v2 error message should be on another_method

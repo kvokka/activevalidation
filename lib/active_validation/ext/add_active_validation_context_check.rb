@@ -7,7 +7,8 @@ module ActiveValidation
         result = super
         return result unless ActiveValidation.config.verifiers_registry.registered?(self.class)
 
-        av_context = ActiveValidation.config.verifiers_registry[self.class].current_manifest.try(:context)
+        av_context = try(:manifest).try(:context) ||
+                     ActiveValidation.config.verifiers_registry[self.class].current_manifest.try(:context)
         return result unless av_context
 
         self.validation_context = av_context

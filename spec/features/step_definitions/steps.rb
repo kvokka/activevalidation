@@ -47,7 +47,7 @@ step("klass :klass have method :string") do |klass, method_name|
 end
 
 # rubocop:disable Security/Eval
-step(":klass have manifest version :manifest_version with checks:") do |klass, version, table|
+step(":klass have manifest version :version with checks:") do |klass, version, table|
   checks = table.rows.map do |(method_name, argument, options)|
     { method_name: method_name, argument: argument, options: eval(options) }
   end
@@ -63,4 +63,23 @@ end
 step("variable :string method ':string' returns :string") do |instance_var_name, method_name, returns|
   variable = instance_variable_get("@#{instance_var_name}")
   variable.define_singleton_method(method_name) { returns }
+end
+
+step("variable :string error message :whether_to be on :string") do |instance_var_name, expectation, method_name|
+  variable = instance_variable_get("@#{instance_var_name}")
+  check_method = expectation ? :to : :to_not
+
+  expect(variable.errors.messages).send(check_method, have_key(method_name.to_sym))
+end
+
+step("set active validation version for klass :klass to :version") do |klass, version|
+  klass.active_validation.version = version.to_i
+end
+
+step("set variable :string manifest to :string") do |instance_var_name, state|
+  variable = instance_variable_get("@#{instance_var_name}")
+  variable.manifest = case state
+                      when "current" then variable.class.active_validation.current_manifest
+                      when "none" then nil
+                      end
 end

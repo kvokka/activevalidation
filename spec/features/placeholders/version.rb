@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-placeholder :manifest_version do
+placeholder :version do
   match(/unprovided|none|undefined/) do
     nil
   end
