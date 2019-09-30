@@ -34,7 +34,7 @@ before_script:
   - psql -c 'create database test;' -U postgres
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
 
-before_install: gem install bundler -v 1.17.1
+before_install: gem install bundler -v 2.0.1
 script:
   - bundle exec rspec
 after_script:
