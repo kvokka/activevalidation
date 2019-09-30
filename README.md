@@ -112,8 +112,7 @@ class Foo < ActiveRecord::Base
 end
 ```
 
-The usage described through [spec][readme-spec], so it is always up-to-date.
-
+The usage described [in special spec][readme-spec], and it is always up-to-date.
 
 ## Configuration
 
@@ -154,6 +153,6 @@ The gem is available as open source under the terms of the
 [codeclimate_badge]: https://api.codeclimate.com/v1/badges/53dc9ce7ec0b94570044/maintainability
 [codeclimate]: https://codeclimate.com/github/kvokka/activevalidation/maintainability
 
-[readme-spec]: https://github.com/kvokka/activevalidation/spec/active_validation/orm_plugins/active_record_plugin/readme_spec.rb
+[readme-spec]: https://github.com/kvokka/activevalidation/blob/master/spec/active_validation/orm_plugins/active_record_plugin/readme_spec.rb
 
 [mit-licence-link]: http://opensource.org/licenses/MIT
