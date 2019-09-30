@@ -4,7 +4,7 @@
 [![Build Status          ][travisci_badge]][travisci]
 [![Codacy Badge          ][codacy_badge]][codacy]
 [![Reviewed by Hound     ][hound_badge]][hound]
-
+[![Maintainability       ][codeclimate_badge]][codeclimate]
 
 Validations on steroids. Allows to group validations with versions and
 allow to manage validations of the records.
@@ -143,14 +143,16 @@ Contribution directions go here.
 The gem is available as open source under the terms of the
 [MIT License][mit-licence-link].
 
-[rubygems_badge]: http://img.shields.io/gem/v/active_validation.svg
-[rubygems]: https://rubygems.org/gems/active_validation
+[rubygems_badge]: http://img.shields.io/gem/v/activevalidation.svg
+[rubygems]: https://rubygems.org/gems/activevalidation
 [travisci_badge]: https://travis-ci.org/kvokka/active_validation.svg?branch=master
 [travisci]: https://travis-ci.org/kvokka/active_validation
-[codacy_badge]: https://api.codacy.com/project/badge/Grade/fix--it
-[codacy]: https://www.codacy.com/app/kvokka/pp_sql?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kvokka/active_validation&amp;utm_campaign=Badge_Grade
+[codacy_badge]: https://api.codacy.com/project/badge/Grade/687bcb63afb74686b3acdd0b8cbaf2cf
+[codacy]: https://www.codacy.com/manual/kvokka/activevalidation?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kvokka/activevalidation&amp;utm_campaign=Badge_Grade
 [hound_badge]: https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg
 [hound]: https://houndci.com
+[codeclimate_badge]: https://api.codeclimate.com/v1/badges/53dc9ce7ec0b94570044/maintainability
+[codeclimate]: https://codeclimate.com/github/kvokka/activevalidation/maintainability
 
 [readme-spec]: https://github.com/kvokka/activevalidation/spec/active_validation/orm_plugins/active_record_plugin/readme_spec.rb
 
