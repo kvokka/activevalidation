@@ -25,7 +25,6 @@ RSpec.configure do |config|
 end
 
 require "active_validation"
-require "pry"
 
 # load ORM related support modules
 require_relative "orm/#{ENV['ORM']}/setup"
