@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mysql2", "~> 0.5.2"
   spec.add_development_dependency "pg", "~> 1.0.0"
   spec.add_development_dependency "rspec", "~> 3.8"
-  spec.add_development_dependency "simplecov", "~> 0.16"
+  spec.add_development_dependency "simplecov", "~> 0.17"
   spec.add_development_dependency "sqlite3", ">= 1.3.13"
   spec.add_development_dependency "turnip", "~> 4.0.0"
 end
