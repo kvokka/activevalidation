@@ -26,10 +26,10 @@ Supported ORM:
 
 ## Why and for whom is it
 
-* For those who have to manage the states from the dynamic actions
-* For those who does not want to worry if the migration pass on the production
-* For those who have to maintain huge DB with tons of possible acceptable legacy validation issues
-* Your option
+  * For those who have to manage the states from the dynamic actions
+  * For those who does not want to worry if the migration pass on the production
+  * For those who have to maintain huge DB with tons of possible acceptable legacy validation issues
+  * Your option
 
 ## Overview
 
