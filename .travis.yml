@@ -28,6 +28,11 @@ env:
     - DB=sqlite
     - DB=postgres
 
+matrix:
+  exclude:
+    - rvm: 2.4
+      gemfile: gemfiles/am_6.0.gemfile
+
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
