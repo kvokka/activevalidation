@@ -5,6 +5,7 @@
 [![Codacy Badge          ][codacy_badge]][codacy]
 [![Reviewed by Hound     ][hound_badge]][hound]
 [![Maintainability       ][codeclimate_badge]][codeclimate]
+[![Test Coverage		 ][codeclimate_coverage_badge]][codeclimate_coveradge]
 
 Validations on steroids. Allows to group validations with versions and
 allow to manage validations of the records.
@@ -152,6 +153,8 @@ The gem is available as open source under the terms of the
 [hound]: https://houndci.com
 [codeclimate_badge]: https://api.codeclimate.com/v1/badges/53dc9ce7ec0b94570044/maintainability
 [codeclimate]: https://codeclimate.com/github/kvokka/activevalidation/maintainability
+[codeclimate_coverage_badge]: https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage
+[codeclimate_coveradge]: https://codeclimate.com/github/codeclimate/codeclimate/test_coverage
 
 [readme-spec]: https://github.com/kvokka/activevalidation/blob/master/spec/active_validation/orm_plugins/active_record_plugin/readme_spec.rb
 
