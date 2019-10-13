@@ -7,12 +7,13 @@
 [![Maintainability       ][codeclimate_badge]][codeclimate]
 [![Test Coverage		 ][codeclimate_coverage_badge]][codeclimate_coveradge]
 
-Validations on steroids. Allows to group validations with versions and
-allow to manage validations of the records.
+Extend ActiveModel validations, which introduce validations with versions and
+allows to manage validations of the records dynamically.
 
 With `ActiveValidation` instead of storing all validations hardcoded
-in the Model, you can store them in the database. Manifests are lazy loaded
-once, so it does not affect the performance.
+in the Model, you can also store them in the database. Validation Manifests
+are lazy loaded once, and only when they required so it does not
+affect the performance.
 
 ## Require
 
@@ -25,9 +26,9 @@ Supported ORM:
 
 ## Overview
 
-The gem allows to store validations for different versions of the records.
-Validation versions are stored in the selected plugin (for example DB, but
-it is possible to save it in any sort of storage). Each record belongs to
+This is the add-on for ActiveModel validations. The gem allows to store
+`ActiveModel` validations in some backend, like DB.
+Each record with `ActiveValidation` belongs to
 `ActiveValidation::Manifest` which holds general information about
 the validation, including `name`, `version` and `id`. Assumed, that
 `ActiveValidation::Manifest`'s with the same version are compatible and share
@@ -43,21 +44,24 @@ the same validation methods. Folder structure example for model `MyModelName`:
         └── my_model_name.rb
 ```
 
+ for different versions of the records.
+Validation versions are stored in the selected backend.
 Validations themselves are stored in `ActiveValidation::Check`, 1 validation
 per one record. `ActiveValidation::Manifest` has many `ActiveValidation::Check`'s.
 
-`ActiveValidation::Manifest` and `ActiveValidation::Check` records are immutable
-by design.
+`Manifest`'s and `Check`'s are immutable by design. Instead of updating or
+patching the existed objects the developer should clone and create the new
+record.
 
 It is assumed that inside one version manifests are compatible. Verifier version
 is a border between new version and the existed one, which allows co-existing of
-both versions for some time.
+both versions at the same time.
 
 To control `ActiveValidation::Manifest`'s there is `ActiveValidation::Verifier`
 class. Each model with activated `ActiveValidation` has one corresponding
 `ActiveValidation::Verifier` instance (which can easily taken with
 `MyModelName.active_validation` method). Through this instance user can add or find
-Minifest.
+`Minifest`(s).
 
 
 ## Installation
@@ -106,14 +110,14 @@ class Foo < ActiveRecord::Base
   active_validation
 
 #  active_validation do |verifier|          # this is a form with optional block
-# 	verifier.manifest = some_manifest       # lock manifest
+# 	verifier.manifest = some_manifest       # lock manifest to some particular existed manifest
 # 	verifier.version = 42 			        # lock version
 # 	verifier.orm_adapter = :active_record	# ORM adapter name
 #  end
 end
 ```
 
-The usage described [in special spec][readme-spec], and it is always up-to-date.
+The usage described [in special spec][readme-spec]. Only this way allows to keep it always up-to-date.
 
 ## Configuration
 
@@ -136,8 +140,8 @@ ActiveValidation.configuration do |c|
 end
 ```
 
-## Contributing
-Contribution directions go here.
+## FAQ
+
 
 ## License
 The gem is available as open source under the terms of the
