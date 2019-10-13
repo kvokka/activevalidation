@@ -11,28 +11,17 @@
 
 appraise "am-5.0" do
   gem "activerecord", "~> 5.0.0"
-  gem "sqlite3",    "~> 1.3.13"    if ENV["DB"] == "" || ENV["DB"] == "sqlite"
-	gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-	gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
 end
 
 appraise "am-5.1" do
   gem "activerecord", "~> 5.1.0"
-  gem "sqlite3",    "~> 1.3.13"    if ENV["DB"] == "" || ENV["DB"] == "sqlite"
-  gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-  gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
 end
 
 appraise "am-5.2" do
   gem "activerecord", "~> 5.2.0"
-  gem "sqlite3",    "~> 1.3.13"    if ENV["DB"] == "" || ENV["DB"] == "sqlite"
-  gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-  gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
 end
 
 appraise "am-6.0" do
   gem "activerecord", "~> 6.0.0"
-  gem "sqlite3",    "~> 1.4.0"     if ENV["DB"] == "" || ENV["DB"] == "sqlite"
-  gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-  gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
+  gem "sqlite3", "~> 1.4.0"
 end
