@@ -13,7 +13,9 @@ module ActiveValidation
         @manifest = manifest
       end
 
-      delegate_missing_to :@manifest
+      attr_reader :manifest
+
+      delegate :options, :id, :name, to: :manifest
 
       def call
         ["active_validation", "id#{id}"].tap do |base|

@@ -22,10 +22,11 @@ class PrepareDb
         t.string     :type
         t.string     :argument
 
-        t.json       :options
-
         t.datetime   :created_at
       end
+
+      # To support ActiveModel 5.0 we have to use this hack
+      add_column :active_validation_checks, :options, :json
     end
 
     def create_foos
@@ -83,4 +84,6 @@ class PrepareDb
     connection.drop_table(name, if_exists: true)
     connection.create_table(name, *args, &blk)
   end
+
+  delegate :add_column, to: :connection
 end
