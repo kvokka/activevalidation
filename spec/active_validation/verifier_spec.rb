@@ -45,9 +45,11 @@ describe ActiveValidation::Verifier do
           define_const "Bar::Validations::V17"
         end
 
-        it "set defaults" do
+        it "calculate name and set default klass & version" do
           subject.add_manifest
-          defaults = { base_klass: bar.to_s, version: ActiveValidation::Values::Version.new(17) }
+          defaults = { base_klass: bar.to_s,
+                       version:    ActiveValidation::Values::Version.new(17),
+                       name:       "Manifest for Bar" }
           expect(subject.orm_adapter).to have_received(:add_manifest).with(defaults)
         end
       end

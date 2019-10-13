@@ -6,7 +6,7 @@
 # rubocop:disable RSpec/DescribeClass
 # rubocop:disable RSpec/ExampleLength
 describe "Readme" do
-  let(:manifest) do
+  let(:manifest_with_checks) do
     {
       base_klass:        "Foo", # Name of the Model Class
       version:           1, # optional, by default use locked or latest version
@@ -48,7 +48,8 @@ describe "Readme" do
 
   it "manifest manipulations" do
     # This is how you can add the new manifest
-    Foo.active_validation.add_manifest(manifest)
+
+    Foo.active_validation.add_manifest(manifest_with_checks)
 
     f = Foo.new
 
@@ -58,6 +59,7 @@ describe "Readme" do
 
     # new manifest will be used for new records, while existed records
     # continue using one of the previous versions
+    # the same result will be with `Foo.active_validation.add_manifest`
     Foo.active_validation.add_manifest(empty_manifest)
 
     expect(f).to be_valid

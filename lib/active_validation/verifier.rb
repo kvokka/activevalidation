@@ -118,11 +118,24 @@ module ActiveValidation
     end
 
     # Forward the normalized request to ORM mapper
+    # For the name field we calculate default value
     #
     # param [Hash]
     # @return [Internal::Manifest, Array<Internal::Manifest>]
 
-    %i[add_manifest find_manifest find_manifests].each do |m|
+    def add_manifest(**hash)
+      add_defaults_for_orm_adapter(hash) do |**h|
+        h[:name] ||= manifest_name_formatter.call(base_klass)
+        orm_adapter.public_send :add_manifest, h
+      end
+    end
+
+    # Forward the normalized request to ORM mapper
+    #
+    # param [Hash]
+    # @return [Internal::Manifest, Array<Internal::Manifest>]
+
+    %i[find_manifest find_manifests].each do |m|
       define_method(m) { |**hash| add_defaults_for_orm_adapter(hash) { |**h| orm_adapter.public_send m, h } }
     end
 

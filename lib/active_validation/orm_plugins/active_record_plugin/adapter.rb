@@ -41,7 +41,7 @@ module ActiveValidation
 
         # @api internal
         def search(wheres)
-          relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc)
+          relation = Manifest.includes(:checks).where(wheres).order(created_at: :desc, id: :desc)
           relation = yield relation if block_given?
           relation.is_a?(ActiveRecord::Base) ? relation.to_internal_manifest : relation.map(&:to_internal_manifest)
         end

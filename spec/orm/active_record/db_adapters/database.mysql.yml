@@ -9,4 +9,4 @@ default: &default
 
 test:
   <<: *default
-  database: active_validation_test
+  database: test

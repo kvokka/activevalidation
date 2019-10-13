@@ -24,7 +24,7 @@ module ActiveValidation
       # this restriction
 
       MUTABLE_INSTANCE_METHODS.each do |name|
-        define_method(name) { raise Errors::ImmutableError }
+        define_method(name) { |*| raise Errors::ImmutableError }
       end
     end
   end
