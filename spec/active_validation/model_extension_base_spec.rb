@@ -46,7 +46,7 @@ describe ActiveValidation::ModelExtensionBase do
 
     context "with manifest_id" do
       before do
-        klass.define_method(:manifest_id) { 42 }
+        klass.send(:define_method, :manifest_id) { 42 }
       end
 
       it "installs the manifest" do
@@ -58,7 +58,7 @@ describe ActiveValidation::ModelExtensionBase do
 
     context "with out manifest_id" do
       before do
-        klass.define_method(:manifest_id) { nil }
+        klass.send(:define_method, :manifest_id) { nil }
       end
 
       it "installs the manifest" do

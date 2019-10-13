@@ -73,7 +73,7 @@ module ActiveValidation
 
             chain.instance_variable_get(:@mutex).synchronize do
               target._validators
-                    .each_value { |v| v.filter! { |el| !installed_validators.include?(el) } }
+                    .each_value { |v| v.reject! { |el| installed_validators.include?(el) } }
                     .delete_if { |_, v| v.empty?  }
 
               installed_callbacks.each { |callback| chain.delete(callback) }

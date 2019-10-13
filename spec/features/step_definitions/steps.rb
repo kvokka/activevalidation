@@ -43,7 +43,7 @@ step("variable :string :whether_to :be_matcher") do |instance_var_name, positive
 end
 
 step("klass :klass have method :string") do |klass, method_name|
-  klass.define_method(method_name) { nil }
+  klass.send(:define_method, method_name) { nil }
 end
 
 # rubocop:disable Security/Eval

@@ -6,10 +6,11 @@ module ActiveValidation
       mattr_accessor :initialised, default: false
 
       def inherited(base)
-        base.singleton_class.attr_accessor :abstract
+        # ruby 2.4 require this :send
+        base.singleton_class.send(:attr_accessor, :abstract)
 
         # set default loading paths from the plugin root folder
-        base.singleton_class.attr_accessor :loading_paths
+        base.singleton_class.send(:attr_accessor, :loading_paths)
         base.loading_paths = []
         base.abstract = false
         ActiveValidation.config.orm_adapters_registry.register base.plugin_name, base

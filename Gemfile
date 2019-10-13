@@ -25,7 +25,3 @@ group :local_development do
   gem "rubocop",       "~> 0.72.0"
   gem "rubocop-rspec", "~> 1.32"
 end
-
-gem "mysql2",     "~> 0.5.2"     if ENV["DB"] == "mysql"
-gem "pg",         "~> 1.0.0"     if ENV["DB"] == "postgres"
-gem "sqlite3",    ">= 1.3.13"    if ENV["DB"].nil? || ENV["DB"] == "" || ENV["DB"] == "sqlite"
